@@ -13,12 +13,9 @@ window:
 font:
   normal:
     family: Hermit
-
     style: Regular
-
   bold:
     family: Hermit
-
   # Point size
   size: 13
 
