@@ -2,7 +2,25 @@
 export ZSH="/home/gabox/.oh-my-zsh"
 
 ZSH_THEME="spaceship"
-
+SPACESHIP_CHAR_SYMBOL="❯ "
+SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_USER_SHOW="always"
+SPACESHIP_PROMPT_ORDER=(
+  time          # Time stamps section
+  user          # Username section
+  dir           # Current directory section
+  host          # Hostname section
+  git           # Git section (git_branch + git_status)
+  package       # Package version
+  docker        # Docker section
+  venv          # virtualenv section
+  pyenv         # Pyenv section
+  exec_time     # Execution time
+  # line_sep      # Line break
+  jobs          # Background jobs indicator
+  exit_code     # Exit code section
+  char
+)
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
