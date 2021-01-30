@@ -21,4 +21,5 @@ Plug 'tyrannicaltoucan/vim-deep-space'
 Plug 'rakr/vim-one'
 Plug 'joshdick/onedark.vim'
 Plug 'voldikss/vim-translator'
+Plug 'cespare/vim-toml'
 call plug#end()
