@@ -5,10 +5,12 @@ let g:netrw_browse_split = 3
 let g:netrw_winsize = 20
 
 set noswapfile
+set clipboard+=unnamedplus
 " No wrap
 set nowrap
 set number
 set relativenumber
+set diffopt+=vertical
 " COLOR SCHEME
 " For true colors in tmux and vim without issues
 if (empty($TMUX))
