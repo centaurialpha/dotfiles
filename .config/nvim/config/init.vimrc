@@ -13,7 +13,6 @@ Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'mboughaba/i3config.vim'
 Plug 'preservim/nerdtree'
 Plug 'stevearc/vim-arduino'
-Plug 'fisadev/vim-isort'
 Plug 'peterhoeg/vim-qml'
 Plug 'preservim/tagbar'
 " Colorschemes
@@ -23,4 +22,5 @@ Plug 'rakr/vim-one'
 Plug 'joshdick/onedark.vim'
 Plug 'voldikss/vim-translator'
 Plug 'cespare/vim-toml'
+Plug 'norcalli/nvim-colorizer.lua'
 call plug#end()

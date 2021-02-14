@@ -31,6 +31,8 @@ bindsym XF86MonBrightnessDown exec --no-startup-id light -U 5
 bindsym $mod+d exec --no-startup-id i3-dmenu-desktop -dmenu="dmenu -b -i -fn 'ProFont for Powerline-14' -nb '#282a36' -sf  '#f8f8f2' -sb '#44475a' -nf '#bd93f9'"
 # Power script
 bindsym $mod+Shift+x exec --no-startup-id ~/.scripts/power
+# MR script
+bindsym $mod+m exec --no-startup-id ~/satellogic/emeere/emeere
 
 # change focus
 bindsym $mod+j focus left
@@ -137,9 +139,8 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-exec --no-startup-id feh --bg-scale ~/Pictures/dragon.jpg
+exec --no-startup-id feh --bg-scale ~/Pictures/mars.jpg
 exec_always --no-startup-id ~/.config/polybar/launch.sh
-
 exec --no-startup-id dunst -config .config/dunst/dunstrc
 
-bindsym $mod+p exec i3lock-fancy -p
+# bindsym $mod+p exec --no-startup-id ~/.scripts/i3locko
