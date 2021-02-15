@@ -5,10 +5,11 @@ new_float pixel 1
 
 # Needed for i3-gaps
 for_window [class="^.*"] border pixel 0
+for_window [class="Alacritty"] border pixel 1
 gaps inner 7
 gaps outer 7
 
-font pango:Hermit 10
+font pango:Hermit 12
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -113,7 +114,7 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # class                 border  bground text    indicator child_border
-client.focused          #7e57c2 #7e57c2 #F8F8F2 #6272A4   #6272A4
+client.focused          #7e57c2 #7e57c2 #F8F8F2 #6272A4   #FFA000
 client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
 client.unfocused        #282A36 #282A36 #BFBFBF #282A36   #282A36
 client.urgent           #44475A #FF5555 #F8F8F2 #FF5555   #FF5555
@@ -139,8 +140,9 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-exec --no-startup-id feh --bg-scale ~/Pictures/mars.jpg
+exec --no-startup-id feh --bg-scale ~/Pictures/castle.png
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec --no-startup-id dunst -config .config/dunst/dunstrc
+exec --no-startup-id picom --config ~/.config/picom/picom.conf --experimental-backends
 
 # bindsym $mod+p exec --no-startup-id ~/.scripts/i3locko
