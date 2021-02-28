@@ -12,7 +12,7 @@ SPACESHIP_PROMPT_ORDER=(
   host          # Hostname section
   git           # Git section (git_branch + git_status)
   package       # Package version
-  docker        # Docker section
+  # docker        # Docker section
   venv          # virtualenv section
   pyenv         # Pyenv section
   exec_time     # Execution time
@@ -99,16 +99,16 @@ source $ZSH/oh-my-zsh.sh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-alias {v,vim}='/opt/nvim/nvim.appimage'
-export PATH=$PATH:~/diff-so-fancy
+alias {v,vim}='nvim'
 export PATH=$PATH:~/arduino-1.8.13
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
-alias cat="/usr/bin/bat"
+# alias cat="/usr/bin/bat"
 # taskwarrior
 alias t="clear; task; task summary"
 alias gb='fzf-git-branch'
 alias gch='fzf-git-checkout'
+alias gdf='git diff | diff-so-fancy | less'
 # dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 PATH=~/.local/bin:$PATH
@@ -116,6 +116,9 @@ PATH=~/.local/bin:$PATH
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
+
+# Set MANPAGER
+export MANPAGER="nvim -c 'set ft=man' -"
 
 fzf-git-branch() {
     git rev-parse HEAD > /dev/null 2>&1 || return

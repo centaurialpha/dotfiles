@@ -140,7 +140,7 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-exec --no-startup-id feh --bg-scale ~/Pictures/castle.png
+exec --no-startup-id feh --bg-scale ~/Pictures/minimalist/galaxy.jpg
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec --no-startup-id dunst -config .config/dunst/dunstrc
 exec --no-startup-id picom --config ~/.config/picom/picom.conf --experimental-backends
