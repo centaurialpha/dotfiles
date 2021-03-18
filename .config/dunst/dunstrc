@@ -67,7 +67,7 @@ startup_notification = false
 # dmenu path.
 dmenu = /usr/bin/dmenu -p dunst:
 # Browser for opening urls in context menu.
-browser = /usr/bin/firefox -new-tab
+browser = /usr/bin/qutebrowser
 # Align icons left/right/off
 icon_position = off
 max_icon_size = 80
@@ -101,13 +101,13 @@ history = ctrl+grave
 context = ctrl+shift+period
 
 [urgency_low]
-frame_color = "#61c766"
+frame_color = "#ffca28"
 foreground = "#f1f1f1"
 background = "#000000"
 timeout = 4
 
 [urgency_normal]
-frame_color = "#ff8f00"
+frame_color = "#ffa000"
 foreground = "#f1f1f1"
 background = "#18191E"
 timeout = 10

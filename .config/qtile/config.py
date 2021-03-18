@@ -23,15 +23,16 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import os
+import subprocess
 
 from typing import List  # noqa: F401
 
-from libqtile import bar, layout, widget
+from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-# from libqtile.utils import guess_terminal
 
-mod = "mod1"  # Alt
+mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = 'st'  # Suckless st
 
 keys = [
@@ -80,39 +81,38 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(),
         desc="Spawn a command using a prompt widget"),
+    Key([mod], "d", lazy.spawn("dmenu_run"))
 ]
 
-groups = [Group(i) for i in "123456789"]
 
-for i in groups:
-    keys.extend([
-        # mod1 + letter of group = switch to group
-        Key([mod], i.name, lazy.group[i.name].toscreen(),
-            desc="Switch to group {}".format(i.name)),
+group_names = [
+    ("WWW", {'layout': 'bsp'}),
+    ("DEV", {'layout': 'bsp'}),
+    ("CHAT", {'layout': 'bsp'}),
+    ("SYS", {'layout': 'bsp'}),
+    ("EMAIL", {'layout': 'bsp'}),
+    ("VBOX", {'layout': 'bsp'}),
+    ("MUS", {'layout': 'bsp'}),
+    ("VID", {'layout': 'bsp'}),
+    ("GFX", {'layout': 'bsp'})
+]
 
-        # mod1 + shift + letter of group = switch to & move focused window to group
-        Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True),
-            desc="Switch to & move focused window to group {}".format(i.name)),
-        # Or, use below if you prefer not to switch to that group.
-        # # mod1 + shift + letter of group = move focused window to group
-        # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-        #     desc="move focused window to group {}".format(i.name)),
-    ])
+groups = [Group(name, **kwargs) for name, kwargs in group_names]
 
+for i, (name, kwargs) in enumerate(group_names, 1):
+    keys.append(Key([mod], str(i), lazy.group[name].toscreen()))  # Switch to another group
+    keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(name)))  # Send current window to another group
+
+
+LAYOUT_KWARGS = {
+    'border_focus': '#ffa000',
+    'border_width': 1,
+    'margin': 5
+}
 layouts = [
-    # layout.Columns(border_focus_stack='#d75f5f'),
-    # layout.Max(),
-    # Try more layouts by unleashing below layouts.
-    # layout.Stack(num_stacks=2),
-    layout.Bsp(margin=8, border_focus='#ffa000', border_width=1),
-    # layout.Matrix(),
-    # layout.MonadTall(),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.Tile(),
-    # layout.TreeTab(),
-    # layout.VerticalTile(),
-    # layout.Zoomy(),
+    # layout.Tile(**LAYOUT_KWARGS),
+    layout.Bsp(**LAYOUT_KWARGS),
+    # layout.MonadTall(**LAYOUT_KWARGS),
 ]
 
 widget_defaults = dict(
@@ -125,38 +125,72 @@ extension_defaults = widget_defaults.copy()
 # Custom separator
 sep_widget = widget.Sep(linewidth=2, size_percent=60, padding=10, foreground='#ffa000')
 
+
+
+def init_widgets() -> list:
+    return [
+            widget.GroupBox(
+                this_current_screen_border='#ffa000',
+                borderwidth=2,
+                rounded=False
+            ),
+            widget.Prompt(
+                prompt='run: ',
+                cursor_color='#ffa000',
+                foreground='#ffa000'
+            ),
+            widget.WindowName(max_chars=40, format='{state}{class}'),
+            widget.Chord(
+                chords_colors={
+                    'launch': ("#ff0000", "#ffffff"),
+                },
+                name_transform=lambda name: name.upper(),
+            ),
+            widget.CurrentLayout(),
+            widget.Pomodoro(),
+            widget.TextBox(
+                foreground='#9c9c9c',
+                text=' '),
+            widget.DF(visible_on_warn=False),
+            widget.TextBox(
+                text=' ',
+                foreground='#42a5f5'
+            ),
+            widget.Memory(
+                update_interval=5.0,
+            ),
+            widget.TextBox(
+                foreground='#fbc02d',
+                text=' '),
+            widget.CPU(
+                update_interval=5.0
+            ),
+            widget.TextBox(
+                foreground='#61c766',
+                text=' '),
+            widget.Battery(
+                format='{char} {percent:2.0%}'),
+            widget.TextBox(
+                foreground='#ba68c8',
+                text=' '),
+            widget.ThermalSensor(),
+            widget.TextBox(
+                foreground='#6c77bb',
+                text=' '),
+            widget.Clock(
+                format='%d-%m-%Y %A %I:%M %p'
+            ),
+            widget.TextBox(
+                text=' ',
+                foreground='#ec7875',
+            ),
+            widget.Volume(),
+    ]
+
+# NOTE: waffle siji icons font is needed
 screens = [
     Screen(
-        top=bar.Bar(
-            [
-                widget.GroupBox(
-                    this_current_screen_border='#ffa000',
-                    borderwidth=2,
-                    rounded=False),
-                widget.Prompt(prompt='run: ', cursor_color='#ffa000', foreground='#ffa000'),
-                widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        'launch': ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
-                sep_widget,
-                widget.Memory(
-                    update_interval=5.0,
-                    measure_mem='g',
-                ),
-                sep_widget,
-                widget.Battery(format='{char} {percent:2.0%}'),
-                sep_widget,
-                widget.ThermalSensor(),
-                sep_widget,
-                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
-                sep_widget,
-                widget.Volume(),
-            ],
-            26,
-        ),
+        top=bar.Bar(init_widgets(), 24),
     ),
 ]
 
@@ -197,3 +231,17 @@ focus_on_window_activation = "smart"
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
+
+
+@hook.subscribe.client_new
+def client_new(client):
+    if client.name in ('qutebrowser', 'firefox'):
+        client.togroup('WWW')
+    elif client.name == 'Slack':
+        client.togroup('CHAT')
+
+
+@hook.subscribe.startup_once
+def autostart():
+    autostart_script = os.path.expanduser('~/.config/qtile/autostart.sh')
+    subprocess.call([autostart_script])

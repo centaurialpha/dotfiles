@@ -1,7 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/home/gabox/.oh-my-zsh"
 
-ZSH_THEME="spaceship"
+ZSH_THEME="mh"
 SPACESHIP_CHAR_SYMBOL="❯ "
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_USER_SHOW="always"
@@ -102,15 +102,12 @@ source $ZSH/oh-my-zsh.sh
 alias {v,vim}='nvim'
 export PATH=$PATH:~/arduino-1.8.13
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias cat="/usr/bin/bat"
-# taskwarrior
-alias t="clear; task; task summary"
 alias gb='fzf-git-branch'
 alias gch='fzf-git-checkout'
 alias gdf='git diff | diff-so-fancy | less'
 # dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
 PATH=~/.local/bin:$PATH
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
