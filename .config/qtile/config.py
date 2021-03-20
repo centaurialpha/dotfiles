@@ -32,6 +32,8 @@ from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 
+from widgets import widgets
+
 mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = 'st'  # Suckless st
 
@@ -105,14 +107,13 @@ for i, (name, kwargs) in enumerate(group_names, 1):
 
 
 LAYOUT_KWARGS = {
-    'border_focus': '#ffa000',
+    'border_focus': '#bd93f9',
     'border_width': 1,
     'margin': 5
 }
 layouts = [
-    # layout.Tile(**LAYOUT_KWARGS),
-    layout.Bsp(**LAYOUT_KWARGS),
-    # layout.MonadTall(**LAYOUT_KWARGS),
+    layout.Tile(**LAYOUT_KWARGS),
+    layout.MonadTall(**LAYOUT_KWARGS),
 ]
 
 widget_defaults = dict(
@@ -122,77 +123,8 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
-# Custom separator
-sep_widget = widget.Sep(linewidth=2, size_percent=60, padding=10, foreground='#ffa000')
-
-
-
-def init_widgets() -> list:
-    return [
-            widget.GroupBox(
-                this_current_screen_border='#ffa000',
-                borderwidth=2,
-                rounded=False
-            ),
-            widget.Prompt(
-                prompt='run: ',
-                cursor_color='#ffa000',
-                foreground='#ffa000'
-            ),
-            widget.WindowName(max_chars=40, format='{state}{class}'),
-            widget.Chord(
-                chords_colors={
-                    'launch': ("#ff0000", "#ffffff"),
-                },
-                name_transform=lambda name: name.upper(),
-            ),
-            widget.CurrentLayout(),
-            widget.Pomodoro(),
-            widget.TextBox(
-                foreground='#9c9c9c',
-                text=' '),
-            widget.DF(visible_on_warn=False),
-            widget.TextBox(
-                text=' ',
-                foreground='#42a5f5'
-            ),
-            widget.Memory(
-                update_interval=5.0,
-            ),
-            widget.TextBox(
-                foreground='#fbc02d',
-                text=' '),
-            widget.CPU(
-                update_interval=5.0
-            ),
-            widget.TextBox(
-                foreground='#61c766',
-                text=' '),
-            widget.Battery(
-                format='{char} {percent:2.0%}'),
-            widget.TextBox(
-                foreground='#ba68c8',
-                text=' '),
-            widget.ThermalSensor(),
-            widget.TextBox(
-                foreground='#6c77bb',
-                text=' '),
-            widget.Clock(
-                format='%d-%m-%Y %A %I:%M %p'
-            ),
-            widget.TextBox(
-                text=' ',
-                foreground='#ec7875',
-            ),
-            widget.Volume(),
-    ]
-
 # NOTE: waffle siji icons font is needed
-screens = [
-    Screen(
-        top=bar.Bar(init_widgets(), 24),
-    ),
-]
+screens = [Screen(top=bar.Bar(widgets, 24, background='#030303'))]
 
 # Drag floating layouts.
 mouse = [
@@ -230,7 +162,7 @@ focus_on_window_activation = "smart"
 #
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
-wmname = "LG3D"
+wmname = "qtile"
 
 
 @hook.subscribe.client_new
