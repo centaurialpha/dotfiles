@@ -15,11 +15,7 @@ Plug 'preservim/nerdtree'
 Plug 'stevearc/vim-arduino'
 Plug 'peterhoeg/vim-qml'
 Plug 'preservim/tagbar'
-" Colorschemes
-Plug 'dracula/vim', {'as': 'dracula'}
-Plug 'tyrannicaltoucan/vim-deep-space'
 Plug 'rakr/vim-one'
-Plug 'joshdick/onedark.vim'
 Plug 'voldikss/vim-translator'
 Plug 'cespare/vim-toml'
 Plug 'norcalli/nvim-colorizer.lua'

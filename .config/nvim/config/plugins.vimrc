@@ -14,7 +14,7 @@ let g:fzf_colors = {'border': ['fg', 'Comment']}
 
 " Configure lightline
 let g:lightline = {
-  \   'colorscheme': 'onedark',
+  \   'colorscheme': 'one',
   \   'active': {
   \     'left':[ [ 'mode', 'paste' ],
   \              [ 'gitbranch', 'readonly', 'filename', 'modified' ]
