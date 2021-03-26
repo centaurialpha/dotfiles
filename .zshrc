@@ -1,7 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/home/gabox/.oh-my-zsh"
 
-ZSH_THEME="mh"
+ZSH_THEME="spaceship"
 SPACESHIP_CHAR_SYMBOL="❯ "
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_USER_SHOW="always"
@@ -116,6 +116,12 @@ export FZF_DEFAULT_OPTS='-m --height 50% --border'
 
 # Set MANPAGER
 export MANPAGER="nvim -c 'set ft=man' -"
+
+# For code review
+export REVIEW_BASE=master
+
+# Theme for bat
+export BAT_THEME="Dracula"
 
 fzf-git-branch() {
     git rev-parse HEAD > /dev/null 2>&1 || return
