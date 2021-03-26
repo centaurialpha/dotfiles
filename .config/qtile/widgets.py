@@ -15,7 +15,13 @@ clock = widget.Clock(foreground='#dddddd', format='%I:%M %p')
 layout_icon = widget.TextBox(text=' ', foreground='#fbc02d')
 current_layout = widget.CurrentLayout(foreground='#dddddd')
 baterry_icon = widget.TextBox(text=' ', foreground='#61c766')
-baterry = widget.Battery(foreground='#dddddd')
+baterry = widget.Battery(
+    foreground='#dddddd',
+    format='{char} {percent: 2.0%}',
+    charge_char='C',
+    discharge_char='D',
+    full_char='F',
+)
 thermal_icon = widget.TextBox(text=' ', foreground='#ba68c8')
 thermal = widget.ThermalSensor(foreground='#dddddd')
 cpu_icon = widget.TextBox(text=' ', foreground='#ec407a')
