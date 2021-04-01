@@ -27,7 +27,10 @@ thermal = widget.ThermalSensor(foreground='#dddddd')
 cpu_icon = widget.TextBox(text=' ', foreground='#ec407a')
 cpu = widget.CPU(foreground='#dddddd', update_interval=5.0)
 volume_icon = widget.TextBox(text=' ', foreground='#ec7875')
-volume = widget.Volume(foreground='#dddddd')
+volume = widget.Volume(
+    foreground='#dddddd',
+    get_volume_command=['amixer', '-D', 'default', '-M', 'sget', 'Master'],
+)
 disk_icon = widget.TextBox(text=' ', foreground='#7cb342')
 disk = widget.DF(foreground='#dddddd', visible_on_warn=False)
 memory_icon = widget.TextBox(text=' ', foreground='#7e57c2')
