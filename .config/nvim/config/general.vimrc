@@ -23,6 +23,7 @@ if (has("termguicolors"))
   set termguicolors
 endif
 colorscheme one
+" colorscheme dracula
 hi Normal guibg=#1e2127
 hi SignColumn guibg=#1e2127
 

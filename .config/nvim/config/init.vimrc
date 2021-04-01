@@ -19,4 +19,5 @@ Plug 'rakr/vim-one'
 Plug 'voldikss/vim-translator'
 Plug 'cespare/vim-toml'
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'dracula/vim', { 'as': 'dracula' }
 call plug#end()
