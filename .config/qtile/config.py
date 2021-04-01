@@ -87,29 +87,17 @@ keys = [
 ]
 
 
-group_names = [
-    ("WWW", {'layout': 'bsp'}),
-    ("DEV", {'layout': 'bsp'}),
-    ("CHAT", {'layout': 'bsp'}),
-    ("SYS", {'layout': 'bsp'}),
-    ("EMAIL", {'layout': 'bsp'}),
-    ("VBOX", {'layout': 'bsp'}),
-    ("MUS", {'layout': 'bsp'}),
-    ("VID", {'layout': 'bsp'}),
-    ("GFX", {'layout': 'bsp'})
-]
-
-groups = [Group(name, **kwargs) for name, kwargs in group_names]
-
-for i, (name, kwargs) in enumerate(group_names, 1):
-    keys.append(Key([mod], str(i), lazy.group[name].toscreen()))  # Switch to another group
-    keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(name)))  # Send current window to another group
+groups = []
+for i, group in enumerate('asdfuiop', 1):
+    groups.append(Group(group))
+    keys.append(Key([mod], str(i), lazy.group[group].toscreen()))
+    keys.append(Key([mod, 'shift'], str(i), lazy.window.togroup(group)))
 
 
 LAYOUT_KWARGS = {
     'border_focus': '#bd93f9',
     'border_width': 1,
-    'margin': 5
+    'margin': 10
 }
 layouts = [
     layout.Tile(**LAYOUT_KWARGS),
