@@ -31,4 +31,4 @@ hi SignColumn guibg=#1e2127
 autocmd BufWritePre * :%s/\s\+$//e
 " YAML
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-autocmd FileType c,cpp,json setlocal ts=4 sts=4 sw=4 expandtab
+autocmd FileType c,cpp,json,qs setlocal ts=4 sts=4 sw=4 expandtab

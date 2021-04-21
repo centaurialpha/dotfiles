@@ -1,5 +1,6 @@
 from libqtile import widget
 
+
 group_box = widget.GroupBox(
     borderwidth=2,
     rounded=False,

@@ -87,11 +87,16 @@ keys = [
 ]
 
 
-groups = []
-for i, group in enumerate('asdfuiop', 1):
-    groups.append(Group(group))
-    keys.append(Key([mod], str(i), lazy.group[group].toscreen()))
-    keys.append(Key([mod, 'shift'], str(i), lazy.window.togroup(group)))
+group_names = [
+    ('WWW', {'layout': 'tile'}),
+    ('SATELLOGIC', {'layout': 'stack'}),
+    ('TODO', {'layout': 'tile'}),
+    ('MISC', {'layout': 'tile'}),
+]
+groups = [Group(name, **kwargs) for name, kwargs in group_names]
+for i, (name, kwargs) in enumerate(group_names, 1):
+    keys.append(Key([mod], str(i), lazy.group[name].toscreen()))
+    keys.append(Key([mod, 'shift'], str(i), lazy.window.togroup(name)))
 
 
 LAYOUT_KWARGS = {
@@ -102,6 +107,7 @@ LAYOUT_KWARGS = {
 layouts = [
     layout.Tile(**LAYOUT_KWARGS),
     layout.MonadTall(**LAYOUT_KWARGS),
+    layout.Stack(**LAYOUT_KWARGS, num_stacks=1)
 ]
 
 widget_defaults = dict(
@@ -112,7 +118,12 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 # NOTE: waffle siji icons font is needed
-screens = [Screen(top=bar.Bar(widgets, 24, background='#030303'))]
+screens = []
+for _ in range(0, 1):
+    screens.append(
+        Screen(top=bar.Bar(widgets.copy(), 24, background='#030303'))
+    )
+# screens = [Screen(top=bar.Bar(widgets, 24, background='#030303'))]
 
 # Drag floating layouts.
 mouse = [
@@ -159,6 +170,12 @@ def client_new(client):
         client.togroup('WWW')
     elif client.name == 'Slack':
         client.togroup('CHAT')
+
+
+def switch_screens(qtile):
+    i = qtile.screens.index(qtile.current_screen)
+    group = qtile.screens[i - 1].group
+    qtile.current_screen.set_group(group)
 
 
 @hook.subscribe.startup_once
