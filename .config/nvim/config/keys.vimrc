@@ -1,5 +1,3 @@
-" Make tab got to the matching pair item
-nnoremap <Tab> %
 " INSERT SPACE IN NORMAL MODE
 nnoremap <leader>p li<space><esc>
 " Enter normal Mode
