@@ -1,3 +1,5 @@
+pfetch
+
 # Installed by AUR
 export SPACESHIP_ROOT=/usr/lib/spaceship-prompt
 
@@ -17,6 +19,8 @@ alias {v,vim}='nvim'
 # dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
+SPACESHIP_USER_SHOW=always
+SPACESHIP_USER_COLOR=blue
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_PROMPT_SEPARATE_LINE=false
 SPACESHIP_CHAR_SYMBOL=❯
@@ -37,14 +41,13 @@ SPACESHIP_DOCKER_SHOW=false
 SPACESHIP_DOCKER_CONTEXT_SHOW=false
 SPACESHIP_AWS_SHOW=false
 SPACESHIP_CONDA_SHOW=false
-SPACESHIP_VENV_SHOW=false
 SPACESHIP_PYENV_SHOW=false
 SPACESHIP_DOTNET_SHOW=false
 SPACESHIP_EMBER_SHOW=false
 SPACESHIP_KUBECONTEXT_SHOW=false
 SPACESHIP_TERRAFORM_SHOW=false
 SPACESHIP_TERRAFORM_SHOW=false
-SPACESHIP_VI_MODE_SHOW=false
+SPACESHIP_VI_MODE_SHOW=true
 SPACESHIP_JOBS_SHOW=false
 
 autoload -U promptinit; promptinit
