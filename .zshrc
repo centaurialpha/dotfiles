@@ -7,10 +7,18 @@ HISTFILE=~/.cache/zsh/history
 HISTSIZE=1000
 SAVEHIST=1000
 
+bindkey  "^[[H"   beginning-of-line
+bindkey  "^[[4~"   end-of-line
+bindkey  "^[[P"   delete-char
+
 # Load zsh-syntax-highlighting
 source ~/.zsh-scripts/syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 # Load zsh-autosuggestions
 source ~/.zsh-scripts/autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+# Load completions
+fpath=(~/.zsh-scripts/completions/src $fpath)
+autoload -U compinit; compinit
+
 # Add ~/.local/bin to PATH
 PATH=~/.local/bin:$PATH
 
@@ -18,9 +26,14 @@ PATH=~/.local/bin:$PATH
 alias {v,vim}='nvim'
 # dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+# ls with colors
+alias ls='ls --color=auto -la'
+# Bat instead of cat
+alias cat='bat --style=plain,grid,header --theme=Dracula'
 
 SPACESHIP_USER_SHOW=always
 SPACESHIP_USER_COLOR=blue
+SPACESHIP_BATTERY_SHOW=false
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_PROMPT_SEPARATE_LINE=false
 SPACESHIP_CHAR_SYMBOL=❯
@@ -47,7 +60,7 @@ SPACESHIP_EMBER_SHOW=false
 SPACESHIP_KUBECONTEXT_SHOW=false
 SPACESHIP_TERRAFORM_SHOW=false
 SPACESHIP_TERRAFORM_SHOW=false
-SPACESHIP_VI_MODE_SHOW=true
+SPACESHIP_VI_MODE_SHOW=false
 SPACESHIP_JOBS_SHOW=false
 
 autoload -U promptinit; promptinit
