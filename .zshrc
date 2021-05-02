@@ -11,8 +11,10 @@ bindkey  "^[[H"   beginning-of-line
 bindkey  "^[[4~"   end-of-line
 bindkey  "^[[P"   delete-char
 
+source ~/.zsh-scripts/interactive-cd.zsh
 # Load zsh-syntax-highlighting
-source ~/.zsh-scripts/syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+source ~/.zsh-scripts/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+# source ~/.zsh-scripts/syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 # Load zsh-autosuggestions
 source ~/.zsh-scripts/autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 # Load completions
@@ -32,7 +34,14 @@ alias ls='ls --color=auto -la'
 alias cat='bat --style=plain,grid,header --theme=Dracula'
 
 SPACESHIP_USER_SHOW=always
-SPACESHIP_USER_COLOR=blue
+# Colors
+SPACESHIP_USER_COLOR="#ffb86c"
+SPACESHIP_CHAR_COLOR_SUCCESS="#50fa7b"
+SPACESHIP_CHAR_COLOR_FAILURE="#ff5555"
+SPACESHIP_CHAR_COLOR_SECONDARY="#f1fa8c"
+SPACESHIP_DIR_COLOR="#8be9fd"
+SPACESHIP_GIT_BRANCH_COLOR="#bd93f9"
+SPACESHIP_GIT_STATUS_COLOR="#ff5555"
 SPACESHIP_BATTERY_SHOW=false
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_PROMPT_SEPARATE_LINE=false
