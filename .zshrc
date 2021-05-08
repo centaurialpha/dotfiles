@@ -29,7 +29,7 @@ alias {v,vim}='nvim'
 # dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 # ls with colors
-alias ls='ls --color=auto -la'
+alias ls='ls --color=auto -la --human-readable'
 # Bat instead of cat
 alias cat='bat --style=plain,grid,header --theme=Dracula'
 
