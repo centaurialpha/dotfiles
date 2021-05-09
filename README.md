@@ -10,4 +10,4 @@
 
 
 ## qtile
-[screenshot qtile](screenshot-dotfiles-qtile.png)
+![screenshot qtile](screenshot-dotfiles-qtile.png)
