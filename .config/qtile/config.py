@@ -28,6 +28,8 @@ import subprocess
 
 from typing import List  # noqa: F401
 
+from Xlib import display
+
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
@@ -87,16 +89,16 @@ keys = [
 ]
 
 
-group_names = [
-    ('WWW', {'layout': 'tile'}),
-    ('SATELLOGIC', {'layout': 'stack'}),
-    ('TODO', {'layout': 'tile'}),
-    ('MISC', {'layout': 'tile'}),
+groups = [
+    Group(name='dev', label=''),
+    Group(name='slack', label=''),
+    Group(name='browser', label=''),
+    Group(name='python', label=''),
+    Group(name='sys', label=''),
 ]
-groups = [Group(name, **kwargs) for name, kwargs in group_names]
-for i, (name, kwargs) in enumerate(group_names, 1):
-    keys.append(Key([mod], str(i), lazy.group[name].toscreen()))
-    keys.append(Key([mod, 'shift'], str(i), lazy.window.togroup(name)))
+for i, group in enumerate(groups, 1):
+    keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
+    keys.append(Key([mod, 'shift'], str(i), lazy.window.togroup(group.name)))
 
 
 LAYOUT_KWARGS = {
@@ -118,12 +120,20 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 # NOTE: waffle siji icons font is needed
-screens = []
-for _ in range(0, 1):
-    screens.append(
-        Screen(top=bar.Bar(widgets.copy(), 24, background='#030303'))
-    )
-# screens = [Screen(top=bar.Bar(widgets, 24, background='#030303'))]
+# d = display.Display()
+# s = d.screen()
+# screen_resources = s.root.xrandr_get_screen_resources()
+#
+# num_monitors = 0
+# for output in screen_resources._data['outputs']:
+#     monitor = d.xrandr_get_output_info(output, screen_resources._data['config_timestamp'])._data
+#     if monitor['num_preferred']:
+#         num_monitors += 1
+
+screens = [Screen(top=bar.Bar(widgets.copy(), 24, background='#030303'))]
+
+# if num_monitors > 1:
+#     screens.insert(0, Screen())
 
 # Drag floating layouts.
 mouse = [
@@ -164,14 +174,6 @@ focus_on_window_activation = "smart"
 wmname = "qtile"
 
 
-@hook.subscribe.client_new
-def client_new(client):
-    if client.name in ('qutebrowser', 'firefox'):
-        client.togroup('WWW')
-    elif client.name == 'Slack':
-        client.togroup('CHAT')
-
-
 def switch_screens(qtile):
     i = qtile.screens.index(qtile.current_screen)
     group = qtile.screens[i - 1].group
@@ -182,3 +184,11 @@ def switch_screens(qtile):
 def autostart():
     autostart_script = os.path.expanduser('~/.config/qtile/autostart.sh')
     subprocess.call([autostart_script])
+
+
+@hook.subscribe.client_new
+def client_new(client):
+    if client.name in ('qutebrowser', 'firefox'):
+        client.togroup('browser')
+    elif client.name == 'Slack':
+        client.togroup('slack')
