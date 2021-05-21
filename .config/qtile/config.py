@@ -109,9 +109,14 @@ LAYOUT_KWARGS = {
     'margin': 10
 }
 layouts = [
-    layout.Tile(**LAYOUT_KWARGS),
+    layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
     layout.MonadTall(**LAYOUT_KWARGS),
-    layout.Stack(**LAYOUT_KWARGS, num_stacks=1)
+    layout.Tile(**LAYOUT_KWARGS),
+    layout.MonadWide(**LAYOUT_KWARGS),
+    layout.Max(**LAYOUT_KWARGS),
+    layout.VerticalTile(**LAYOUT_KWARGS),
+    layout.RatioTile(**LAYOUT_KWARGS),
+    layout.Matrix(**LAYOUT_KWARGS),
 ]
 
 widget_defaults = dict(
