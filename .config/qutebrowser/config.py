@@ -12,3 +12,15 @@ dracula.draw.blood(c, {
         'horizontal': 8
     }
 })
+
+c.auto_save.session = True
+
+# Fonts
+c.fonts.statusbar = '10pt Hermit'
+c.fonts.tabs.selected = '10pt Hermit'
+c.fonts.tabs.unselected = '10pt Hermit'
+c.fonts.prompts = '10pt Hermit'
+c.fonts.messages.error = '10pt Hermit'
+c.fonts.messages.info = '10pt Hermit'
+c.fonts.messages.warning = '10pt Hermit'
+c.fonts.hints = '12pt Hermit'
