@@ -10,6 +10,8 @@ SAVEHIST=1000
 bindkey  "^[[H"   beginning-of-line
 bindkey  "^[[4~"   end-of-line
 bindkey  "^[[P"   delete-char
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
 
 source ~/.zsh-scripts/interactive-cd.zsh
 # Load zsh-syntax-highlighting
