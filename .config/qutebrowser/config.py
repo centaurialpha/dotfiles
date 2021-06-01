@@ -16,6 +16,8 @@ dracula.draw.blood(c, {
 c.auto_save.session = True
 
 # Fonts
+c.fonts.completion.category = '12pt Hermit'
+c.fonts.completion.entry = '10pt Hermit'
 c.fonts.statusbar = '10pt Hermit'
 c.fonts.tabs.selected = '10pt Hermit'
 c.fonts.tabs.unselected = '10pt Hermit'

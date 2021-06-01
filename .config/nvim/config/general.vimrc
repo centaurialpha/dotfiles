@@ -6,8 +6,6 @@ let g:netrw_winsize = 20
 
 set noswapfile
 set clipboard+=unnamedplus
-" No wrap
-set nowrap
 set number
 set relativenumber
 set diffopt+=vertical
@@ -23,6 +21,7 @@ if (has("termguicolors"))
   set termguicolors
 endif
 colorscheme one
+
 " colorscheme dracula
 hi Normal guibg=#1e2127
 hi SignColumn guibg=#1e2127

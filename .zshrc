@@ -36,6 +36,9 @@ alias ls='ls --color=auto -la --human-readable'
 alias cat='bat --style=plain,grid,header --theme=Dracula'
 
 SPACESHIP_USER_SHOW=always
+SPACESHIP_CHAR_PREFIX='アーチ'
+SPACESHIP_EXEC_TIME_SHOW=false
+
 # Colors
 SPACESHIP_USER_COLOR="#ffb86c"
 SPACESHIP_CHAR_COLOR_SUCCESS="#50fa7b"
