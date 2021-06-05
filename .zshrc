@@ -31,9 +31,14 @@ alias {v,vim}='nvim'
 # dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 # ls with colors
-alias ls='ls --color=auto -la --human-readable'
+# alias ls='ls --color=auto -la --human-readable'
 # Bat instead of cat
 alias cat='bat --style=plain,grid,header --theme=Dracula'
+# ls to exa
+alias ls='exa -al --group-directories-first'
+alias la='exa -a --group-directories-first'
+alias ll='exa -l --group-directories-first'
+alias lt='exa -aT --group-directories-first'
 
 SPACESHIP_USER_SHOW=always
 SPACESHIP_CHAR_PREFIX='アーチ'
