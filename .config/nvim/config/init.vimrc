@@ -20,5 +20,5 @@ Plug 'voldikss/vim-translator'
 Plug 'cespare/vim-toml'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'vimwiki/vimwiki'
+Plug 'junegunn/limelight.vim'
 call plug#end()
