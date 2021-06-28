@@ -11,7 +11,6 @@ Plug 'vim-python/python-syntax'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'mboughaba/i3config.vim'
-Plug 'preservim/nerdtree'
 Plug 'stevearc/vim-arduino'
 Plug 'peterhoeg/vim-qml'
 Plug 'preservim/tagbar'
@@ -21,4 +20,5 @@ Plug 'cespare/vim-toml'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'junegunn/limelight.vim'
+Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
 call plug#end()

@@ -1,7 +1,7 @@
 " EXPLORER
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
-let g:netrw_browse_split = 3
+let g:netrw_browse_split = 4
 let g:netrw_winsize = 20
 
 set noswapfile
@@ -31,3 +31,4 @@ autocmd BufWritePre * :%s/\s\+$//e
 " YAML
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType c,cpp,json,qs setlocal ts=4 sts=4 sw=4 expandtab
+autocmd BufRead,BufNewFile *.htm,*.html setlocal tabstop=2 shiftwidth=2 softtabstop=2

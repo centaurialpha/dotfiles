@@ -85,7 +85,8 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(),
         desc="Spawn a command using a prompt widget"),
-    Key([mod], "d", lazy.spawn("dmenu_run"))
+    Key([mod], "d", lazy.spawn("dmenu_run")),
+    Key([mod], "n", lazy.next_screen())
 ]
 
 
@@ -114,7 +115,6 @@ layouts = [
     layout.Tile(**LAYOUT_KWARGS),
     layout.MonadWide(**LAYOUT_KWARGS),
     layout.Max(**LAYOUT_KWARGS),
-    layout.VerticalTile(**LAYOUT_KWARGS),
     layout.RatioTile(**LAYOUT_KWARGS),
     layout.Matrix(**LAYOUT_KWARGS),
 ]
@@ -127,20 +127,11 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 # NOTE: waffle siji icons font is needed
-# d = display.Display()
-# s = d.screen()
-# screen_resources = s.root.xrandr_get_screen_resources()
-#
-# num_monitors = 0
-# for output in screen_resources._data['outputs']:
-#     monitor = d.xrandr_get_output_info(output, screen_resources._data['config_timestamp'])._data
-#     if monitor['num_preferred']:
-#         num_monitors += 1
-
-screens = [Screen(top=bar.Bar(widgets.copy(), 24, background='#030303'))]
-
-# if num_monitors > 1:
-#     screens.insert(0, Screen())
+all_widgets = widgets.copy()
+top_primary = bar.Bar(all_widgets, 24)
+screens = [
+    Screen(top=top_primary)
+]
 
 # Drag floating layouts.
 mouse = [
@@ -187,6 +178,14 @@ def switch_screens(qtile):
     qtile.current_screen.set_group(group)
 
 
+@hook.subscribe.startup_complete
+def on_startup_complete():
+    if lazy.conn.pseudoscreens > 1:
+        xrandr_cmd = ['xrandr', '--output', 'HDMI-2', '--primary', '--mode', '1920x1080', '--right-of', 'eDP-1']
+    else:
+        xrandr_cmd = ['xrandr', '--output', 'eDP-1', '--mode', '1920x1080']
+
+
 @hook.subscribe.startup_once
 def autostart():
     autostart_script = os.path.expanduser('~/.config/qtile/autostart.sh')
@@ -199,3 +198,20 @@ def client_new(client):
         client.togroup('browser')
     elif client.name == 'Slack':
         client.togroup('slack')
+
+
+def install_secondary_screen(qtile):
+    monitors_count = len(qtile.conn.pseudoscreens)
+    if monitors_count > 1:
+        second_screen_widgets = [
+            all_widgets[0],
+        ]
+        top_secondary = bar.Bar(second_screen_widgets, 24)
+        screens.append(Screen(top=top_secondary))
+
+        xrandr_cmd = ['xrandr', '--output', 'HDMI-2', '--primary', '--mode', '1920x1080', '--right-of', 'eDP-1']
+        subprocess.Popen(xrandr_cmd)
+
+
+def main(qtile):
+    install_secondary_screen(qtile)

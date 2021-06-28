@@ -31,6 +31,3 @@ let g:lightline = {
 let g:translator_target_lang='es'
 let g:translator_window_max_height=200
 let g:translator_window_max_width=200
-" VimWiki
-let g:vimwiki_list = [{'path': '~/vimwiki/',
-                      \ 'syntax': 'markdown', 'ext': '.md'}]
