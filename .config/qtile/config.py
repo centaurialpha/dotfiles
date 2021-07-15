@@ -139,7 +139,7 @@ mouse = [
          start=lazy.window.get_position()),
     Drag([mod], "Button3", lazy.window.set_size_floating(),
          start=lazy.window.get_size()),
-    Click([mod], "Button2", lazy.window.bring_to_front())
+    Click([mod], "Button1", lazy.window.bring_to_front())
 ]
 
 dgroups_key_binder = None
@@ -178,15 +178,6 @@ def switch_screens(qtile):
     qtile.current_screen.set_group(group)
 
 
-@hook.subscribe.startup_complete
-def on_startup_complete():
-    if lazy.conn.pseudoscreens > 1:
-        # xrandr_cmd = ['xrandr', '--output', 'HDMI-2', '--primary', '--mode', '--1920x1080', '--left-of', 'eDP-1']
-        xrandr_cmd = ['xrandr', '--output', 'eDP-1', '--mode', '1920x1080', '--right-of', 'HDMI-2', '--primary']
-    else:
-        xrandr_cmd = ['xrandr', '--output', 'eDP-1', '--mode', '1920x1080']
-
-
 @hook.subscribe.startup_once
 def autostart():
     autostart_script = os.path.expanduser('~/.config/qtile/autostart.sh')
@@ -210,8 +201,13 @@ def install_secondary_screen(qtile):
         top_secondary = bar.Bar(second_screen_widgets, 24)
         screens.append(Screen(top=top_secondary))
 
-        # xrandr_cmd = ['xrandr', '--output', 'HDMI-2', '--primary', '--mode', '--1920x1080', '--left-of', 'eDP-1']
-        xrandr_cmd = ['xrandr', '--output', 'eDP-1', '--mode', '1920x1080', '--right-of', 'HDMI-2', '--primary']
+        xrandr_cmd_str = (
+            'xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 '
+            '--rotate normal --output DP-1 --off --output HDMI-1 '
+            '--off --output DP-2 --off --output HDMI-2 --primary '
+            '--mode 1920x1080 --pos 0x0 --rotate normal'
+        )
+        xrandr_cmd = xrandr_cmd_str.split()
         subprocess.Popen(xrandr_cmd)
 
 
