@@ -19,6 +19,7 @@ Plug 'voldikss/vim-translator'
 Plug 'cespare/vim-toml'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'junegunn/limelight.vim'
-Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
+" HTML & CSS
+Plug 'mattn/emmet-vim'
+Plug 'turbio/bracey.vim'
 call plug#end()

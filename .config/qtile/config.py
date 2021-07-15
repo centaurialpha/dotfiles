@@ -107,7 +107,7 @@ for i, group in enumerate(groups, 1):
 LAYOUT_KWARGS = {
     'border_focus': '#bd93f9',
     'border_width': 1,
-    'margin': 10
+    'margin': 20
 }
 layouts = [
     layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
@@ -181,7 +181,8 @@ def switch_screens(qtile):
 @hook.subscribe.startup_complete
 def on_startup_complete():
     if lazy.conn.pseudoscreens > 1:
-        xrandr_cmd = ['xrandr', '--output', 'HDMI-2', '--primary', '--mode', '1920x1080', '--right-of', 'eDP-1']
+        # xrandr_cmd = ['xrandr', '--output', 'HDMI-2', '--primary', '--mode', '--1920x1080', '--left-of', 'eDP-1']
+        xrandr_cmd = ['xrandr', '--output', 'eDP-1', '--mode', '1920x1080', '--right-of', 'HDMI-2', '--primary']
     else:
         xrandr_cmd = ['xrandr', '--output', 'eDP-1', '--mode', '1920x1080']
 
@@ -209,7 +210,8 @@ def install_secondary_screen(qtile):
         top_secondary = bar.Bar(second_screen_widgets, 24)
         screens.append(Screen(top=top_secondary))
 
-        xrandr_cmd = ['xrandr', '--output', 'HDMI-2', '--primary', '--mode', '1920x1080', '--right-of', 'eDP-1']
+        # xrandr_cmd = ['xrandr', '--output', 'HDMI-2', '--primary', '--mode', '--1920x1080', '--left-of', 'eDP-1']
+        xrandr_cmd = ['xrandr', '--output', 'eDP-1', '--mode', '1920x1080', '--right-of', 'HDMI-2', '--primary']
         subprocess.Popen(xrandr_cmd)
 
 

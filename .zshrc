@@ -41,7 +41,7 @@ alias ll='exa -l --group-directories-first'
 alias lt='exa -aT --group-directories-first'
 
 SPACESHIP_USER_SHOW=always
-SPACESHIP_CHAR_PREFIX='アーチ'
+# SPACESHIP_CHAR_PREFIX='アーチ'
 SPACESHIP_EXEC_TIME_SHOW=false
 
 # Colors
