@@ -28,8 +28,7 @@ import subprocess
 
 from typing import List  # noqa: F401
 
-from Xlib import display
-
+from libqtile.log_utils import logger
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
@@ -91,12 +90,12 @@ keys = [
 
 
 groups = [
-    Group(name='dev', label=''),
+    Group(name='dev', label=''),
     Group(name='slack', label=''),
     Group(name='browser', label=''),
-    Group(name='jira', label=''),
-    Group(name='python', label=''),
-    Group(name='sys', label=''),
+    Group(name='todo', label=''),
+    Group(name='python', label=''),
+    Group(name='sys', label=''),
     Group(name='irc', label=''),
 ]
 for i, group in enumerate(groups, 1):
@@ -107,7 +106,7 @@ for i, group in enumerate(groups, 1):
 LAYOUT_KWARGS = {
     'border_focus': '#bd93f9',
     'border_width': 1,
-    'margin': 20
+    'margin': 6
 }
 layouts = [
     layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
@@ -116,7 +115,7 @@ layouts = [
     layout.MonadWide(**LAYOUT_KWARGS),
     layout.Max(**LAYOUT_KWARGS),
     layout.RatioTile(**LAYOUT_KWARGS),
-    layout.Matrix(**LAYOUT_KWARGS),
+    layout.Matrix(columns=2, **LAYOUT_KWARGS),
 ]
 
 widget_defaults = dict(
@@ -130,7 +129,7 @@ extension_defaults = widget_defaults.copy()
 all_widgets = widgets.copy()
 top_primary = bar.Bar(all_widgets, 24)
 screens = [
-    Screen(top=top_primary)
+    Screen(top=top_primary),
 ]
 
 # Drag floating layouts.
@@ -139,7 +138,8 @@ mouse = [
          start=lazy.window.get_position()),
     Drag([mod], "Button3", lazy.window.set_size_floating(),
          start=lazy.window.get_size()),
-    Click([mod], "Button1", lazy.window.bring_to_front())
+    #
+Click([mod], "Button1", lazy.window.bring_to_front())
 ]
 
 dgroups_key_binder = None
@@ -193,23 +193,44 @@ def client_new(client):
 
 
 def install_secondary_screen(qtile):
-    monitors_count = len(qtile.conn.pseudoscreens)
-    if monitors_count > 1:
-        second_screen_widgets = [
-            all_widgets[0],
-        ]
-        top_secondary = bar.Bar(second_screen_widgets, 24)
-        screens.append(Screen(top=top_secondary))
+    pass
+    # FIXME: esto ya no funciona, cambio la API?
+    # monitors_count = len(qtile.conn.pseudoscreens)
+    # if monitors_count > 1:
+    #     second_screen_widgets = [
+    #         all_widgets[0],
+    #     ]
+    #     top_secondary = bar.Bar(second_screen_widgets, 24)
+    #     screens.append(Screen(top=top_secondary))
 
-        xrandr_cmd_str = (
-            'xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 '
-            '--rotate normal --output DP-1 --off --output HDMI-1 '
-            '--off --output DP-2 --off --output HDMI-2 --primary '
-            '--mode 1920x1080 --pos 0x0 --rotate normal'
-        )
-        xrandr_cmd = xrandr_cmd_str.split()
-        subprocess.Popen(xrandr_cmd)
+    #     xrandr_cmd_str = (
+    #         'xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 '
+    #         '--rotate normal --output DP-1 --off --output HDMI-1 '
+    #         '--off --output DP-2 --off --output HDMI-2 --primary '
+    #         '--mode 1920x1080 --pos 0x0 --rotate normal'
+    #     )
+    #     xrandr_cmd = xrandr_cmd_str.split()
+    #     subprocess.Popen(xrandr_cmd)
 
 
-def main(qtile):
-    install_secondary_screen(qtile)
+def init_secondary_screen():
+    second_screen_widgets = [
+        all_widgets[0],
+    ]
+    top_secondary = bar.Bar(second_screen_widgets, 24)
+    screens.append(Screen(top=top_secondary))
+
+    xrandr_cmd_str = (
+        'xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 '
+        '--rotate normal --output DP-1 --off --output HDMI-1 '
+        '--off --output DP-2 --off --output HDMI-2 --primary '
+        '--mode 1920x1080 --pos 0x0 --rotate normal'
+    )
+    xrandr_cmd = xrandr_cmd_str.split()
+    subprocess.Popen(xrandr_cmd)
+
+# def main(qtile):
+# install_secondary_screen(lazy)
+
+if __name__ in ('config', '__main__'):
+    init_secondary_screen()

@@ -3,6 +3,9 @@ pfetch
 # Installed by AUR
 export SPACESHIP_ROOT=/usr/lib/spaceship-prompt
 
+# Ignore pyc files with RipGrep
+export FZF_DEFAULT_COMMAND="rg --files --follow -g '!*.pyc'"
+
 HISTFILE=~/.cache/zsh/history
 HISTSIZE=1000
 SAVEHIST=1000
@@ -28,6 +31,8 @@ PATH=~/.local/bin:$PATH
 
 # Aliases
 alias {v,vim}='nvim'
+# Arch pkg system
+alias pacman='sudo pacman'
 # dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 # ls with colors

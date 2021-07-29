@@ -6,7 +6,7 @@ Plug 'davidhalter/jedi-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 Plug 'nvie/vim-flake8'
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
 Plug 'vim-python/python-syntax'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Vimjas/vim-python-pep8-indent'
@@ -22,4 +22,6 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 " HTML & CSS
 Plug 'mattn/emmet-vim'
 Plug 'turbio/bracey.vim'
+" RUST
+Plug 'rust-lang/rust.vim'
 call plug#end()

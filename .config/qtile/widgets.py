@@ -2,8 +2,12 @@ from libqtile import widget
 
 
 group_box = widget.GroupBox(
-    borderwidth=2,
+    borderwidth=1,
+    fontsize=15,
+    padding_y=3,
+    padding_x=3,
     highlight_method='block',
+    urgent_alert_method='block',
     this_current_screen_border='#7e57c2',
     this_screen_border='#ffb86c',
     other_current_screen_border='#7e57c2',
@@ -23,7 +27,7 @@ clock = widget.Clock(
     foreground='#dddddd',
     format='%I:%M %p'
 )
-layout_icon = widget.TextBox(text=' ', foreground='#fbc02d')
+layout_icon = widget.TextBox(text=' ﯸ', foreground='#fbc02d')
 current_layout = widget.CurrentLayout(foreground='#dddddd')
 baterry_icon = widget.TextBox(text=' ', foreground='#c1c766')
 baterry = widget.Battery(
@@ -33,11 +37,11 @@ baterry = widget.Battery(
     discharge_char='D',
     full_char='F',
 )
-thermal_icon = widget.TextBox(text=' ', foreground='#ba68c8')
+thermal_icon = widget.TextBox(text=' ', foreground='#ba68c8')
 thermal = widget.ThermalSensor(foreground='#dddddd')
 cpu_icon = widget.TextBox(text=' ', foreground='#ec407a')
 cpu = widget.CPU(foreground='#dddddd', update_interval=5.0)
-volume_icon = widget.TextBox(text=' ', foreground='#ec7875')
+volume_icon = widget.TextBox(text=' ', foreground='#ec7875')
 volume = widget.Volume(
     foreground='#dddddd',
     get_volume_command=['amixer', '-D', 'default', '-M', 'sget', 'Master'],
