@@ -1,13 +1,9 @@
 # dotfiles
 
-- OS: Arch Linux
-- Browser: qutebrowser
-- Shell: zsh
-- Terminal: st
+- OS: [Arch Linux](https://archlinux.org/)
+- Browser: [qutebrowser](https://qutebrowser.org/)
+- Shell: [zsh](https://www.zsh.org/)
+- Terminal: [st](https://st.suckless.org/)
 
-## i3-gaps
-![screenshot](screenshot_dotfiles.png)
-
-
-## qtile
+## screenshot
 ![screenshot qtile](screenshot-dotfiles-qtile.png)
