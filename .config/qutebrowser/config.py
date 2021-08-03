@@ -1,6 +1,6 @@
 import dracula.draw
 
-config.load_autoconfig(False)
+config.load_autoconfig()
 
 # Default home page
 c.url.default_page = 'https://google.com.ar'
