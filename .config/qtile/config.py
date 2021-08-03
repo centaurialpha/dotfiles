@@ -28,8 +28,7 @@ import subprocess
 
 from typing import List  # noqa: F401
 
-from libqtile.log_utils import logger
-from libqtile import bar, layout, widget, hook
+from libqtile import bar, layout, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 
@@ -90,13 +89,15 @@ keys = [
 
 
 groups = [
-    Group(name='dev', label=''),
-    Group(name='slack', label=''),
-    Group(name='browser', label=''),
-    Group(name='todo', label=''),
-    Group(name='python', label=''),
-    Group(name='sys', label=''),
-    Group(name='irc', label=''),
+    Group(name='dev', label=''),
+    Group(name='slack', label=''),
+    Group(name='browser', label=''),
+    Group(name='sys', label=''),
+    Group(name='vbox', label=''),
+    Group(name='misc', label=''),
+    Group(name='misc2', label=''),
+    Group(name='misc3', label=''),
+    Group(name='misc4', label=''),
 ]
 for i, group in enumerate(groups, 1):
     keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
@@ -119,7 +120,7 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font='Hermit',
+    font='IBM Plex Mono',
     fontsize=12,
     padding=3,
 )
@@ -138,8 +139,7 @@ mouse = [
          start=lazy.window.get_position()),
     Drag([mod], "Button3", lazy.window.set_size_floating(),
          start=lazy.window.get_size()),
-    #
-Click([mod], "Button1", lazy.window.bring_to_front())
+    Click([mod], "Button1", lazy.window.bring_to_front())
 ]
 
 dgroups_key_binder = None
@@ -185,52 +185,44 @@ def autostart():
 
 
 @hook.subscribe.client_new
-def client_new(client):
+def on_client_new(client):
     if client.name in ('qutebrowser', 'firefox'):
         client.togroup('browser')
     elif client.name == 'Slack':
         client.togroup('slack')
 
 
-def install_secondary_screen(qtile):
-    pass
-    # FIXME: esto ya no funciona, cambio la API?
-    # monitors_count = len(qtile.conn.pseudoscreens)
-    # if monitors_count > 1:
-    #     second_screen_widgets = [
-    #         all_widgets[0],
-    #     ]
-    #     top_secondary = bar.Bar(second_screen_widgets, 24)
-    #     screens.append(Screen(top=top_secondary))
-
-    #     xrandr_cmd_str = (
-    #         'xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 '
-    #         '--rotate normal --output DP-1 --off --output HDMI-1 '
-    #         '--off --output DP-2 --off --output HDMI-2 --primary '
-    #         '--mode 1920x1080 --pos 0x0 --rotate normal'
-    #     )
-    #     xrandr_cmd = xrandr_cmd_str.split()
-    #     subprocess.Popen(xrandr_cmd)
+def count_monitors() -> int:
+    # FIXME: con qtile.conn.pseudomonitors era un toque más rápido
+    # FIXME: pero dejó de andar(?
+    monitors_count_cmd = "xrandr | grep -w 'connected' | cut -d ' ' -f 2 | wc -l"
+    command = subprocess.run(
+        monitors_count_cmd,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+    return int(command.stdout.decode())
 
 
 def init_secondary_screen():
-    second_screen_widgets = [
-        all_widgets[0],
-    ]
-    top_secondary = bar.Bar(second_screen_widgets, 24)
-    screens.append(Screen(top=top_secondary))
+    monitors_count = count_monitors()
+    if monitors_count > 1:
+        second_screen_widgets = [
+            all_widgets[0],
+        ]
+        top_secondary = bar.Bar(second_screen_widgets, 24)
+        screens.append(Screen(top=top_secondary))
 
-    xrandr_cmd_str = (
-        'xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 '
-        '--rotate normal --output DP-1 --off --output HDMI-1 '
-        '--off --output DP-2 --off --output HDMI-2 --primary '
-        '--mode 1920x1080 --pos 0x0 --rotate normal'
-    )
-    xrandr_cmd = xrandr_cmd_str.split()
-    subprocess.Popen(xrandr_cmd)
+        xrandr_cmd_str = (
+            'xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 '
+            '--rotate normal --output DP-1 --off --output HDMI-1 '
+            '--off --output DP-2 --off --output HDMI-2 --primary '
+            '--mode 1920x1080 --pos 0x0 --rotate normal'
+        )
+        xrandr_cmd = xrandr_cmd_str.split()
+        subprocess.Popen(xrandr_cmd)
 
-# def main(qtile):
-# install_secondary_screen(lazy)
 
 if __name__ in ('config', '__main__'):
     init_secondary_screen()

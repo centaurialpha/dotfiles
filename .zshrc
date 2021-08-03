@@ -33,6 +33,8 @@ PATH=~/.local/bin:$PATH
 alias {v,vim}='nvim'
 # Arch pkg system
 alias pacman='sudo pacman'
+# Turn on bluetooth
+alias bon='sudo ~/turn_on_bluetooth.sh'
 # dotfiles management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 # ls with colors
