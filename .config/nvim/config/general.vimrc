@@ -32,3 +32,19 @@ autocmd BufWritePre * :%s/\s\+$//e
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType c,cpp,json,qs setlocal ts=4 sts=4 sw=4 expandtab
 autocmd BufRead,BufNewFile *.htm,*.html setlocal tabstop=2 shiftwidth=2 softtabstop=2
+
+
+" Zoom / Restore window.
+function! s:ZoomToggle() abort
+    if exists('t:zoomed') && t:zoomed
+        execute t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        resize
+        vertical resize
+        let t:zoomed = 1
+    endif
+endfunction
+command! ZoomToggle call s:ZoomToggle()
+nnoremap <silent> <C-A> :ZoomToggle<CR>

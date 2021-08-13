@@ -31,3 +31,5 @@ let g:lightline = {
 let g:translator_target_lang='es'
 let g:translator_window_max_height=200
 let g:translator_window_max_width=200
+" Black Python Formatter
+let g:black_linelength = 120
