@@ -1,10 +1,11 @@
 pfetch
 
-# Installed by AUR
-export SPACESHIP_ROOT=/usr/lib/spaceship-prompt
+## EXPORT
+export SPACESHIP_ROOT=/usr/lib/spaceship-prompt # Installed by AUR
+export FZF_DEFAULT_COMMAND="rg --files --follow -g '!*.pyc'" # Ignore pyc files with RipGrep
+export TERM="xterm-256color"
+export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
 
-# Ignore pyc files with RipGrep
-export FZF_DEFAULT_COMMAND="rg --files --follow -g '!*.pyc'"
 
 HISTFILE=~/.cache/zsh/history
 HISTSIZE=1000
@@ -16,12 +17,9 @@ bindkey  "^[[P"   delete-char
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 
-source ~/.zsh-scripts/interactive-cd.zsh
-# Load zsh-syntax-highlighting
+source ~/.zsh-scripts/interactive-cd.zsh # Load zsh-syntax-highlighting
 source ~/.zsh-scripts/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-# source ~/.zsh-scripts/syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-# Load zsh-autosuggestions
-source ~/.zsh-scripts/autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+source ~/.zsh-scripts/autosuggestions/zsh-autosuggestions.zsh 2>/dev/null # Load zsh-autosuggestions
 # Load completions
 fpath=(~/.zsh-scripts/completions/src $fpath)
 autoload -U compinit; compinit
@@ -31,26 +29,24 @@ PATH=~/.local/bin:$PATH
 
 # Aliases
 alias {v,vim}='nvim'
-# Arch pkg system
-alias pacman='sudo pacman'
-# Turn on bluetooth
-alias bon='sudo ~/turn_on_bluetooth.sh'
-# dotfiles management
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-# ls with colors
-# alias ls='ls --color=auto -la --human-readable'
-# Bat instead of cat
-alias cat='bat --style=plain,grid,header --theme=Dracula'
+alias pacman='sudo pacman' # Arch pkg system
+alias bon='sudo ~/turn_on_bluetooth.sh' # Turn on bluetooth
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # dotfiles management
+alias cat='bat --style=plain,grid,header --theme=Dracula' # Bat instead of cat
 # ls to exa
 alias ls='exa -al --group-directories-first'
 alias la='exa -a --group-directories-first'
 alias ll='exa -l --group-directories-first'
 alias lt='exa -aT --group-directories-first'
+# Git
+alias addall='git add .'
+alias pull='git pull origin'
+alias push='git push origin'
+alias gstat='git status'
 
+# SPACESHIP CONFIG
 SPACESHIP_USER_SHOW=always
-# SPACESHIP_CHAR_PREFIX='アーチ'
 SPACESHIP_EXEC_TIME_SHOW=false
-
 # Colors
 SPACESHIP_USER_COLOR="#ffb86c"
 SPACESHIP_CHAR_COLOR_SUCCESS="#50fa7b"
