@@ -6,7 +6,6 @@ export FZF_DEFAULT_COMMAND="rg --files --follow -g '!*.pyc'" # Ignore pyc files 
 export TERM="xterm-256color"
 export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
 
-
 HISTFILE=~/.cache/zsh/history
 HISTSIZE=1000
 SAVEHIST=1000
@@ -91,3 +90,5 @@ fi
 
 autoload -U promptinit; promptinit
 prompt spaceship
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
