@@ -210,6 +210,7 @@ def init_secondary_screen():
     if monitors_count > 1:
         second_screen_widgets = [
             all_widgets[0],
+            all_widgets[-1],  # clock
         ]
         top_secondary = bar.Bar(second_screen_widgets, 24)
         screens.append(Screen(top=top_secondary))
