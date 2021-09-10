@@ -10,7 +10,7 @@
 - File Manager: [ranger](https://ranger.github.io/)
 - Compositor: [picom](https://github.com/yshui/picom)
 
-## screenshot
+## Screenshot
 ![screenshot qtile](screenshot-dotfiles-qtile.png)
 
 ## How to install
