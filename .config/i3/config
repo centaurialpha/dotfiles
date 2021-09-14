@@ -5,7 +5,7 @@ new_float pixel 1
 
 # Needed for i3-gaps
 for_window [class="^.*"] border pixel 0
-for_window [class="Alacritty"] border pixel 1
+for_window [class="st"] border pixel 1
 gaps inner 7
 gaps outer 7
 
@@ -15,7 +15,7 @@ font pango:Hermit 12
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec --no-startup-id alacritty
+bindsym $mod+Return exec --no-startup-id st
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -29,11 +29,11 @@ bindsym XF86MonBrightnessUp exec --no-startup-id light -A 5
 bindsym XF86MonBrightnessDown exec --no-startup-id light -U 5
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop -dmenu="dmenu -b -i -fn 'ProFont for Powerline-14' -nb '#282a36' -sf  '#f8f8f2' -sb '#44475a' -nf '#bd93f9'"
+bindsym $mod+d exec --no-startup-id dmenu_run
 # Power script
-bindsym $mod+Shift+x exec --no-startup-id ~/.scripts/power
+# bindsym $mod+Shift+x exec --no-startup-id ~/.scripts/power
 # MR script
-bindsym $mod+m exec --no-startup-id ~/satellogic/emeere/emeere
+# bindsym $mod+m exec --no-startup-id ~/satellogic/emeere/emeere
 
 # change focus
 bindsym $mod+j focus left
@@ -137,12 +137,13 @@ mode "resize" {
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
+bar {
+        status_command i3status
+}
 
 bindsym $mod+r mode "resize"
 
-exec --no-startup-id feh --bg-scale ~/Pictures/minimalist/galaxy.jpg
-exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec --no-startup-id feh --bg-scale ~/Pictures/wallpapers/1.jpg
+# exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec --no-startup-id dunst -config .config/dunst/dunstrc
-exec --no-startup-id picom --config ~/.config/picom/picom.conf --experimental-backends
-
-# bindsym $mod+p exec --no-startup-id ~/.scripts/i3locko
+exec --no-startup-id picom

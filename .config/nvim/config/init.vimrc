@@ -25,4 +25,6 @@ Plug 'mattn/emmet-vim'
 Plug 'turbio/bracey.vim'
 " RUST
 Plug 'rust-lang/rust.vim'
+
+Plug 'dbeniamine/cheat.sh-vim'
 call plug#end()

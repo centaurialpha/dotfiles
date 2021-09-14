@@ -7,8 +7,8 @@ let g:jedi#force_py_version = 3
 let g:python_highlight_all = 1
 
 "ARDUINO
-let g:arduino_cmd = '/home/gabox/arduino-1.8.13/arduino'
-let g:arduino_dir = '/home/gabox/arduino-1.8.13'
+let g:arduino_cmd = '/usr/share/arduino/arduino'
+let g:arduino_dir = '/usr/share/arduino/'
 
 let g:fzf_colors = {'border': ['fg', 'Comment']}
 

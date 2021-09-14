@@ -89,15 +89,15 @@ keys = [
 
 
 groups = [
-    Group(name='dev', label=''),
-    Group(name='slack', label=''),
-    Group(name='browser', label=''),
-    Group(name='sys', label=''),
-    Group(name='vbox', label=''),
-    Group(name='misc', label=''),
-    Group(name='misc2', label=''),
-    Group(name='misc3', label=''),
-    Group(name='misc4', label=''),
+    Group(name='dev', label='I'),
+    Group(name='slack', label='II'),
+    Group(name='browser', label='III'),
+    Group(name='sys', label='IV'),
+    Group(name='vbox', label='V'),
+    Group(name='misc', label='VI'),
+    Group(name='misc2', label='VII'),
+    Group(name='misc3', label='VIII'),
+    Group(name='misc4', label='IX'),
 ]
 for i, group in enumerate(groups, 1):
     keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
