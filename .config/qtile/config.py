@@ -83,21 +83,21 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(),
         desc="Spawn a command using a prompt widget"),
-    Key([mod], "d", lazy.spawn("dmenu_run")),
+    Key([mod], "d", lazy.spawn("rofi -show drun")),
     Key([mod], "n", lazy.next_screen())
 ]
 
 
 groups = [
-    Group(name='dev', label='I'),
-    Group(name='slack', label='II'),
-    Group(name='browser', label='III'),
-    Group(name='sys', label='IV'),
-    Group(name='vbox', label='V'),
-    Group(name='misc', label='VI'),
-    Group(name='misc2', label='VII'),
-    Group(name='misc3', label='VIII'),
-    Group(name='misc4', label='IX'),
+    Group(name='dev', label=''),
+    Group(name='slack', label=''),
+    Group(name='browser', label=''),
+    Group(name='sys', label=''),
+    Group(name='vbox', label=''),
+    Group(name='misc', label=''),
+    Group(name='misc2', label=''),
+    Group(name='misc3', label=''),
+    Group(name='misc4', label=''),
 ]
 for i, group in enumerate(groups, 1):
     keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
@@ -120,15 +120,14 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font='IBM Plex Mono',
+    font='Hermit',
     fontsize=12,
-    padding=3,
+    padding=7,
 )
 extension_defaults = widget_defaults.copy()
 
-# NOTE: waffle siji icons font is needed
 all_widgets = widgets.copy()
-top_primary = bar.Bar(all_widgets, 24)
+top_primary = bar.Bar(all_widgets, 24, background="#1e222a")
 screens = [
     Screen(top=top_primary),
 ]
@@ -144,21 +143,15 @@ mouse = [
 
 dgroups_key_binder = None
 dgroups_app_rules = []  # type: List
-main = None  # WARNING: this is deprecated and will be removed soon
 follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
-auto_fullscreen = False
+auto_fullscreen = True
 focus_on_window_activation = "smart"
+reconfigure_screens = True
+respect_minimize_requests = True
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
-# string besides java UI toolkits; you can see several discussions on the
-# mailing lists, GitHub issues, and other WM documentation that suggest setting
-# this string if your java app doesn't work correctly. We may as well just lie
-# and say that we're a working one by default.
-#
-# We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
-# java that happens to be on java's whitelist.
 wmname = "qtile"
 
 
