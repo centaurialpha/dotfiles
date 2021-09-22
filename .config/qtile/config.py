@@ -29,13 +29,13 @@ import subprocess
 from typing import List  # noqa: F401
 
 from libqtile import bar, layout, hook
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, Screen
 from libqtile.lazy import lazy
 
 from widgets import widgets
 
 mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
-terminal = 'st'  # Suckless st
+terminal = "st"  # Suckless st
 
 keys = [
     # Switch between windows
@@ -43,72 +43,64 @@ keys = [
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "space", lazy.layout.next(),
-        desc="Move window focus to other window"),
-
+    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
-    Key([mod, "shift"], "h", lazy.layout.shuffle_left(),
-        desc="Move window to the left"),
-    Key([mod, "shift"], "l", lazy.layout.shuffle_right(),
-        desc="Move window to the right"),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down(),
-        desc="Move window down"),
+    Key(
+        [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
+    ),
+    Key(
+        [mod, "shift"],
+        "l",
+        lazy.layout.shuffle_right(),
+        desc="Move window to the right",
+    ),
+    Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
-    Key([mod, "control"], "h", lazy.layout.grow_left(),
-        desc="Grow window to the left"),
-    Key([mod, "control"], "l", lazy.layout.grow_right(),
-        desc="Grow window to the right"),
-    Key([mod, "control"], "j", lazy.layout.grow_down(),
-        desc="Grow window down"),
+    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key(
+        [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
+    ),
+    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
-
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
-    Key([mod, "shift"], "Return", lazy.layout.toggle_split(),
-        desc="Toggle between split and unsplit sides of stack"),
+    Key(
+        [mod, "shift"],
+        "Return",
+        lazy.layout.toggle_split(),
+        desc="Toggle between split and unsplit sides of stack",
+    ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
-
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "r", lazy.spawncmd(),
-        desc="Spawn a command using a prompt widget"),
+    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "d", lazy.spawn("rofi -show drun")),
-    Key([mod], "n", lazy.next_screen())
+    Key([mod], "n", lazy.next_screen()),
 ]
 
 
 groups = [
-    Group(name='dev', label=''),
-    Group(name='slack', label=''),
-    Group(name='browser', label=''),
-    Group(name='sys', label=''),
-    Group(name='vbox', label=''),
-    Group(name='misc', label=''),
-    Group(name='misc2', label=''),
-    Group(name='misc3', label=''),
-    Group(name='misc4', label=''),
+    Group(name="dev", label="⬤"),
+    Group(name="slack", label="⬤"),
+    Group(name="browser", label="⬤"),
+    Group(name="sys", label="⬤"),
+    Group(name="vbox", label="⬤"),
 ]
 for i, group in enumerate(groups, 1):
     keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
-    keys.append(Key([mod, 'shift'], str(i), lazy.window.togroup(group.name)))
+    keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(group.name)))
 
 
-LAYOUT_KWARGS = {
-    'border_focus': '#bd93f9',
-    'border_width': 1,
-    'margin': 6
-}
+LAYOUT_KWARGS = {"border_focus": "#bd93f9", "border_width": 1, "margin": 6}
 layouts = [
     layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
     layout.MonadTall(**LAYOUT_KWARGS),
@@ -120,7 +112,7 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font='Hermit',
+    font="Hermit",
     fontsize=12,
     padding=7,
 )
@@ -134,11 +126,16 @@ screens = [
 
 # Drag floating layouts.
 mouse = [
-    Drag([mod], "Button1", lazy.window.set_position_floating(),
-         start=lazy.window.get_position()),
-    Drag([mod], "Button3", lazy.window.set_size_floating(),
-         start=lazy.window.get_size()),
-    Click([mod], "Button1", lazy.window.bring_to_front())
+    Drag(
+        [mod],
+        "Button1",
+        lazy.window.set_position_floating(),
+        start=lazy.window.get_position(),
+    ),
+    Drag(
+        [mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()
+    ),
+    Click([mod], "Button1", lazy.window.bring_to_front()),
 ]
 
 dgroups_key_binder = None
@@ -163,16 +160,16 @@ def switch_screens(qtile):
 
 @hook.subscribe.startup_once
 def autostart():
-    autostart_script = os.path.expanduser('~/.config/qtile/autostart.sh')
+    autostart_script = os.path.expanduser("~/.config/qtile/autostart.sh")
     subprocess.call([autostart_script])
 
 
 @hook.subscribe.client_new
 def on_client_new(client):
-    if client.name in ('qutebrowser', 'firefox'):
-        client.togroup('browser')
-    elif client.name == 'Slack':
-        client.togroup('slack')
+    if client.name in ("qutebrowser", "firefox"):
+        client.togroup("browser")
+    elif client.name == "Slack":
+        client.togroup("slack")
 
 
 def count_monitors() -> int:
@@ -180,10 +177,7 @@ def count_monitors() -> int:
     # FIXME: pero dejó de andar(?
     monitors_count_cmd = "xrandr | grep -w 'connected' | cut -d ' ' -f 2 | wc -l"
     command = subprocess.run(
-        monitors_count_cmd,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        monitors_count_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     return int(command.stdout.decode())
 
@@ -199,14 +193,14 @@ def init_secondary_screen():
         screens.append(Screen(top=top_secondary))
 
         xrandr_cmd_str = (
-            'xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 '
-            '--rotate normal --output DP-1 --off --output HDMI-1 '
-            '--off --output DP-2 --off --output HDMI-2 --primary '
-            '--mode 1920x1080 --pos 0x0 --rotate normal'
+            "xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 "
+            "--rotate normal --output DP-1 --off --output HDMI-1 "
+            "--off --output DP-2 --off --output HDMI-2 --primary "
+            "--mode 1920x1080 --pos 0x0 --rotate normal"
         )
         xrandr_cmd = xrandr_cmd_str.split()
         subprocess.Popen(xrandr_cmd)
 
 
-if __name__ in ('config', '__main__'):
+if __name__ in ("config", "__main__"):
     init_secondary_screen()
