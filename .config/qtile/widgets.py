@@ -23,7 +23,7 @@ class PoweroffWidget(widget.base._TextBox):
         self.is_counting = False
         self.countdown = self.countdown_start
         self.text = self.default_text
-        for f in self.__call_later_funcs:
+        for f in self._call_later_funcs:
             f.cancel()
 
     def update(self):
