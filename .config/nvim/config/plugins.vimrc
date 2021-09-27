@@ -12,9 +12,11 @@ let g:arduino_dir = '/usr/share/arduino/'
 
 let g:fzf_colors = {'border': ['fg', 'Comment']}
 
+let g:palenight_terminal_italics=1
+
 " Configure lightline
 let g:lightline = {
-  \   'colorscheme': 'dracula',
+  \   'colorscheme': 'palenight',
   \   'active': {
   \     'left':[ [ 'mode', 'paste' ],
   \              [ 'gitbranch', 'readonly', 'filename', 'modified' ]

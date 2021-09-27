@@ -20,8 +20,9 @@ endif
 if (has("termguicolors"))
   set termguicolors
 endif
-colorscheme one
-
+set background=dark
+"colorscheme one
+colorscheme palenight
 " colorscheme dracula
 hi Normal guibg=#1e2127
 hi SignColumn guibg=#1e2127

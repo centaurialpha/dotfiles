@@ -38,7 +38,6 @@ class PoweroffWidget(widget.base._TextBox):
 
         if self.countdown == 0:
             import subprocess
-
             subprocess.call("poweroff", shell=True)
 
     def shutdown(self):
@@ -101,28 +100,26 @@ disk = widget.DF(
     format=" {uf}{m}|{r:.0f}%", foreground="#c678dd", visible_on_warn=False
 )
 memory = widget.Memory(
-    foreground="#7797b7", format="{MemUsed: .0f}", update_interval=5.0
+    foreground="#7797b7",
+    format="{MemUsed: .2f}{mm}",
+    update_interval=5.0
 )
-poweroff = PoweroffWidget(background="#ff5555", foreground="#1e222a")
 
 widgets = [
     layout_icon,
     current_layout,
+    group_box,
     prompt,
     window_name,
-    widget.Spacer(),
-    group_box,
-    widget.Spacer(),
-    widget.Spacer(),
+    clock_icon,
+    clock,
+    widget.Spacer(length=bar.STRETCH),
     disk,
     memory,
     widget.TextBox(text="CPU", foreground="#3b414d", background="#7ec7a2"),
     cpu,
     thermal,
     battery,
-    clock_icon,
-    clock,
     volume_icon,
     volume,
-    poweroff,
 ]
