@@ -28,7 +28,7 @@ import subprocess
 
 from typing import List  # noqa: F401
 
-from libqtile import bar, layout, hook
+from libqtile import bar, layout, hook, widget
 from libqtile.config import Click, Drag, Group, Key, Screen
 from libqtile.lazy import lazy
 
@@ -83,7 +83,7 @@ keys = [
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    Key([mod], "d", lazy.spawn("rofi -show drun")),
+    Key([mod], "d", lazy.spawn("dmenu_run -c -l 10")),
     Key([mod], "n", lazy.next_screen()),
 ]
 
@@ -186,8 +186,10 @@ def init_secondary_screen():
     monitors_count = count_monitors()
     if monitors_count > 1:
         second_screen_widgets = [
-            all_widgets[0],
-            all_widgets[-1],  # clock
+            widget.Spacer(length=bar.STRETCH),
+            all_widgets[5],
+            all_widgets[6],  # clock
+            widget.Spacer(length=bar.STRETCH),
         ]
         top_secondary = bar.Bar(second_screen_widgets, 24)
         screens.append(Screen(top=top_secondary))
