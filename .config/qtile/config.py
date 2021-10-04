@@ -83,7 +83,7 @@ keys = [
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    Key([mod], "d", lazy.spawn("dmenu_run -c -l 10")),
+    Key([mod], "d", lazy.spawn("dmenu_run -c -l 10 -bw 2")),
     Key([mod], "n", lazy.next_screen()),
 ]
 
