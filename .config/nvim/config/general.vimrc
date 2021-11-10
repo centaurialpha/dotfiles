@@ -9,6 +9,7 @@ set clipboard+=unnamedplus
 set number
 set relativenumber
 set diffopt+=vertical
+
 " COLOR SCHEME
 " For true colors in tmux and vim without issues
 if (empty($TMUX))
@@ -50,3 +51,4 @@ function! s:ZoomToggle() abort
 endfunction
 command! ZoomToggle call s:ZoomToggle()
 nnoremap <silent> <C-A> :ZoomToggle<CR>
+

@@ -19,6 +19,7 @@ bindkey "^[[1;5D" backward-word
 source ~/.zsh-scripts/interactive-cd.zsh # Load zsh-syntax-highlighting
 source ~/.zsh-scripts/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source ~/.zsh-scripts/autosuggestions/zsh-autosuggestions.zsh 2>/dev/null # Load zsh-autosuggestions
+source /home/gabox/.config/broot/launcher/bash/br
 # Load completions
 fpath=(~/.zsh-scripts/completions/src $fpath)
 autoload -U compinit; compinit
@@ -92,3 +93,4 @@ autoload -U promptinit; promptinit
 prompt spaceship
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+

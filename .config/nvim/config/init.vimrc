@@ -29,4 +29,6 @@ Plug 'mhinz/vim-startify'
 
 Plug 'dbeniamine/cheat.sh-vim'
 Plug 'drewtempelmeyer/palenight.vim'
+
+Plug 'farmergreg/vim-lastplace'
 call plug#end()
