@@ -25,7 +25,7 @@ set background=dark
 "colorscheme one
 colorscheme palenight
 " colorscheme dracula
-hi Normal guibg=#1e2127
+hi Normal guibg=#111111
 hi SignColumn guibg=#1e2127
 
 " REMOVE SPACES AFTER SAVE
