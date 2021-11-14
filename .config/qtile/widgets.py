@@ -1,4 +1,30 @@
+import subprocess
+
 from libqtile import widget, bar
+
+
+class IPAddressWidget(widget.base.ThreadPoolText):
+    orientations = widget.base.ORIENTATION_HORIZONTAL
+    defaults = [
+        ("update_interval", 900.0, "Update interval"),
+        (
+            "format",
+            "{text} {address}",
+        ),
+    ]
+
+    def __init__(self, text="", **config):
+        super().__init__("", **config)
+        self.add_defaults(IPAddressWidget.defaults)
+        self._text = text
+
+    def poll(self):
+        variables = {}
+        address = subprocess.run("ip r get 1 | head -1 | awk '{print $7}'", stdout=subprocess.PIPE, shell=True)
+        variables["address"] = address.stdout.decode().strip()
+        variables["text"] = self._text
+        return self.format.format(**variables)
+
 
 
 class PoweroffWidget(widget.base._TextBox):
@@ -114,6 +140,7 @@ widgets = [
     clock_icon,
     clock,
     widget.Spacer(length=bar.STRETCH),
+    # IPAddressWidget(background="#ff5555"),
     disk,
     memory,
     widget.TextBox(text="CPU", foreground="#3b414d", background="#7ec7a2"),
