@@ -1,12 +1,11 @@
 call plug#begin()
 Plug 'itchyny/lightline.vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf.vim'
 Plug 'davidhalter/jedi-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 Plug 'nvie/vim-flake8'
-" Plug 'airblade/vim-gitgutter'
 Plug 'vim-python/python-syntax'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Vimjas/vim-python-pep8-indent'
@@ -31,4 +30,8 @@ Plug 'dbeniamine/cheat.sh-vim'
 Plug 'drewtempelmeyer/palenight.vim'
 
 Plug 'farmergreg/vim-lastplace'
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
 call plug#end()
