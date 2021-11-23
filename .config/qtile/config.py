@@ -119,7 +119,7 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 all_widgets = widgets.copy()
-top_primary = bar.Bar(all_widgets, 24, background="#1e222a")
+top_primary = bar.Bar(all_widgets, 24, background="#111111")
 screens = [
     Screen(top=top_primary),
 ]
@@ -191,7 +191,7 @@ def init_secondary_screen():
             all_widgets[6],  # clock
             widget.Spacer(length=bar.STRETCH),
         ]
-        top_secondary = bar.Bar(second_screen_widgets, 24)
+        top_secondary = bar.Bar(second_screen_widgets, 24, background="#111111")
         screens.append(Screen(top=top_secondary))
 
         xrandr_cmd_str = (
