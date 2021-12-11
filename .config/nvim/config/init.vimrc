@@ -1,4 +1,5 @@
 call plug#begin()
+Plug 'preservim/nerdtree'
 Plug 'itchyny/lightline.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -13,7 +14,6 @@ Plug 'mboughaba/i3config.vim'
 Plug 'stevearc/vim-arduino'
 Plug 'peterhoeg/vim-qml'
 Plug 'preservim/tagbar'
-Plug 'rakr/vim-one'
 Plug 'voldikss/vim-translator'
 Plug 'cespare/vim-toml'
 Plug 'norcalli/nvim-colorizer.lua'
@@ -30,4 +30,6 @@ Plug 'dbeniamine/cheat.sh-vim'
 Plug 'drewtempelmeyer/palenight.vim'
 
 Plug 'farmergreg/vim-lastplace'
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 call plug#end()

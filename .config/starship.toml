@@ -1,0 +1,43 @@
+add_newline = false
+
+
+format = """
+$username\
+$hostname\
+$shlvl\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$shell\
+$time\
+$python\
+$status\
+$character"""
+
+right_format = """$status"""
+
+
+[status]
+disabled = false
+format = "[$symbol $status]($style) "
+
+[git_metrics]
+disabled = false
+
+[package]
+disabled = false
+
+[username]
+style_user = "#6272a4 bold"
+style_root = "red bold"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+
+[python]
+format = '[(\($virtualenv\) )]($style)'
+symbol = ""
+style = "blue"

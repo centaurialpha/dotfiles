@@ -11,3 +11,7 @@ nnoremap <C-_> :BLines<CR>
 
 " TagBar
 nnoremap <silent> <F8> :TagbarToggle<CR>
+
+" NERDTree
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>

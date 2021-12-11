@@ -2,7 +2,7 @@
 autocmd FileType python setlocal completeopt-=previewA
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 2
-let g:jedi#force_py_version = 3
+let g:jedi#force_py_version = '3'
 " PYTHON HIGHLIGHT
 let g:python_highlight_all = 1
 

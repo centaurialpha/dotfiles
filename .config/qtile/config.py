@@ -168,8 +168,6 @@ def autostart():
 def on_client_new(client):
     if client.name in ("qutebrowser", "firefox"):
         client.togroup("browser")
-    elif client.name == "Slack":
-        client.togroup("slack")
 
 
 def count_monitors() -> int:

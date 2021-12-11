@@ -5,6 +5,10 @@ end
 starship init fish | source
 
 set -gx TERM xterm-256color
+set -U fish_color_error ff5555
+set -U fish_color_command bd93f9  --bold
+set -U fish_color_param ffb86c
+
 # Aliases
 # Neo Vim
 alias vim="nvim"
