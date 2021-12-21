@@ -1,5 +1,5 @@
 #!/bin/bash
 
-feh --bg-fill ~/Pictures/wallpapers/man-telescope.jpg &
+feh --bg-fill ~/Pictures/wallpapers/interstellar.jpg &
 picom --experimental-backends &
 dunst -config ~/.config/dunst/dunstrc &
