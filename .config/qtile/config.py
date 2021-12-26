@@ -29,7 +29,7 @@ import subprocess
 from typing import List  # noqa: F401
 
 from libqtile import bar, layout, hook, widget
-from libqtile.config import Click, Drag, Group, Key, Screen
+from libqtile.config import Click, Drag, Group, Key, Screen, Match
 from libqtile.lazy import lazy
 
 from widgets import widgets
@@ -150,6 +150,16 @@ respect_minimize_requests = True
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
 wmname = "qtile"
+
+
+floating_layout = layout.Floating(float_rules=[
+    # Run the utility of `xprop` to see the wm class and name of an X client.
+    # default_float_rules include: utility, notification, toolbar, splash, dialog,
+    # file_progress, confirm, download and error.
+    *layout.Floating.default_float_rules,
+    Match(title="ESPlorer v0.2.0 by 4refr0nt"),
+    Match(wm_class="pinentry-qt"),
+])
 
 
 def switch_screens(qtile):
