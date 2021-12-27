@@ -1,6 +1,5 @@
 call plug#begin()
 Plug 'preservim/nerdtree'
-Plug 'itchyny/lightline.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'davidhalter/jedi-vim'
@@ -32,4 +31,7 @@ Plug 'drewtempelmeyer/palenight.vim'
 Plug 'farmergreg/vim-lastplace'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+Plug 'nvim-lualine/lualine.nvim'
+
 call plug#end()
