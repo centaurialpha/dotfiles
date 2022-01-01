@@ -5,6 +5,8 @@ end
 starship init fish | source
 
 set -gx TERM xterm-256color
+set -gx _JAVA_AWT_WM_NONREPARENTING 1
+set -gx AWT_TOOLKIT MToolkit
 set -U fish_color_error ff5555
 set -U fish_color_command bd93f9  --bold
 set -U fish_color_param ffb86c

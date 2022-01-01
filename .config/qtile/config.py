@@ -157,7 +157,7 @@ floating_layout = layout.Floating(float_rules=[
     # default_float_rules include: utility, notification, toolbar, splash, dialog,
     # file_progress, confirm, download and error.
     *layout.Floating.default_float_rules,
-    Match(title="ESPlorer v0.2.0 by 4refr0nt"),
+    # Match(title="ESPlorer v0.2.0 by 4refr0nt"),
     Match(wm_class="pinentry-qt"),
 ])
 
