@@ -15,6 +15,8 @@ set -U fish_color_param ffb86c
 # Neo Vim
 alias vim="nvim"
 alias v="nvim"
+
+alias ls="exa -l"
 # Dot files
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # dotfiles management
 # Turn on bluetooth
