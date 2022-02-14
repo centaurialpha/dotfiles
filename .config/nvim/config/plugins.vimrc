@@ -17,6 +17,7 @@ let g:palenight_terminal_italics=1
 lua << END
 require'lualine'.get_config()
 require'lualine'.setup()
+require'nvim-tree'.setup()
 -- Eviline config for lualine
 -- Author: shadmansaleh
 -- Credit: glepnir
@@ -226,5 +227,10 @@ END
 let g:translator_target_lang='es'
 let g:translator_window_max_height=200
 let g:translator_window_max_width=200
+
 " Black Python Formatter
 let g:black_linelength = 120
+
+" NvimTree
+let g:nvim_tree_git_hl = 1
+let g:nvim_tree_highlight_opened_files = 1

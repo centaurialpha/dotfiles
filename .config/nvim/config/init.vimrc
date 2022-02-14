@@ -1,5 +1,5 @@
 call plug#begin()
-Plug 'preservim/nerdtree'
+" Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'davidhalter/jedi-vim'
@@ -29,9 +29,10 @@ Plug 'dbeniamine/cheat.sh-vim'
 Plug 'drewtempelmeyer/palenight.vim'
 
 Plug 'farmergreg/vim-lastplace'
-Plug 'ryanoasis/vim-devicons'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-
+" Plug 'ryanoasis/vim-devicons'
+" Plug 'vwxyutarooo/nerdtree-devicons-syntax'
 Plug 'nvim-lualine/lualine.nvim'
 
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 call plug#end()

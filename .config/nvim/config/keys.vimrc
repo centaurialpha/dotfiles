@@ -13,5 +13,9 @@ nnoremap <C-k> :BTags<CR>
 nnoremap <silent> <F8> :TagbarToggle<CR>
 
 " NERDTree
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
+"nnoremap <leader>n :NERDTreeFocus<CR>
+"nnoremap <C-t> :NERDTreeToggle<CR>
+
+" NvimTree
+nnoremap <C-t> :NvimTreeToggle<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
