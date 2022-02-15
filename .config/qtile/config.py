@@ -83,7 +83,9 @@ keys = [
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    Key([mod], "d", lazy.spawn("dmenu_run -c -l 10 -bw 2")),
+    # Key([mod], "d", lazy.spawn("dmenu_run -c -l 10 -bw 2")),
+    Key([mod], "d", lazy.spawn("rofi -show drun -display-drun ''")),
+    Key(["control", "shift"], "a", lazy.spawn("rofi -show power-menu -modi \"power-menu:~/.rofi-scripts/power-menu --dry-run --choices=shutdown/reboot/logout\"")),
     Key([mod], "n", lazy.next_screen()),
 ]
 
