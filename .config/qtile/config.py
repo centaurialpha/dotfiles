@@ -114,9 +114,9 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="Hermit",
-    fontsize=12,
-    padding=7,
+    font="Siji,Hermit",
+    fontsize=14,
+    padding=10,
 )
 extension_defaults = widget_defaults.copy()
 

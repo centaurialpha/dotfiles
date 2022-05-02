@@ -6,9 +6,12 @@ let g:jedi#force_py_version = '3'
 " PYTHON HIGHLIGHT
 let g:python_highlight_all = 1
 
+let g:slime_target = "tmux"
+let g:slime_default_config = {"socket_name": "default", "target_pane": "{last}"}
 "ARDUINO
-let g:arduino_cmd = '/usr/share/arduino/arduino'
-let g:arduino_dir = '/usr/share/arduino/'
+let g:arduino_use_slime = 1
+"let g:arduino_cmd = '/usr/share/arduino/arduino'
+"let g:arduino_dir = '/usr/share/arduino/'
 
 let g:fzf_colors = {'border': ['fg', 'Comment']}
 

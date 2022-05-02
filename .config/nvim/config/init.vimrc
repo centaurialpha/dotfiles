@@ -35,4 +35,6 @@ Plug 'nvim-lualine/lualine.nvim'
 
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
+
+Plug 'jpalardy/vim-slime'
 call plug#end()

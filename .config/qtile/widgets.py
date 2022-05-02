@@ -77,7 +77,7 @@ class PoweroffWidget(widget.base._TextBox):
 
 group_box = widget.GroupBox(
     borderwidth=1,
-    padding_y=4,
+    padding_y=1,
     padding_x=5,
     highlight_method="block",
     urgent_alert_method="block",
@@ -149,4 +149,5 @@ widgets = [
     battery,
     volume_icon,
     volume,
+    widget.Systray(),
 ]
