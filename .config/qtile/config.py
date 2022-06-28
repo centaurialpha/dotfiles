@@ -102,11 +102,11 @@ for i, group in enumerate(groups, 1):
     keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(group.name)))
 
 
-LAYOUT_KWARGS = {"border_focus": "#bd93f9", "border_width": 1, "margin": 6}
+LAYOUT_KWARGS = {"border_focus": "#bd93f9", "border_width": 1, "margin": 10}
 layouts = [
+    layout.Tile(**LAYOUT_KWARGS),
     layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
     layout.MonadTall(**LAYOUT_KWARGS),
-    layout.Tile(**LAYOUT_KWARGS),
     layout.MonadWide(**LAYOUT_KWARGS),
     layout.Max(**LAYOUT_KWARGS),
     layout.RatioTile(**LAYOUT_KWARGS),
@@ -121,7 +121,7 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 all_widgets = widgets.copy()
-top_primary = bar.Bar(all_widgets, 24, background="#111111")
+top_primary = bar.Bar(all_widgets, 24, background="#1a1b26")
 screens = [
     Screen(top=top_primary),
 ]
@@ -145,7 +145,7 @@ dgroups_app_rules = []  # type: List
 follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
-auto_fullscreen = False
+auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
 respect_minimize_requests = True
@@ -161,6 +161,7 @@ floating_layout = layout.Floating(float_rules=[
     *layout.Floating.default_float_rules,
     # Match(title="ESPlorer v0.2.0 by 4refr0nt"),
     Match(wm_class="pinentry-qt"),
+    Match(wm_class="main.py")
 ])
 
 

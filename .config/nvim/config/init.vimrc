@@ -17,7 +17,7 @@ Plug 'voldikss/vim-translator'
 Plug 'cespare/vim-toml'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'psf/black', { 'branch': 'stable' }
+Plug 'psf/black'
 " HTML & CSS
 Plug 'mattn/emmet-vim'
 Plug 'turbio/bracey.vim'

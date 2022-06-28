@@ -14,7 +14,6 @@ $git_status\
 $shell\
 $time\
 $python\
-$status\
 $character"""
 
 right_format = """$status"""
@@ -31,7 +30,7 @@ disabled = false
 disabled = false
 
 [username]
-style_user = "#6272a4 bold"
+style_user = "red bold"
 style_root = "red bold"
 format = "[$user]($style) "
 disabled = false

@@ -110,17 +110,18 @@ battery = widget.Battery(
     full_char="",
     empty_char="",
 )
-thermal = widget.ThermalSensor(foreground="#e06c75", show_tag=True)
+thermal = widget.ThermalSensor(foreground="#0db9d7", foreground_alert="#ff5555", background="#353b45")
 cpu = widget.CPU(
     background="#353b45",
     foreground="#abb2bf",
     format="{freq_current}GHz",
     update_interval=5.0,
 )
-volume_icon = widget.TextBox(text="", foreground="#f1fa8c")
+volume_icon = widget.TextBox(text="", foreground="#caaa6a", padding=1)
 volume = widget.Volume(
-    foreground="#f1fa8c",
+    foreground="#caaa6a",
     get_volume_command=["amixer", "-D", "default", "-M", "sget", "Master"],
+    padding=1,
 )
 disk = widget.DF(
     format=" {uf}{m}|{r:.0f}%", foreground="#c678dd", visible_on_warn=False
@@ -139,6 +140,7 @@ widgets = [
     window_name,
     clock_icon,
     clock,
+    widget.Cmus(),
     widget.Spacer(length=bar.STRETCH),
     # IPAddressWidget(background="#ff5555"),
     disk,
