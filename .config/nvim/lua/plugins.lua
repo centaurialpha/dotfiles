@@ -1,9 +1,12 @@
-lua <<EOF
 local Plug = vim.fn['plug#']
 
-vim.call('plug#begin', '~/.config/nvim/plugged')
+vim.call('plug#begin')
 
-Plug('junegunn/fzf', { 'do': { -> fzf#install() } })
+Plug('junegunn/fzf', {
+    ['do'] = function()
+        vim.cmd('fzf#install')
+    end
+})
 Plug 'junegunn/fzf.vim'
 Plug 'davidhalter/jedi-vim'
 Plug 'tpope/vim-fugitive'
@@ -19,7 +22,7 @@ Plug 'preservim/tagbar'
 Plug 'voldikss/vim-translator'
 Plug 'cespare/vim-toml'
 Plug 'norcalli/nvim-colorizer.lua'
-Plug('dracula/vim', { 'as': 'dracula' })
+Plug('dracula/vim', { as = 'dracula' })
 Plug 'psf/black'
 Plug 'mhinz/vim-startify'
 Plug 'dbeniamine/cheat.sh-vim'
@@ -31,4 +34,3 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'jpalardy/vim-slime'
 
 vim.call('plug#end')
-EOF
