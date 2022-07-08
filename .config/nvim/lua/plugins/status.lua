@@ -1,29 +1,6 @@
-" JEDI CONFIGURATION
-autocmd FileType python setlocal completeopt-=previewA
-let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = 2
-let g:jedi#force_py_version = '3'
-" PYTHON HIGHLIGHT
-let g:python_highlight_all = 1
-
-let g:slime_target = "tmux"
-let g:slime_default_config = {"socket_name": "default", "target_pane": "{last}"}
-"ARDUINO
-let g:arduino_use_slime = 1
-"let g:arduino_cmd = '/usr/share/arduino/arduino'
-"let g:arduino_dir = '/usr/share/arduino/'
-
-let g:fzf_colors = {'border': ['fg', 'Comment']}
-
-let g:palenight_terminal_italics=1
-
-lua << END
 require'lualine'.get_config()
 require'lualine'.setup()
-require'nvim-tree'.setup()
--- Eviline config for lualine
--- Author: shadmansaleh
--- Credit: glepnir
+
 local lualine = require 'lualine'
 
 -- Color table for highlights
@@ -59,6 +36,7 @@ local conditions = {
 -- Config
 local config = {
   options = {
+    theme = 'onedark',
     -- Disable sections and component separators
     component_separators = '',
     section_separators = '',
@@ -223,17 +201,4 @@ ins_right {
   padding = { left = 1 },
 }
 
--- Now don't forget to initialize lualine
 lualine.setup(config)
-END
-" Configure target lang for translator plugin
-let g:translator_target_lang='es'
-let g:translator_window_max_height=200
-let g:translator_window_max_width=200
-
-" Black Python Formatter
-let g:black_linelength = 120
-
-" NvimTree
-let g:nvim_tree_git_hl = 1
-let g:nvim_tree_highlight_opened_files = 1
