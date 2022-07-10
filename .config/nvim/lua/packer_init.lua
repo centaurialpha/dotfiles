@@ -37,6 +37,7 @@ return packer.startup(function(use)
 
   use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
   use 'jose-elias-alvarez/null-ls.nvim'
+  use { 'ms-jpq/coq_nvim', run = 'python3 -m coq deps' }
 
   use {
     'ibhagwan/fzf-lua',
