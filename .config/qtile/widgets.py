@@ -140,7 +140,6 @@ widgets = [
     window_name,
     clock_icon,
     clock,
-    widget.Cmus(),
     widget.Spacer(length=bar.STRETCH),
     # IPAddressWidget(background="#ff5555"),
     disk,
