@@ -23,8 +23,8 @@ require('onedark').setup {
 			StartLogo9 = { fg = "#009bdb" },
 			StartLogo10 = { fg = "#00a3db" },
 			StartLogo11 = { fg = "#00a3db" },
+			StartLogo12 = { fg = "#00a3db" },
     }
   -- colors = { fg = '#b2bbcc' }, --default: #a0a8b7
 }
 require('onedark').load()
-

@@ -22,6 +22,7 @@ return packer.startup(function(use)
   }
 
   use 'navarasu/onedark.nvim'
+  use 'Mofiqul/dracula.nvim'
 
   use {
     'goolord/alpha-nvim',
@@ -34,6 +35,7 @@ return packer.startup(function(use)
   }
 
   use 'nvim-treesitter/nvim-treesitter'
+  use 'nvim-treesitter/nvim-treesitter-context'
 
   use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
   use 'jose-elias-alvarez/null-ls.nvim'
@@ -50,10 +52,16 @@ return packer.startup(function(use)
       require('gitsigns').setup()
     end
   }
+  use {
+    'TimUntersberger/neogit',
+    requires = 'nvim-lua/plenary.nvim'
+  }
 
   use {
     "windwp/nvim-autopairs",
       config = function() require("nvim-autopairs").setup {} end
   }
+
+  use 'norcalli/nvim-colorizer.lua'
 end)
 

@@ -16,5 +16,8 @@ map('n', '<C-n>', ':NvimTreeToggle<CR>')
 map('n', '<leader>f', ':NvimTreeRefresh<CR>')
 map('n', '<leader>n', ':NvimTreeFindFile<CR>')
 
+-- FZF
 map('n', '<c-P>',
     "<cmd>lua require('fzf-lua').files()<CR>")
+map('n', '<c-A>', ":FzfLua grep_last<CR><CR>")
+map('n', '<c-k>', ":FzfLua grep<CR><CR>")
