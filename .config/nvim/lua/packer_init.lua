@@ -37,9 +37,21 @@ return packer.startup(function(use)
   use 'nvim-treesitter/nvim-treesitter'
   use 'nvim-treesitter/nvim-treesitter-context'
 
-  use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
+  use {
+    'neovim/nvim-lspconfig', -- Configurations for Nvim LSP
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
+  }
+
   use 'jose-elias-alvarez/null-ls.nvim'
-  use { 'ms-jpq/coq_nvim', run = 'python3 -m coq deps' }
+  use 'hrsh7th/nvim-cmp'
+  use 'onsails/lspkind.nvim'
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
+  -- use { 'ms-jpq/coq_nvim', run = 'python3 -m coq deps' }
+  -- use 'ms-jpq/coq.artifacts'
+  -- use 'ms-jpq/coq.thirdparty'
 
   use {
     'ibhagwan/fzf-lua',

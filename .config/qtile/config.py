@@ -34,7 +34,7 @@ from libqtile.lazy import lazy
 
 from widgets import widgets
 
-mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
+mod = "mod4"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = "st"  # Suckless st
 
 keys = [

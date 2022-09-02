@@ -6,6 +6,7 @@ require('core/colors')
 require('core/autocmds')
 
 require('plugins/nvim-tree')
+require('plugins/fzf')
 require('plugins/nvim-neogit')
 require('plugins/startpage')
 require('plugins/status')

@@ -1,3 +1,7 @@
+# fish_add_path --global --path --move /usr/local/sbin
+# fish_add_path --global --path --move /usr/local/bin
+fish_add_path --global --path --move ~/.local/bin
+
 set fish_greeting
 
 if status is-interactive
@@ -21,7 +25,5 @@ alias v="nvim"
 alias ls="exa -l"
 # Dot files
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # dotfiles management
-# Turn on bluetooth
-alias bon='sudo ~/turn_on_bluetooth.sh'
 # Bat
 alias cat='bat --style=plain,grid,header --theme=Dracula'

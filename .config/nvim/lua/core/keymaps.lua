@@ -19,5 +19,7 @@ map('n', '<leader>n', ':NvimTreeFindFile<CR>')
 -- FZF
 map('n', '<c-P>',
     "<cmd>lua require('fzf-lua').files()<CR>")
-map('n', '<c-A>', ":FzfLua grep_last<CR><CR>")
 map('n', '<c-k>', ":FzfLua grep<CR><CR>")
+map('n', '<c-l>', ":FzfLua buffers<CR>")
+map('n', '<leader>c', ":FzfLua git_commits<CR>")
+map('n', '<c-j>', ":FzfLua lsp_references<CR>")

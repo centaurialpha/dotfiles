@@ -1,10 +1,8 @@
 add_newline = false
 
-
 format = """
 $username\
 $hostname\
-$shlvl\
 $directory\
 $git_branch\
 $git_commit\
@@ -16,7 +14,7 @@ $time\
 $python\
 $character"""
 
-right_format = """$status"""
+right_format = """$status $shlvl"""
 
 
 [status]

@@ -109,7 +109,7 @@ nvim_tree.setup {
   },
   filters = {
     dotfiles = false,
-    custom = {},
+    custom = {"__pycache__"},
     exclude = {},
   },
   git = {
