@@ -36,7 +36,7 @@ local conditions = {
 -- Config
 local config = {
   options = {
-    theme = 'dracula-nvim',
+    theme = 'onedark',
     -- Disable sections and component separators
     component_separators = '',
     section_separators = '',

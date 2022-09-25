@@ -53,10 +53,10 @@ local function colorize_header()
 end
 
 dashboard.section.buttons.val = {
-  dashboard.button("e", "  New file", ":ene | startinsert <CR>"),
-  dashboard.button("f", "  Find file", "<cmd>lua require('fzf-lua').files()<CR>"),
-  dashboard.button("g", "  Find word", ":Telescope live_grep<CR>"),
-  dashboard.button("q", "  Quit NVIM", ":qa<CR>"),
+  dashboard.button("e", "  New file", ":ene | startinsert <CR>"),
+  dashboard.button("f", "  Find file", "<cmd>lua require('fzf-lua').files()<CR>"),
+  dashboard.button("g", "  Find word", ":Telescope live_grep<CR>"),
+  dashboard.button("q", "  Quit NVIM", ":qa<CR>"),
 }
 
 -- Everyone could use a good fortune cookie from time to time, right?

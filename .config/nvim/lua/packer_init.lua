@@ -21,8 +21,22 @@ return packer.startup(function(use)
     },
   }
 
+  -- colors
+  use 'sam4llis/nvim-tundra'
   use 'navarasu/onedark.nvim'
   use 'Mofiqul/dracula.nvim'
+  use 'shaunsingh/nord.nvim'
+
+  use 'Vimjas/vim-python-pep8-indent'
+
+  use {
+    'phaazon/hop.nvim',
+    branch = 'v2', -- optional but strongly recommended
+    config = function()
+      -- you can configure Hop the way you like here; see :h hop-config
+      require'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
+    end
+  }
 
   use {
     'goolord/alpha-nvim',
@@ -41,6 +55,7 @@ return packer.startup(function(use)
     'neovim/nvim-lspconfig', -- Configurations for Nvim LSP
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
+    "jayp0521/mason-null-ls.nvim",
   }
 
   use 'jose-elias-alvarez/null-ls.nvim'
@@ -49,21 +64,18 @@ return packer.startup(function(use)
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
-  -- use { 'ms-jpq/coq_nvim', run = 'python3 -m coq deps' }
-  -- use 'ms-jpq/coq.artifacts'
-  -- use 'ms-jpq/coq.thirdparty'
+  use 'L3MON4D3/LuaSnip'
+  use { 'saadparwaiz1/cmp_luasnip' }
+  use "rafamadriz/friendly-snippets"
+
+  use "p00f/nvim-ts-rainbow"
 
   use {
     'ibhagwan/fzf-lua',
     requires = { 'kyazdani42/nvim-web-devicons' }
   }
 
-  use {
-    'lewis6991/gitsigns.nvim',
-    config = function()
-      require('gitsigns').setup()
-    end
-  }
+  use 'lewis6991/gitsigns.nvim'
   use {
     'TimUntersberger/neogit',
     requires = 'nvim-lua/plenary.nvim'
