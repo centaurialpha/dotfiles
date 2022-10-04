@@ -1,7 +1,4 @@
-require'lualine'.get_config()
-require'lualine'.setup()
-
-local lualine = require 'lualine'
+local lualine = require('lualine')
 
 -- Color table for highlights
 -- stylua: ignore
@@ -21,13 +18,13 @@ local colors = {
 
 local conditions = {
   buffer_not_empty = function()
-    return vim.fn.empty(vim.fn.expand '%:t') ~= 1
+    return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
   end,
   hide_in_width = function()
     return vim.fn.winwidth(0) > 80
   end,
   check_git_workspace = function()
-    local filepath = vim.fn.expand '%:p:h'
+    local filepath = vim.fn.expand('%:p:h')
     local gitdir = vim.fn.finddir('.git', filepath .. ';')
     return gitdir and #gitdir > 0 and #gitdir < #filepath
   end,
@@ -36,17 +33,10 @@ local conditions = {
 -- Config
 local config = {
   options = {
-    theme = 'onedark',
     -- Disable sections and component separators
+    theme = 'onedark',
     component_separators = '',
     section_separators = '',
-    theme = {
-      -- We are going to use lualine_c an lualine_x as left and
-      -- right section. Both are highlighted by c theme .  So we
-      -- are just setting default looks o statusline
-      normal = { c = { fg = colors.fg, bg = colors.bg } },
-      inactive = { c = { fg = colors.fg, bg = colors.bg } },
-    },
   },
   sections = {
     -- these are to remove the defaults
@@ -90,6 +80,9 @@ ins_left {
 ins_left {
   -- mode component
   function()
+    return ''
+  end,
+  color = function()
     -- auto change color according to neovims mode
     local mode_color = {
       n = colors.red,
@@ -113,10 +106,8 @@ ins_left {
       ['!'] = colors.red,
       t = colors.red,
     }
-    vim.api.nvim_command('hi! LualineMode guifg=' .. mode_color[vim.fn.mode()] .. ' guibg=' .. colors.bg)
-    return ''
+    return { fg = mode_color[vim.fn.mode()] }
   end,
-  color = 'LualineMode',
   padding = { right = 1 },
 }
 
@@ -155,11 +146,28 @@ ins_left {
   end,
 }
 
--- Add components to right sections
-ins_right {
-   'filetype'
-}
+--ins_left {
+--  -- Lsp server name .
+--  function()
+--    local msg = 'No Active Lsp'
+--    local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+--    local clients = vim.lsp.get_active_clients()
+--    if next(clients) == nil then
+--      return msg
+--    end
+--    for _, client in ipairs(clients) do
+--      local filetypes = client.config.filetypes
+--      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+--        return client.name
+--      end
+--    end
+--    return msg
+--  end,
+--  icon = ' LSP:',
+--  color = { fg = '#ffffff', gui = 'bold' },
+--}
 
+-- Add components to right sections
 ins_right {
   'o:encoding', -- option component same as &encoding in viml
   fmt = string.upper, -- I'm not sure why it's upper case either ;)
@@ -173,7 +181,6 @@ ins_right {
   icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
   color = { fg = colors.green, gui = 'bold' },
 }
-
 
 ins_right {
   'branch',
@@ -201,4 +208,5 @@ ins_right {
   padding = { left = 1 },
 }
 
+-- Now don't forget to initialize lualine
 lualine.setup(config)

@@ -7,7 +7,6 @@ local function map(mode, lhs, rhs, opts)
 end
 
 vim.g.mapleader = ','
-vim.o.completeopt = 'menuone,noinsert,noselect'
 
 map('i', 'jj', '<Esc>')
 

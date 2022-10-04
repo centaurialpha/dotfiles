@@ -29,7 +29,7 @@ import subprocess
 from typing import List  # noqa: F401
 
 from libqtile import bar, layout, hook, widget
-from libqtile.config import Click, Drag, Group, Key, Screen, Match
+from libqtile.config import Click, Drag, Group, Key, Screen, Match, ScratchPad, DropDown
 from libqtile.lazy import lazy
 
 from widgets import widgets
@@ -84,8 +84,18 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # Key([mod], "d", lazy.spawn("dmenu_run -c -l 10 -bw 2")),
-    Key([mod], "d", lazy.spawn("rofi -i -show drun -modi drun -show-icons -display-drun ''")),
-    Key(["control", "shift"], "a", lazy.spawn("rofi -show power-menu -modi \"power-menu:~/.rofi-scripts/power-menu --dry-run --choices=shutdown/reboot/logout\"")),
+    Key(
+        [mod],
+        "d",
+        lazy.spawn("rofi -i -show drun -modi drun -show-icons -display-drun ''"),
+    ),
+    Key(
+        ["control", "shift"],
+        "a",
+        lazy.spawn(
+            'rofi -show power-menu -modi "power-menu:~/.rofi-scripts/power-menu --dry-run --choices=shutdown/reboot/logout"'
+        ),
+    ),
     Key([mod], "n", lazy.next_screen()),
 ]
 
@@ -101,6 +111,21 @@ for i, group in enumerate(groups, 1):
     keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
     keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(group.name)))
 
+
+groups.append(
+    ScratchPad(
+        "scratchpad",
+        [
+            DropDown("term", "st", width=0.4, height=0.5, x=0.3, y=0.1, opacity=1),
+        ],
+    )
+)
+
+keys.extend(
+    [
+        Key(["control"], "1", lazy.group["scratchpad"].dropdown_toggle("term")),
+    ]
+)
 
 LAYOUT_KWARGS = {"border_focus": "#bd93f9", "border_width": 1, "margin": 10}
 layouts = [
@@ -154,15 +179,17 @@ respect_minimize_requests = True
 wmname = "qtile"
 
 
-floating_layout = layout.Floating(float_rules=[
-    # Run the utility of `xprop` to see the wm class and name of an X client.
-    # default_float_rules include: utility, notification, toolbar, splash, dialog,
-    # file_progress, confirm, download and error.
-    *layout.Floating.default_float_rules,
-    # Match(title="ESPlorer v0.2.0 by 4refr0nt"),
-    Match(wm_class="pinentry-qt"),
-    Match(wm_class="main.py")
-])
+floating_layout = layout.Floating(
+    float_rules=[
+        # Run the utility of `xprop` to see the wm class and name of an X client.
+        # default_float_rules include: utility, notification, toolbar, splash, dialog,
+        # file_progress, confirm, download and error.
+        *layout.Floating.default_float_rules,
+        # Match(title="ESPlorer v0.2.0 by 4refr0nt"),
+        Match(wm_class="pinentry-qt"),
+        Match(wm_class="main.py"),
+    ]
+)
 
 
 def switch_screens(qtile):

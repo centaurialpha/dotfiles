@@ -1,14 +1,6 @@
-require("mason").setup()
-local null_ls_status_ok, null_ls = pcall(require, "null-ls")
-if not null_ls_status_ok then
-  return
-end
-require("mason-null-ls").setup({
-  ensure_installed = {"python", "javascript"}
-})
-require("mason-lspconfig").setup()
+local lspconfig = require('lspconfig')
 
-vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
+local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 local cmp = require('cmp')
 local luasnip = require('luasnip')
@@ -90,10 +82,21 @@ cmp.setup({
   },
 })
 
-local lspconfig = require('lspconfig')
+local lsp_defaults = {
+  flags = {
+    debounce_text_changes = 300,
+  },
+  capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities),
+  on_attach = function(client, bufnr)
+    vim.api.nvim_exec_autocmds('User', {pattern = 'LspAttached'})
+  end
+}
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-
+lspconfig.util.default_config = vim.tbl_deep_extend(
+  'force',
+  lspconfig.util.default_config,
+  lsp_defaults
+)
 vim.api.nvim_create_autocmd('User', {
   pattern = 'LspAttached',
   desc = 'LSP actions',
@@ -119,30 +122,16 @@ vim.api.nvim_create_autocmd('User', {
   end
 })
 
-local lsp_defaults = {
-  flags = {
-    debounce_text_changes = 300,
-  },
-  capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities),
-  on_attach = function(client, bufnr)
-    vim.api.nvim_exec_autocmds('User', {pattern = 'LspAttached'})
-  end
-}
-
-lspconfig.util.default_config = vim.tbl_deep_extend(
-  'force',
-  lspconfig.util.default_config,
-  lsp_defaults
-)
-
 require'lspconfig'.pyright.setup{
   on_attach=on_attach,
 }
+
 require'lspconfig'.tsserver.setup({
-  on_attach = function(client)
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
-  end
+  on_attach = function(client, bufnr)
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
+    -- on_attach(client, bufnr)
+  end,
 })
 
 capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -150,17 +139,3 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 require'lspconfig'.html.setup {
   capabilities = capabilities,
 }
-
-local formatting = null_ls.builtins.formatting
-local diagnostics = null_ls.builtins.diagnostics
-
-null_ls.setup {
-  debug = false,
-  sources = {
-    formatting.black.with { extra_args = { "--fast" } },
-    formatting.prettier,
-    diagnostics.flake8,
-  },
-}
-
-vim.cmd([[ command! Format execute 'lua vim.lsp.buf.formatting()']])

@@ -21,7 +21,6 @@ nvim_treesitter.setup {
   rainbow = {
     enable = true,
     max_file_lines = 5000,
-
     colors = {
       "#8be9fd",
       "#a89984",
@@ -42,3 +41,4 @@ nvim_treesitter.setup {
     }, -- table of colour name strings
   }
 }
+
