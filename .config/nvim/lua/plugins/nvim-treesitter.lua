@@ -8,7 +8,7 @@ nvim_treesitter.setup {
   -- A list of parser names, or "all"
   ensure_installed = {
     'bash', 'c', 'cpp', 'css', 'html', 'json', 'lua', 'python',
-    'vim', 'yaml', 'javascript',
+    'vim', 'yaml', 'javascript', 'typescript'
   },
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = true,
@@ -18,6 +18,10 @@ nvim_treesitter.setup {
   highlight = {
     enable = true,
   },
+  indent = {
+    enable = false,
+  },
+  autotag = { enable = true },
   rainbow = {
     enable = true,
     max_file_lines = 5000,

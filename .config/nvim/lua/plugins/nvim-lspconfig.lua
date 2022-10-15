@@ -86,7 +86,7 @@ local lsp_defaults = {
   flags = {
     debounce_text_changes = 300,
   },
-  capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities),
+  capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities),
   on_attach = function(client, bufnr)
     vim.api.nvim_exec_autocmds('User', {pattern = 'LspAttached'})
   end
@@ -127,11 +127,11 @@ require'lspconfig'.pyright.setup{
 }
 
 require'lspconfig'.tsserver.setup({
-  on_attach = function(client, bufnr)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
-    -- on_attach(client, bufnr)
-  end,
+  --on_attach = function(client, bufnr)
+  --  client.server_capabilities.documentFormattingProvider = false
+  --  client.server_capabilities.documentRangeFormattingProvider = false
+  --  -- on_attach(client, bufnr)
+  --end,
 })
 
 capabilities.textDocument.completion.completionItem.snippetSupport = true

@@ -7,7 +7,6 @@ autocmd('BufWritePre', {
   command = ":%s/\\s\\+$//e"
 })
 
--- Don't auto commenting new lines
 autocmd('BufEnter', {
   pattern = '*',
   command = 'set fo-=c fo-=r fo-=o'
@@ -26,8 +25,8 @@ autocmd('Filetype', {
 augroup('setIndent', { clear = true })
 autocmd('Filetype', {
   group = 'setIndent',
-  pattern = { 'xml', 'html', 'xhtml', 'css', 'scss', 'javascript', 'typescript',
-    'yaml', 'lua'
+  pattern = { 'xml', 'jsx', 'html', 'xhtml', 'css', 'scss', 'javascript', 'typescript',
+    'yaml', 'javascriptreact', 'lua'
   },
   command = 'setlocal shiftwidth=2 tabstop=2'
 })

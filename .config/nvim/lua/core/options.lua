@@ -29,6 +29,18 @@ opt.updatetime = 700
 
 opt.shortmess:append "sI"
 
+-- Neovide
+opt.guifont = { "CaskaydiaCove Nerd Font Mono:h18" }
+g.airline_powerline_fonts = 1
+g.neovide_cursor_antialiasing = true
+g.neovide_transparency = 0.90
+g.neovide_no_idle = true
+g.neovide_cursor_animation_length = 0.10
+g.neovide_cursor_vfx_particle_density = 30.0
+g.neovide_hide_mouse_when_typing = true
+-- g.neovide_confirm_quit = true
+g.neovide_cursor_vfx_mode = "railgun"
+
 -- Disable builtins plugins
 local disabled_built_ins = {
   "netrw",
