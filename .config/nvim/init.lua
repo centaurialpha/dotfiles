@@ -1,9 +1,12 @@
-require('packer_init')
+pcall(require, 'impatient')
+
 
 require('core/options')
+require('packer_init')
 require('core/keymaps')
 require('core/autocmds')
 require('core/colors')
+
 
 require('plugins/nvim-tree')
 require('plugins/statusbar')

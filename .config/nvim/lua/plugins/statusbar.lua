@@ -34,7 +34,7 @@ local conditions = {
 local config = {
   options = {
     -- Disable sections and component separators
-    theme = 'onedark',
+    theme = 'onedarkpro',
     component_separators = '',
     section_separators = '',
   },

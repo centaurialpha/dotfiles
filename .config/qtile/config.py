@@ -116,7 +116,7 @@ groups.append(
     ScratchPad(
         "scratchpad",
         [
-            DropDown("term", "st", width=0.4, height=0.5, x=0.3, y=0.1, opacity=1),
+            DropDown("term", "st", width=0.6, height=0.5, x=0.2, y=0.1, opacity=1),
         ],
     )
 )

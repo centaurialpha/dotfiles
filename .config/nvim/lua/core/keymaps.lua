@@ -22,3 +22,6 @@ map('n', '<c-k>', ":FzfLua grep<CR><CR>")
 map('n', '<c-l>', ":FzfLua buffers<CR>")
 map('n', '<leader>c', ":FzfLua git_commits<CR>")
 map('n', '<c-j>', ":FzfLua lsp_references<CR>")
+
+-- Remove highlights
+map("n", "<CR>", ":noh<CR><CR>", { silent = true })

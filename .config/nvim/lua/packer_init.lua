@@ -13,8 +13,9 @@ end
 return packer.startup(function(use)
 	use("wbthomason/packer.nvim")
 	use("nvim-lua/plenary.nvim")
-	use("navarasu/onedark.nvim")
-	use("tiagovla/tokyodark.nvim")
+	--use("navarasu/onedark.nvim")
+  use "olimorris/onedarkpro.nvim"    -- Packer
+	--use("tiagovla/tokyodark.nvim")
 	use({
 		"kyazdani42/nvim-tree.lua",
 		requires = {
@@ -57,5 +58,13 @@ return packer.startup(function(use)
 	use("p00f/nvim-ts-rainbow")
 	use("Vimjas/vim-python-pep8-indent")
 
-	--use("windwp/nvim-ts-autotag")
+	use("lewis6991/impatient.nvim")
+
+  use { 'mrshmllow/document-color.nvim', config = function()
+  require("document-color").setup {
+    -- Default options
+    mode = "foreground", -- "background" | "foreground" | "single"
+  }
+  end
+}
 end)
