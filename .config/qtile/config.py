@@ -101,11 +101,11 @@ keys = [
 
 
 groups = [
-    Group(name="dev", label="⬤"),
-    Group(name="slack", label="⬤"),
-    Group(name="browser", label="⬤"),
-    Group(name="sys", label="⬤"),
-    Group(name="vbox", label="⬤"),
+    Group(name="dev", label="•"),
+    Group(name="slack", label="•"),
+    Group(name="browser", label="•"),
+    Group(name="sys", label="•"),
+    Group(name="vbox", label="•"),
 ]
 for i, group in enumerate(groups, 1):
     keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
@@ -139,17 +139,15 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="Siji,Hermit",
-    fontsize=14,
-    padding=10,
+    font="Hermit",
+    fontsize=15,
+    padding=2,
 )
 extension_defaults = widget_defaults.copy()
 
 all_widgets = widgets.copy()
-top_primary = bar.Bar(all_widgets, 24, background="#1a1b26")
-screens = [
-    Screen(top=top_primary),
-]
+top_primary = bar.Bar(all_widgets, 30, background="#1a1b26")
+screens = [Screen(top=top_primary)]
 
 # Drag floating layouts.
 mouse = [

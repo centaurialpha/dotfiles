@@ -1,83 +1,31 @@
-import subprocess
+from libqtile import bar
 
-from libqtile import widget, bar
+from qtile_extras import widget
+from qtile_extras.widget import decorations
+from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
 
 
-class IPAddressWidget(widget.base.ThreadPoolText):
-    orientations = widget.base.ORIENTATION_HORIZONTAL
-    defaults = [
-        ("update_interval", 900.0, "Update interval"),
-        (
-            "format",
-            "{text} {address}",
-        ),
+def _left_deco(color, px=None, py=4):
+    return [
+        RectDecoration(colour=color, radius=2, filled=True, padding_x=px, padding_y=py)
     ]
 
-    def __init__(self, text="", **config):
-        super().__init__("", **config)
-        self.add_defaults(IPAddressWidget.defaults)
-        self._text = text
 
-    def poll(self):
-        variables = {}
-        address = subprocess.run("ip r get 1 | head -1 | awk '{print $7}'", stdout=subprocess.PIPE, shell=True)
-        variables["address"] = address.stdout.decode().strip()
-        variables["text"] = self._text
-        return self.format.format(**variables)
-
-
-
-class PoweroffWidget(widget.base._TextBox):
-    defaults = [
-        ("default_text", "", "a text displayed as a button"),
-        ("countdown_format", "{}", "this text is showed when counting down."),
-        ("timer_interval", 1, "a countdown interval."),
-        ("countdown_start", 5, "time to accept the second pushing."),
+def _right_deco(color="#454545"):
+    return [
+        RectDecoration(
+            colour=color, radius=2, filled=True, padding_x=2, padding_y=4
+        )
     ]
 
-    def __init__(self, widget=bar.CALCULATED, **config):
-        super().__init__("", widget, **config)
-        self.add_defaults(PoweroffWidget.defaults)
-        self.is_counting = False
-        self.countdown = self.countdown_start
-        self.text = self.default_text
-        self._call_later_funcs = []
 
-        self.add_callbacks({"Button1": self.shutdown})
-
-    def _reset(self):
-        self.is_counting = False
-        self.countdown = self.countdown_start
-        self.text = self.default_text
-        for f in self._call_later_funcs:
-            f.cancel()
-
-    def update(self):
-        if not self.is_counting:
-            return
-
-        self.countdown -= 1
-        self.text = self.countdown_format.format(self.countdown)
-        func = self.timeout_add(self.timer_interval, self.update)
-        self._call_later_funcs.append(func)
-        self.draw()
-
-        if self.countdown == 0:
-            import subprocess
-            subprocess.call("poweroff", shell=True)
-
-    def shutdown(self):
-        if not self.is_counting:
-            self.is_counting = True
-            self.update()
-        else:
-            self._reset()
-            self.draw()
+def separator():
+    return widget.Sep(linewidth=5, foreground="#1a1b26")
 
 
 group_box = widget.GroupBox(
     borderwidth=1,
-    padding_y=1,
+    padding_y=4,
     padding_x=5,
     highlight_method="block",
     urgent_alert_method="block",
@@ -87,68 +35,149 @@ group_box = widget.GroupBox(
     block_highlight_text_color="#000000",
     urgent_border="#ff5555",
 )
-prompt = widget.Prompt(prompt="run: ")
-window_name = widget.WindowName(
-    foreground="#50fa7b", max_chars=40, format="{state}{class}"
+
+clock = widget.Clock(format="[%b %d, %H:%M]")
+# light = widget.Backlight(
+#     backlight_name="intel_backlight", change_command="light -S {0:.0f}"
+# )
+
+w_window_name = (
+    widget.WindowName(
+        foreground="#0ff0f0",
+        format="{class} - {name}",
+        max_chars=100,
+        decorations=_right_deco(color="#010101"),
+        padding=8,
+    ),
 )
-clock_icon = widget.TextBox(text="", background="#668ee3", foreground="#1e222a")
-clock = widget.Clock(
-    interval=30,
-    foreground="#1e222a",
-    background="#7aa2f7",
-    format="%B %d [ %H:%M ]",
-    margin_y=10,
+
+w_layout = (
+    widget.TextBox(
+        text="",
+        font="Font Awesome 6 Free Solid",
+        foreground="#111111",
+        decorations=_left_deco(color="#89dceb"),
+    ),
+    widget.CurrentLayout(padding=8, foreground="#89dceb", decorations=_right_deco()),
 )
-layout_icon = widget.TextBox(text="", foreground="#1e222a", background="#e5c07b")
-current_layout = widget.CurrentLayout(foreground="#e5c07b", background="#1e222a")
-battery_icon = widget.TextBox(text="", fontsize=16, foreground="#81A1C1")
-battery = widget.Battery(
-    foreground="#81A1C1",
-    format="{char}{percent: 2.0%}",
-    charge_char="",
-    discharge_char="",
-    full_char="",
-    empty_char="",
+
+w_volume = (
+    widget.TextBox(
+        text="",
+        font="Font Awesome 6 Free Solid",
+        foreground="#111111",
+        decorations=_left_deco(color="#eba0ac"),
+    ),
+    widget.Volume(
+        decorations=_right_deco(),
+        padding=8,
+        foreground="#eba0ac",
+    ),
+    separator(),
 )
-thermal = widget.ThermalSensor(foreground="#0db9d7", foreground_alert="#ff5555", background="#353b45")
-cpu = widget.CPU(
-    background="#353b45",
-    foreground="#abb2bf",
-    format="{freq_current}GHz",
-    update_interval=5.0,
+
+w_temperature = (
+    widget.TextBox(
+        text="",
+        font="Font Awesome 6 Free Solid",
+        foreground="#111111",
+        decorations=_left_deco(color="#f9e2af"),
+        padding=10,
+    ),
+    widget.ThermalSensor(
+        decorations=_right_deco(), padding=8, foreground="#f9e2af", update_interval=5
+    ),
+    separator(),
 )
-volume_icon = widget.TextBox(text="", foreground="#caaa6a", padding=1)
-volume = widget.Volume(
-    foreground="#caaa6a",
-    get_volume_command=["amixer", "-D", "default", "-M", "sget", "Master"],
-    padding=1,
+w_battery = (
+    widget.Battery(
+        decorations=_left_deco(color="#89b4fa"),
+        format="{char}",
+        font="Font Awesome 6 Free Solid",
+        foreground="#111111",
+        discharge_char="",
+        charge_char="",
+        empty_char="",
+        full_char="",
+        low_background="#ff0000",
+        padding=5,
+        update_interval=30,
+    ),
+    widget.Battery(
+        decorations=_right_deco(),
+        padding=8,
+        foreground="#89b4fa",
+        format="{percent:2.0%}",
+        update_interval=30,
+    ),
+    separator(),
 )
-disk = widget.DF(
-    format=" {uf}{m}|{r:.0f}%", foreground="#c678dd", visible_on_warn=False
+
+w_cpu = (
+    widget.TextBox(
+        text="",
+        font="Font Awesome 6 Free Solid",
+        decorations=_left_deco(color="#fab387"),
+        foreground="#111111",
+        padding=5,
+    ),
+    widget.CPU(
+        update_interval=5.0,
+        decorations=_right_deco(),
+        padding=8,
+        format="{freq_current}GHz",
+        foreground="#fab387",
+    ),
+    separator(),
 )
-memory = widget.Memory(
-    foreground="#7797b7",
-    format="{MemUsed: .2f}{mm}",
-    update_interval=5.0
+
+w_memory = (
+    widget.TextBox(
+        text="",
+        font="Font Awesome 6 Free Solid",
+        decorations=_left_deco(color="#a6e3a1"),
+        foreground="#111111",
+    ),
+    widget.Memory(
+        decorations=_right_deco(),
+        padding=8,
+        format="{MemFree:.2f}{mm}",
+        foreground="#a6e3a1",
+        measure_mem="G",
+        update_interval=5,
+    ),
+    separator(),
+)
+
+w_storage = (
+    widget.TextBox(
+        text="",
+        font="Font Awesome 6 Free Solid",
+        decorations=_left_deco(color="#cba6f7"),
+        foreground="#111111",
+        padding=5,
+    ),
+    widget.DF(
+        decorations=_right_deco(),
+        format="{uf}{m}|{r:.0f}%",
+        foreground="#cba6f7",
+        visible_on_warn=False,
+        padding=8,
+    ),
+    separator(),
 )
 
 widgets = [
-    layout_icon,
-    current_layout,
     group_box,
-    prompt,
-    window_name,
-    clock_icon,
+    *w_window_name,
     clock,
-    widget.Spacer(length=bar.STRETCH),
-    # IPAddressWidget(background="#ff5555"),
-    disk,
-    memory,
-    widget.TextBox(text="CPU", foreground="#3b414d", background="#7ec7a2"),
-    cpu,
-    thermal,
-    battery,
-    volume_icon,
-    volume,
+    widget.Spacer(),
+    *w_temperature,
+    *w_battery,
+    *w_storage,
+    *w_cpu,
+    *w_memory,
+    *w_volume,
+    *w_layout,
     widget.Systray(),
 ]
