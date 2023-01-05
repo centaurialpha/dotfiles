@@ -1,8 +1,5 @@
-from libqtile import bar
-
 from qtile_extras import widget
-from qtile_extras.widget import decorations
-from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
+from qtile_extras.widget.decorations import RectDecoration
 
 
 def _left_deco(color, px=None, py=4):
@@ -99,7 +96,7 @@ w_battery = (
         charge_char="",
         empty_char="",
         full_char="",
-        low_background="#ff0000",
+        low_foreground="#ff0000",
         padding=5,
         update_interval=30,
     ),
