@@ -1,6 +1,8 @@
 from qtile_extras import widget
 from qtile_extras.widget.decorations import RectDecoration
 
+from vpn_widget import VPN
+
 
 def _left_deco(color, px=None, py=4):
     return [
@@ -164,11 +166,31 @@ w_storage = (
     separator(),
 )
 
+w_vpn_home = (
+    widget.TextBox(
+        text="home",
+        decorations=_left_deco(color="#323232"),
+        padding=5
+    ),
+    VPN(iface="wg0", decorations=_right_deco(), padding=8),
+)
+
+w_vpn_satl = (
+    widget.TextBox(
+        text="satl",
+        decorations=_left_deco(color="#323232"),
+        padding=5
+    ),
+    VPN(iface="satellogic", decorations=_right_deco(), padding=8),
+)
+
 widgets = [
     group_box,
     *w_window_name,
     clock,
     widget.Spacer(),
+    *w_vpn_home,
+    *w_vpn_satl,
     *w_temperature,
     *w_battery,
     *w_storage,
