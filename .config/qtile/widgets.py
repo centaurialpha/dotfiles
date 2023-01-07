@@ -24,7 +24,7 @@ def separator():
 
 group_box = widget.GroupBox(
     borderwidth=1,
-    padding_y=4,
+    padding_y=0,
     padding_x=5,
     highlight_method="block",
     urgent_alert_method="block",
@@ -44,7 +44,7 @@ w_window_name = (
     widget.WindowName(
         foreground="#0ff0f0",
         format="{class} - {name}",
-        max_chars=100,
+        max_chars=60,
         decorations=_right_deco(color="#010101"),
         padding=8,
     ),
@@ -185,8 +185,10 @@ w_vpn_satl = (
 )
 
 widgets = [
+    *w_layout,
     group_box,
     *w_window_name,
+    widget.Spacer(length=100),
     clock,
     widget.Spacer(),
     *w_vpn_home,
@@ -197,6 +199,5 @@ widgets = [
     *w_cpu,
     *w_memory,
     *w_volume,
-    *w_layout,
     widget.Systray(),
 ]
