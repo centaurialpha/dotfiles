@@ -13,6 +13,11 @@ autocmd('BufEnter', {
 })
 
 
+-- autocmd('BufWritePost', {
+--   pattern = {'*.jsx', '*.js'},
+--   command = 'silent !standard --fix %'
+-- })
+
 -- Settings for filetypes:
 -- Disable line length marker
 augroup('setLineLength', { clear = true })

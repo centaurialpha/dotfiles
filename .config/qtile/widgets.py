@@ -33,6 +33,7 @@ group_box = widget.GroupBox(
     other_current_screen_border="#7e57c2",
     block_highlight_text_color="#000000",
     urgent_border="#ff5555",
+    disable_drag=True,
 )
 
 clock = widget.Clock(format="[%b %d, %H:%M]")
@@ -101,6 +102,8 @@ w_battery = (
         low_foreground="#ff0000",
         padding=5,
         update_interval=30,
+        notify_below=10,
+        notification_timeout=30,
     ),
     widget.Battery(
         decorations=_right_deco(),

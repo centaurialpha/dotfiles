@@ -135,3 +135,11 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 require("lspconfig").html.setup({
 	capabilities = capabilities,
 })
+
+require("lspconfig").clangd.setup({
+	cmd = {
+		"clangd",
+		"--query-driver=/home/gabox/projects/ESP/xtensa-lx106-elf/bin/xtensa-lx106-elf-g++",
+	},
+	filetypes = { "c", "cpp" },
+})

@@ -14,7 +14,7 @@ return packer.startup(function(use)
 	use("wbthomason/packer.nvim")
 	use("nvim-lua/plenary.nvim")
 	--use("navarasu/onedark.nvim")
-  use "olimorris/onedarkpro.nvim"    -- Packer
+	use("olimorris/onedarkpro.nvim") -- Packer
 	--use("tiagovla/tokyodark.nvim")
 	use({
 		"kyazdani42/nvim-tree.lua",
@@ -60,11 +60,15 @@ return packer.startup(function(use)
 
 	use("lewis6991/impatient.nvim")
 
-  use { 'mrshmllow/document-color.nvim', config = function()
-  require("document-color").setup {
-    -- Default options
-    mode = "foreground", -- "background" | "foreground" | "single"
-  }
-  end
-}
+	use({
+		"mrshmllow/document-color.nvim",
+		config = function()
+			require("document-color").setup({
+				-- Default options
+				mode = "foreground", -- "background" | "foreground" | "single"
+			})
+		end,
+	})
+  use("uga-rosa/translate.nvim")
+  use { "catppuccin/nvim", as = "catppuccin" }
 end)

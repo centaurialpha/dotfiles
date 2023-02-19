@@ -1,5 +1,3 @@
-# fish_add_path --global --path --move /usr/local/sbin
-# fish_add_path --global --path --move /usr/local/bin
 fish_add_path --global --path --move ~/.local/bin
 
 set fish_greeting

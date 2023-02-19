@@ -1,8 +1,8 @@
 pcall(require, 'impatient')
 
 
-require('core/options')
 require('packer_init')
+require('core/options')
 require('core/keymaps')
 require('core/autocmds')
 require('core/colors')
