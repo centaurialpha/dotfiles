@@ -21,4 +21,4 @@ null_ls.setup({
 
 vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format { async = true }']])
 
-vim.cmd([[ command! Pene execute 'silent !standard --fix % {async = true}']])
+vim.cmd([[ command! Standard execute 'silent !standard --fix %']])

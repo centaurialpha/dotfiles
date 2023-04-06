@@ -13,9 +13,10 @@ end
 return packer.startup(function(use)
 	use("wbthomason/packer.nvim")
 	use("nvim-lua/plenary.nvim")
-	--use("navarasu/onedark.nvim")
-	use("olimorris/onedarkpro.nvim") -- Packer
-	--use("tiagovla/tokyodark.nvim")
+	--use("olimorris/onedarkpro.nvim") -- Packer
+  use 'navarasu/onedark.nvim'
+
+  use { "catppuccin/nvim", as = "catppuccin" }
 	use({
 		"kyazdani42/nvim-tree.lua",
 		requires = {
@@ -65,10 +66,10 @@ return packer.startup(function(use)
 		config = function()
 			require("document-color").setup({
 				-- Default options
-				mode = "foreground", -- "background" | "foreground" | "single"
+				mode = "background", -- "background" | "foreground" | "single"
 			})
 		end,
 	})
   use("uga-rosa/translate.nvim")
-  use { "catppuccin/nvim", as = "catppuccin" }
+  use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 end)
