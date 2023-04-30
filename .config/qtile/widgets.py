@@ -178,15 +178,6 @@ w_vpn_home = (
     VPN(iface="wg0", decorations=_right_deco(), padding=8),
 )
 
-w_vpn_satl = (
-    widget.TextBox(
-        text="satl",
-        decorations=_left_deco(color="#323232"),
-        padding=5
-    ),
-    VPN(iface="satellogic", decorations=_right_deco(), padding=8),
-)
-
 widgets = [
     *w_layout,
     group_box,
@@ -195,7 +186,6 @@ widgets = [
     clock,
     widget.Spacer(),
     *w_vpn_home,
-    *w_vpn_satl,
     *w_temperature,
     *w_battery,
     *w_storage,
