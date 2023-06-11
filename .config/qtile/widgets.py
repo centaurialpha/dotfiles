@@ -1,7 +1,15 @@
+import subprocess
+
 from qtile_extras import widget
 from qtile_extras.widget.decorations import RectDecoration
 
 from vpn_widget import VPN
+
+
+def is_msi() -> bool:
+    """Check if the machine is my msi or lenovo"""
+    output = subprocess.check_output(["lspci"]).decode()
+    return "GTX" in output
 
 
 def _left_deco(color, px=None, py=4):
@@ -135,21 +143,23 @@ w_cpu = (
     separator(),
 )
 
-w_gpu = (
-    widget.TextBox(
-        text="GPU",
-        decorations=_left_deco(color="#76b900"),
-        foreground="#ffffff",
-        padding=6,
-    ),
-    widget.NvidiaSensors(
-        update_interval=5.0,
-        decorations=_right_deco(),
-        padding=8,
-        foreground="#ffffff",
-    ),
-    separator(),
-)
+w_gpu = ()
+if is_msi():
+    w_gpu = (
+        widget.TextBox(
+            text="GPU",
+            decorations=_left_deco(color="#76b900"),
+            foreground="#ffffff",
+            padding=6,
+        ),
+        widget.NvidiaSensors(
+            update_interval=5.0,
+            decorations=_right_deco(),
+            padding=8,
+            foreground="#ffffff",
+        ),
+        separator(),
+    )
 
 w_memory = (
     widget.TextBox(
