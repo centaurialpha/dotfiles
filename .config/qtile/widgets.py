@@ -57,6 +57,7 @@ w_layout = (
         font="Font Awesome 6 Free Solid",
         foreground="#111111",
         decorations=_left_deco(color="#89dceb"),
+        padding=6,
     ),
     widget.CurrentLayout(padding=8, foreground="#89dceb", decorations=_right_deco()),
 )
@@ -67,6 +68,7 @@ w_volume = (
         font="Font Awesome 6 Free Solid",
         foreground="#111111",
         decorations=_left_deco(color="#eba0ac"),
+        padding=6,
     ),
     widget.Volume(
         decorations=_right_deco(),
@@ -82,7 +84,7 @@ w_temperature = (
         font="Font Awesome 6 Free Solid",
         foreground="#111111",
         decorations=_left_deco(color="#f9e2af"),
-        padding=10,
+        padding=6,
     ),
     widget.ThermalSensor(
         decorations=_right_deco(), padding=8, foreground="#f9e2af", update_interval=5
@@ -100,7 +102,7 @@ w_battery = (
         empty_char="",
         full_char="",
         low_foreground="#ff0000",
-        padding=5,
+        padding=6,
         update_interval=30,
         notify_below=10,
         notification_timeout=30,
@@ -121,7 +123,7 @@ w_cpu = (
         font="Font Awesome 6 Free Solid",
         decorations=_left_deco(color="#fab387"),
         foreground="#111111",
-        padding=5,
+        padding=6,
     ),
     widget.CPU(
         update_interval=5.0,
@@ -133,12 +135,29 @@ w_cpu = (
     separator(),
 )
 
+w_gpu = (
+    widget.TextBox(
+        text="GPU",
+        decorations=_left_deco(color="#76b900"),
+        foreground="#ffffff",
+        padding=6,
+    ),
+    widget.NvidiaSensors(
+        update_interval=5.0,
+        decorations=_right_deco(),
+        padding=8,
+        foreground="#ffffff",
+    ),
+    separator(),
+)
+
 w_memory = (
     widget.TextBox(
         text="",
         font="Font Awesome 6 Free Solid",
         decorations=_left_deco(color="#a6e3a1"),
         foreground="#111111",
+        padding=6,
     ),
     widget.Memory(
         decorations=_right_deco(),
@@ -157,7 +176,7 @@ w_storage = (
         font="Font Awesome 6 Free Solid",
         decorations=_left_deco(color="#cba6f7"),
         foreground="#111111",
-        padding=5,
+        padding=6,
     ),
     widget.DF(
         decorations=_right_deco(),
@@ -173,7 +192,7 @@ w_vpn_home = (
     widget.TextBox(
         text="home",
         decorations=_left_deco(color="#323232"),
-        padding=5
+        padding=6,
     ),
     VPN(iface="wg0", decorations=_right_deco(), padding=8),
 )
@@ -186,10 +205,11 @@ widgets = [
     clock,
     widget.Spacer(),
     *w_vpn_home,
-    *w_temperature,
-    *w_battery,
     *w_storage,
+    *w_battery,
+    *w_temperature,
     *w_cpu,
+    *w_gpu,
     *w_memory,
     *w_volume,
     widget.Systray(),
