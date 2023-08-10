@@ -3,7 +3,7 @@ import subprocess
 from qtile_extras import widget
 from qtile_extras.widget.decorations import RectDecoration
 
-from vpn_widget import VPN
+# from vpn_widget import VPN
 
 
 def is_msi() -> bool:
@@ -45,9 +45,23 @@ group_box = widget.GroupBox(
 )
 
 clock = widget.Clock(format="[%b %d, %H:%M]")
-# light = widget.Backlight(
-#     backlight_name="intel_backlight", change_command="light -S {0:.0f}"
-# )
+
+w_display = (
+    widget.TextBox(
+        text="",
+        font="Font Awesome 6 Free Solid",
+        foreground="#111111",
+        decorations=_left_deco(color="#f5c2e7"),
+        padding=6,
+    ),
+    widget.Backlight(
+        backlight_name="intel_backlight",
+        change_command="brightnessctl set {0}%",
+        decorations=_right_deco(),
+        padding=8
+    ),
+    separator(),
+)
 
 w_window_name = (
     widget.WindowName(
@@ -198,13 +212,20 @@ w_storage = (
     separator(),
 )
 
-w_vpn_home = (
-    widget.TextBox(
-        text="home",
-        decorations=_left_deco(color="#323232"),
-        padding=6,
+# w_vpn_home = (
+#     widget.TextBox(
+#         text="home",
+#         decorations=_left_deco(color="#323232"),
+#         padding=6,
+#     ),
+#     VPN(iface="wg0", decorations=_right_deco(), padding=8),
+# )
+
+w_pomodoro = (
+    widget.Pomodoro(
+        length_pomodori=30,
+        padding=8,
     ),
-    VPN(iface="wg0", decorations=_right_deco(), padding=8),
 )
 
 widgets = [
@@ -214,7 +235,9 @@ widgets = [
     widget.Spacer(length=100),
     clock,
     widget.Spacer(),
-    *w_vpn_home,
+    # *w_vpn_home,
+    # *w_pomodoro,
+    *w_display,
     *w_storage,
     *w_battery,
     *w_temperature,
