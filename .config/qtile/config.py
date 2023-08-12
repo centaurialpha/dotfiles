@@ -35,7 +35,8 @@ from libqtile.lazy import lazy
 from widgets import widgets
 
 mod = "mod4"  # mod1=Alt;mod2=;mod3=;mod4=super
-terminal = "st"  # Suckless st
+# terminal = "st"  # Suckless st
+terminal = "alacritty"
 
 keys = [
     # Switch between windows
@@ -65,7 +66,7 @@ keys = [
     ),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
-    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    Key([mod], "m", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with

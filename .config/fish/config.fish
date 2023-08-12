@@ -1,6 +1,11 @@
 fish_add_path --global --path --move ~/.local/bin
 
-set fish_greeting
+function fish_greeting
+  echo 1. (set_color blue; echo Avoid premature optimization.; set_color normal)
+  echo 2. (set_color blue; echo Use standard solutions.; set_color normal)
+  echo 3. (set_color blue; echo Regulary refactor your code.; set_color normal)
+end
+set -g fish_greeting
 
 if status is-interactive
     # Commands to run in interactive sessions can go here
@@ -25,3 +30,5 @@ alias ls="exa -l"
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # dotfiles management
 # Bat
 alias cat='bat --style=plain,grid,header --theme=Dracula'
+
+thefuck --alias | source
