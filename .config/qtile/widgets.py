@@ -1,9 +1,8 @@
 import subprocess
 
+from libqtile import bar
 from qtile_extras import widget
 from qtile_extras.widget.decorations import RectDecoration
-
-# from vpn_widget import VPN
 
 
 def is_msi() -> bool:
@@ -66,10 +65,11 @@ w_display = (
 w_window_name = (
     widget.WindowName(
         foreground="#0ff0f0",
-        format="{class} - {name}",
-        max_chars=60,
+        format="{class}",
+        max_chars=30,
         decorations=_right_deco(color="#010101"),
         padding=8,
+        width=bar.CALCULATED
     ),
 )
 
@@ -109,7 +109,7 @@ w_temperature = (
         padding=6,
     ),
     widget.ThermalSensor(
-        decorations=_right_deco(), padding=8, foreground="#f9e2af", update_interval=5
+        decorations=_right_deco(), format="{temp:.0f}{unit}", padding=8, foreground="#f9e2af", update_interval=5
     ),
     separator(),
 )
@@ -186,7 +186,7 @@ w_memory = (
     widget.Memory(
         decorations=_right_deco(),
         padding=8,
-        format="{MemFree:.2f}{mm}",
+        format="{MemFree:.0f}{mm}",
         foreground="#a6e3a1",
         measure_mem="G",
         update_interval=5,
@@ -204,7 +204,7 @@ w_storage = (
     ),
     widget.DF(
         decorations=_right_deco(),
-        format="{uf}{m}|{r:.0f}%",
+        format="{r:.0f}%",
         foreground="#cba6f7",
         visible_on_warn=False,
         padding=8,
@@ -212,31 +212,13 @@ w_storage = (
     separator(),
 )
 
-# w_vpn_home = (
-#     widget.TextBox(
-#         text="home",
-#         decorations=_left_deco(color="#323232"),
-#         padding=6,
-#     ),
-#     VPN(iface="wg0", decorations=_right_deco(), padding=8),
-# )
-
-w_pomodoro = (
-    widget.Pomodoro(
-        length_pomodori=30,
-        padding=8,
-    ),
-)
-
 widgets = [
     *w_layout,
     group_box,
+    widget.Spacer(),
     *w_window_name,
-    widget.Spacer(length=100),
     clock,
     widget.Spacer(),
-    # *w_vpn_home,
-    # *w_pomodoro,
     *w_display,
     *w_storage,
     *w_battery,
