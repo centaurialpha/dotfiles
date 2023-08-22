@@ -102,11 +102,11 @@ keys = [
 
 
 groups = [
-    Group(name="dev", label="•"),
-    Group(name="slack", label="•"),
-    Group(name="browser", label="•"),
-    Group(name="sys", label="•"),
-    Group(name="vbox", label="•"),
+    Group(name="dev", label="󰏃"),
+    Group(name="slack", label="󰏃"),
+    Group(name="browser", label="󰏃"),
+    Group(name="sys", label="󰏃"),
+    Group(name="vbox", label="󰏃"),
 ]
 for i, group in enumerate(groups, 1):
     keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))

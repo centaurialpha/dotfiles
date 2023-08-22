@@ -19,9 +19,7 @@ def _left_deco(color, px=None, py=4):
 
 def _right_deco(color="#454545"):
     return [
-        RectDecoration(
-            colour=color, radius=2, filled=True, padding_x=2, padding_y=4
-        )
+        RectDecoration(colour=color, radius=2, filled=True, padding_x=2, padding_y=4)
     ]
 
 
@@ -30,16 +28,20 @@ def separator():
 
 
 group_box = widget.GroupBox(
-    borderwidth=1,
-    padding_y=0,
+    fontsize=16,
+    borderwidth=0,
     padding_x=5,
-    highlight_method="block",
-    urgent_alert_method="block",
+    padding_y=0,
+    active="#7e57c2",
+    block_highlight_text_color="#7e57c2",
+    inactive="#111111",
+    foreground="#ffffff",
     this_current_screen_border="#7e57c2",
-    this_screen_border="#bd93f9",
-    other_current_screen_border="#7e57c2",
-    block_highlight_text_color="#000000",
+    this_screen_border="#7e57c2",
+    other_current_screen_border="#353446",
+    other_screen_border="#353446",
     urgent_border="#ff5555",
+    rounded=True,
     disable_drag=True,
 )
 
@@ -57,7 +59,7 @@ w_display = (
         backlight_name="intel_backlight",
         change_command="brightnessctl set {0}%",
         decorations=_right_deco(),
-        padding=8
+        padding=8,
     ),
     separator(),
 )
@@ -69,7 +71,7 @@ w_window_name = (
         max_chars=30,
         decorations=_right_deco(color="#010101"),
         padding=8,
-        width=bar.CALCULATED
+        width=bar.CALCULATED,
     ),
 )
 
@@ -109,7 +111,11 @@ w_temperature = (
         padding=6,
     ),
     widget.ThermalSensor(
-        decorations=_right_deco(), format="{temp:.0f}{unit}", padding=8, foreground="#f9e2af", update_interval=5
+        decorations=_right_deco(),
+        format="{temp:.0f}{unit}",
+        padding=8,
+        foreground="#f9e2af",
+        update_interval=5,
     ),
     separator(),
 )
@@ -220,12 +226,12 @@ widgets = [
     clock,
     widget.Spacer(),
     *w_display,
-    *w_storage,
+    # *w_storage,
     *w_battery,
     *w_temperature,
     *w_cpu,
     *w_gpu,
-    *w_memory,
+    # *w_memory,
     *w_volume,
     widget.Systray(),
 ]
