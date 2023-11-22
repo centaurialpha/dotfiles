@@ -25,13 +25,11 @@
 # SOFTWARE.
 import os
 import subprocess
-
 from typing import List  # noqa: F401
 
-from libqtile import bar, layout, hook, widget
-from libqtile.config import Click, Drag, Group, Key, Screen, Match, ScratchPad, DropDown
+from libqtile import bar, hook, layout, widget
+from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad, Screen
 from libqtile.lazy import lazy
-
 from widgets import widgets
 
 mod = "mod4"  # mod1=Alt;mod2=;mod3=;mod4=super
