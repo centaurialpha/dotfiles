@@ -126,15 +126,27 @@ keys.extend(
     ]
 )
 
-LAYOUT_KWARGS = {"border_focus": "#bd93f9", "border_width": 1, "margin": 10}
+LAYOUT_KWARGS = {
+    "border_focus": "#957FB8",
+    "border_normal": "#717C7C",
+    "border_width": 1,
+    "margin": 10,
+}
 layouts = [
+    layout.Bsp(**LAYOUT_KWARGS, border_on_single=True),
+    layout.Columns(**LAYOUT_KWARGS, border_on_single=True),
+    layout.Floating(**LAYOUT_KWARGS),
+    layout.Matrix(columns=2, **LAYOUT_KWARGS),
     layout.Tile(**LAYOUT_KWARGS),
     layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
     layout.MonadTall(**LAYOUT_KWARGS),
+    layout.MonadThreeCol(**LAYOUT_KWARGS),
     layout.MonadWide(**LAYOUT_KWARGS),
     layout.Max(**LAYOUT_KWARGS),
     layout.RatioTile(**LAYOUT_KWARGS),
-    layout.Matrix(columns=2, **LAYOUT_KWARGS),
+    layout.Spiral(**LAYOUT_KWARGS),
+    layout.TreeTab(**LAYOUT_KWARGS),
+    layout.VerticalTile(**LAYOUT_KWARGS),
 ]
 
 widget_defaults = dict(
