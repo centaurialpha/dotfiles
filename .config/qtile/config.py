@@ -129,8 +129,8 @@ keys.extend(
 LAYOUT_KWARGS = {
     "border_focus": "#957FB8",
     "border_normal": "#717C7C",
-    "border_width": 1,
-    "margin": 10,
+    "border_width": 2,
+    "margin": 2,
 }
 layouts = [
     layout.Bsp(**LAYOUT_KWARGS, border_on_single=True),
