@@ -1,5 +1,5 @@
 #!/bin/bash
 
-feh --bg-fill ~/Pictures/wallpapers/minimalist-blackhole.jpg &
+feh --bg-fill ~/Pictures/wallpapers/ow3.png &
 picom &
 dunst -config ~/.config/dunst/dunstrc &
