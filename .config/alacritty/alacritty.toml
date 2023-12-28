@@ -1,0 +1,38 @@
+[colors.cursor]
+text = "CellBackground"
+
+[colors.normal]
+black = "#111111"
+blue = "#61afef"
+cyan = "#56b6c2"
+green = "#98c379"
+magenta = "#c678dd"
+red = "#e06c75"
+white = "#f8f8f8"
+yellow = "#f0c674"
+
+[colors.primary]
+background = "#181a1f"
+foreground = "#c5c8c6"
+
+[cursor.style]
+shape = "Block"
+
+[font]
+size = 18.0
+
+[font.bold]
+family = "Cascadia Code"
+style = "Bold"
+
+[font.italic]
+family = "Cascadia Code"
+style = "Italic"
+
+[font.normal]
+family = "Cascadia Code"
+style = "Regular"
+
+[window.padding]
+x = 5
+y = 5
