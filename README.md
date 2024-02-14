@@ -34,3 +34,7 @@ Inside nvim: `:PlugInstall`
 ```
 git clone https://github.com/dracula/qutebrowser-dracula-theme.git ~/.config/qutebrowser/dracula
 ```
+
+### Other
+- Install fisher
+- Install pure prompt: `fisher install pure-fish/pure`

@@ -11,8 +11,6 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
-# starship init fish | source
-
 set -gx GPG_TTY (tty)
 set -gx TERM xterm-256color
 set -gx _JAVA_AWT_WM_NONREPARENTING 1
