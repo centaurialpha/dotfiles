@@ -16,21 +16,6 @@ set -gx AWT_TOOLKIT MToolkit
 alias vim="nvim"
 alias v="nvim"
 
-function run-nvim-chad
-  env NVIM_APPNAME=NvimChad nvim
-end
-
-function run-nvim-lazy
-  env NVIM_APPNAME=LazyVim nvim
-end
-
-function run-nvim-kick
-  env NVIM_APPNAME=NvimKickstart nvim
-end
-
-alias nvim-chad=run-nvim-chad
-alias nvim-lazy=run-nvim-lazy
-alias nvim-kickstart=run-nvim-kick
 alias ls="exa -l"
 # Dot files
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # dotfiles management
