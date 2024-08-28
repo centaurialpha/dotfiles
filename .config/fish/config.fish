@@ -16,8 +16,9 @@ set -gx AWT_TOOLKIT MToolkit
 alias vim="nvim"
 alias v="nvim"
 
-alias ls="exa -l"
+alias ls="exa"
 # Dot files
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # dotfiles management
 # Bat
 # alias cat='bat --style=plain,grid,header --theme=Dracula'
+zoxide init fish | source

@@ -1,5 +1,5 @@
 #!/bin/bash
-picom -b
+# picom -b
 feh --bg-fill ~/pictures/full_moon_traveler.jpg &
 slstatus &
 xrandr --output eDP-1 --auto --right-of HDMI-2
