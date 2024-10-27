@@ -7,15 +7,15 @@ shape = "Block"
 size = 14
 
 [font.bold]
-family = "Cascadia Mono"
+family = "IBM Plex Mono Text"
 style = "Bold"
 
 [font.italic]
-family = "Cascadia Mono"
+family = "IBM Plex Mono Text"
 style = "Italic"
 
 [font.normal]
-family = "Cascadia Code"
+family = "IBM Plex Mono Text"
 style = "Regular"
 
 [window.padding]

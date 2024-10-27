@@ -1,7 +1,8 @@
 #!/bin/bash
 # picom -b
-feh --bg-fill ~/pictures/full_moon_traveler.jpg &
+# feh --bg-fill ~/pictures/full_moon_traveler.jpg &
+feh --bg-fill ~/.local/share/wallpapers/1330715.png &
 slstatus &
-xrandr --output eDP-1 --auto --right-of HDMI-2
+# xrandr --output eDP-1 --auto --right-of HDMI-2
 
 exec ~/.local/bin/dwm
