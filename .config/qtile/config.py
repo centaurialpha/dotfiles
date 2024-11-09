@@ -32,7 +32,7 @@ from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad
 from libqtile.lazy import lazy
 from widgets import widgets
 
-mod = "mod4"  # mod1=Alt;mod2=;mod3=;mod4=super
+mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = "st"  # Suckless st
 
 keys = [
@@ -68,23 +68,23 @@ keys = [
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
-    Key(
-        [mod, "shift"],
-        "Return",
-        lazy.layout.toggle_split(),
-        desc="Toggle between split and unsplit sides of stack",
-    ),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    # Key(
+    #     [mod, "shift"],
+    #     "Return",
+    #     lazy.layout.toggle_split(),
+    #     desc="Toggle between split and unsplit sides of stack",
+    # ),
+    Key([mod, "shift"], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod, "shift"], "c", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # Key([mod], "d", lazy.spawn("dmenu_run -c -l 10 -bw 2")),
     Key(
         [mod],
-        "d",
+        "p",
         lazy.spawn("rofi -i -show drun -modi drun -show-icons -display-drun ''"),
     ),
     Key(
@@ -129,7 +129,7 @@ LAYOUT_KWARGS = {
     "border_focus": "#957FB8",
     "border_normal": "#717C7C",
     "border_width": 2,
-    "margin": 2,
+    "margin": 5,
 }
 layouts = [
     layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
@@ -149,14 +149,14 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="Hermit",
+    font="IBM Plex Mono Text",
     fontsize=15,
     padding=2,
 )
 extension_defaults = widget_defaults.copy()
 
 all_widgets = widgets.copy()
-top_primary = bar.Bar(all_widgets, 30, background="#1a1b26")
+top_primary = bar.Bar(all_widgets, 30, background="#121212")
 screens = [Screen(top=top_primary)]
 
 # Drag floating layouts.
