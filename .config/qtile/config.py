@@ -218,8 +218,7 @@ def init_secondary_screen():
     if monitors_count > 1:
         second_screen_widgets = [
             widget.Spacer(length=bar.STRETCH),
-            all_widgets[5],
-            all_widgets[6],  # clock
+            all_widgets[3],  # clock
             widget.Spacer(length=bar.STRETCH),
         ]
         top_secondary = bar.Bar(second_screen_widgets, 24, background="#111111")
