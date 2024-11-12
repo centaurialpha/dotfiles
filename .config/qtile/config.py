@@ -30,6 +30,7 @@ from typing import List  # noqa: F401
 from libqtile import bar, hook, layout, widget
 from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad, Screen
 from libqtile.lazy import lazy
+
 from widgets import widgets
 
 mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
@@ -241,10 +242,9 @@ def init_secondary_screen():
         screens.append(Screen(top=top_secondary))
 
         xrandr_cmd_str = (
-            "xrandr --output eDP-1 --mode 1920x1080 --pos 1920x0 "
-            "--rotate normal --output DP-1 --off --output HDMI-1 "
-            "--off --output DP-2 --off --output HDMI-2 --primary "
-            "--mode 1920x1080 --pos 0x0 --rotate normal"
+            "xrandr --output eDP-1 --mode 1920x1080 "
+            "--output HDMI-1 --mode 1920x1080 --primary "
+            "--left-of eDP-1"
         )
         xrandr_cmd = xrandr_cmd_str.split()
         subprocess.Popen(xrandr_cmd)
