@@ -1,8 +1,17 @@
+import os
 import subprocess
 
 from libqtile import bar
 from qtile_extras import widget
 from qtile_extras.widget.decorations import RectDecoration
+
+
+def get_backlight_name() -> str:
+    path = "/sys/class/backlight/intel_backlight/"
+    bname = "intel_backlight"
+    if not os.path.exists(path):
+        bname = "amdgpu_bl1"
+    return bname
 
 
 def is_msi() -> bool:
@@ -56,7 +65,7 @@ w_display = (
         padding=6,
     ),
     widget.Backlight(
-        backlight_name="intel_backlight",
+        backlight_name=get_backlight_name(),
         change_command="brightnessctl set {0}%",
         decorations=_right_deco(),
         padding=8,
