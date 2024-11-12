@@ -7,6 +7,7 @@ from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad
 from libqtile.lazy import lazy
 
 from widgets import widgets
+from widgets import w_layout, w_window_name
 
 mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = "st"  # Suckless st
@@ -133,7 +134,15 @@ extension_defaults = widget_defaults.copy()
 
 all_widgets = widgets.copy()
 top_primary = bar.Bar(all_widgets, 30, background="#121212")
-screens = [Screen(top=top_primary)]
+bottom_widgets = [
+    widget.Net(update_interval=5),
+    widget.Spacer(),
+    *w_window_name,
+    widget.Spacer(),
+    widget.Wlan(update_interval=30),
+]
+bottom_bar = bar.Bar(bottom_widgets, 24, background="#121212")
+screens = [Screen(top=top_primary, bottom=bottom_bar)]
 
 # Drag floating layouts.
 mouse = [
