@@ -1,7 +1,7 @@
 /*Dracula theme based on the Purple official rofi theme*/
 
 * {
-    font: "Hermit 10";
+    font: "IBM Plex Mono Text 3";
     foreground: #f8f8f2;
     background: #282a36;
     active-background: #6272a4;
@@ -121,6 +121,4 @@
     margin:     0px 0.3em 0em 0em ;
     text-color: @foreground;
 }
-//@theme "/home/gabox/.local/share/rofi/themes/nord-oneline.rasi"
-//@theme "/home/gabox/.local/share/rofi/themes/spotlight-dark.rasi"
-@theme "/home/gabox/.local/share/rofi/themes/nord-oneline.rasi"
+@theme "/home/gabox/.local/share/rofi/themes/main.rasi"
