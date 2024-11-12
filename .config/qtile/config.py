@@ -141,7 +141,7 @@ bottom_widgets = [
     widget.Spacer(),
     widget.Wlan(update_interval=30),
 ]
-bottom_bar = bar.Bar(bottom_widgets, 24, background="#121212")
+bottom_bar = bar.Bar(bottom_widgets, 26, background="#121212")
 screens = [Screen(top=top_primary, bottom=bottom_bar)]
 
 # Drag floating layouts.

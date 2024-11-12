@@ -76,7 +76,8 @@ w_display = (
 w_window_name = (
     widget.WindowName(
         foreground="#0ff0f0",
-        format="{class}",
+        fmt="<b>{}</b>",
+        format="{name} {class}",
         max_chars=30,
         decorations=_right_deco(color="#010101"),
         padding=8,
