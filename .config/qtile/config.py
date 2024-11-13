@@ -6,8 +6,7 @@ from libqtile import bar, hook, layout, widget
 from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad, Screen
 from libqtile.lazy import lazy
 
-from widgets import widgets
-from widgets import w_layout, w_window_name
+from widgets import w_window_name, widgets
 
 mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = "st"  # Suckless st
@@ -203,19 +202,17 @@ def on_client_new(client):
         client.togroup("browser")
 
 
-def count_monitors() -> int:
+def get_connected_monitors() -> list[str]:
     # FIXME: con qtile.conn.pseudomonitors era un toque más rápido
     # FIXME: pero dejó de andar(?
-    monitors_count_cmd = "xrandr | grep -w 'connected' | cut -d ' ' -f 2 | wc -l"
-    command = subprocess.run(
-        monitors_count_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-    return int(command.stdout.decode())
+    xrandr_cmd = "xrandr | grep -w 'connected' | cut -d ' ' -f 1"
+    output = subprocess.check_output(xrandr_cmd, shell=True)
+    return output.decode().split()
 
 
 def init_secondary_screen():
-    monitors_count = count_monitors()
-    if monitors_count > 1:
+    monitors = get_connected_monitors()
+    if len(monitors) > 1:
         second_screen_widgets = [
             widget.Spacer(length=bar.STRETCH),
             all_widgets[3],  # clock
@@ -224,10 +221,11 @@ def init_secondary_screen():
         top_secondary = bar.Bar(second_screen_widgets, 24, background="#111111")
         screens.append(Screen(top=top_secondary))
 
+        edp, hdmi = monitors
         xrandr_cmd_str = (
-            "xrandr --output eDP-1 --mode 1920x1080 "
-            "--output HDMI-1 --mode 1920x1080 --primary "
-            "--left-of eDP-1"
+            f"xrandr --output {edp} --mode 1920x1080 "
+            f"--output {hdmi} --mode 1920x1080 --primary "
+            f"--left-of {edp}"
         )
         xrandr_cmd = xrandr_cmd_str.split()
         subprocess.Popen(xrandr_cmd)
