@@ -10,6 +10,7 @@ from widgets import w_window_name, widgets
 
 mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = "st"  # Suckless st
+# terminal = "kitty"
 
 keys = [
     # Switch between windows

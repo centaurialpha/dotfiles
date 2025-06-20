@@ -78,7 +78,7 @@ w_window_name = (
         foreground="#0ff0f0",
         fmt="<b>{}</b>",
         format="{name} {class}",
-        max_chars=30,
+        max_chars=80,
         decorations=_right_deco(color="#010101"),
         padding=8,
         width=bar.CALCULATED,

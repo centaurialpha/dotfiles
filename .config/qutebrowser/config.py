@@ -1,17 +1,17 @@
-import dracula.draw
-
+# import dracula.draw
+# 
 config.load_autoconfig()
-
-# Default home page
+# 
+# # Default home page
 c.url.default_page = 'https://google.com.ar'
 c.confirm_quit = ['multiple-tabs']
-
-dracula.draw.blood(c, {
-    'spacing': {
-        'vertical': 6,
-        'horizontal': 8
-    }
-})
+# 
+# dracula.draw.blood(c, {
+#     'spacing': {
+#         'vertical': 6,
+#         'horizontal': 8
+#     }
+# })
 
 c.auto_save.session = True
 
