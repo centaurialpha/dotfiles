@@ -59,7 +59,7 @@ clock = widget.Clock(format="[%b %d, %H:%M]")
 w_display = (
     widget.TextBox(
         text="",
-        font="Font Awesome 6 Free Solid",
+        font="Font Awesome 7 Free Solid",
         foreground="#111111",
         decorations=_left_deco(color="#f5c2e7"),
         padding=6,
@@ -88,7 +88,7 @@ w_window_name = (
 w_layout = (
     widget.TextBox(
         text="",
-        font="Font Awesome 6 Free Solid",
+        font="Font Awesome 7 Free Solid",
         foreground="#111111",
         decorations=_left_deco(color="#89dceb"),
         padding=6,
@@ -99,7 +99,7 @@ w_layout = (
 w_volume = (
     widget.TextBox(
         text="",
-        font="Font Awesome 6 Free Solid",
+        font="Font Awesome 7 Free Solid",
         foreground="#111111",
         decorations=_left_deco(color="#eba0ac"),
         padding=6,
@@ -115,7 +115,7 @@ w_volume = (
 w_temperature = (
     widget.TextBox(
         text="",
-        font="Font Awesome 6 Free Solid",
+        font="Font Awesome 7 Free Solid",
         foreground="#111111",
         decorations=_left_deco(color="#f9e2af"),
         padding=6,
@@ -133,7 +133,7 @@ w_battery = (
     widget.Battery(
         decorations=_left_deco(color="#89b4fa"),
         format="{char}",
-        font="Font Awesome 6 Free Solid",
+        font="Font Awesome 7 Free Solid",
         foreground="#111111",
         discharge_char="",
         charge_char="",
@@ -158,7 +158,7 @@ w_battery = (
 w_cpu = (
     widget.TextBox(
         text="",
-        font="Font Awesome 6 Free Solid",
+        font="Font Awesome 7 Free Solid",
         decorations=_left_deco(color="#fab387"),
         foreground="#111111",
         padding=6,
@@ -194,7 +194,7 @@ if is_msi():
 w_memory = (
     widget.TextBox(
         text="",
-        font="Font Awesome 6 Free Solid",
+        font="Font Awesome 7 Free Solid",
         decorations=_left_deco(color="#a6e3a1"),
         foreground="#111111",
         padding=6,
@@ -213,7 +213,7 @@ w_memory = (
 w_storage = (
     widget.TextBox(
         text="",
-        font="Font Awesome 6 Free Solid",
+        font="Font Awesome 7 Free Solid",
         decorations=_left_deco(color="#cba6f7"),
         foreground="#111111",
         padding=6,

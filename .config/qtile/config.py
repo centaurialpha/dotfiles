@@ -142,7 +142,8 @@ bottom_widgets = [
     widget.Wlan(update_interval=30),
 ]
 bottom_bar = bar.Bar(bottom_widgets, 26, background="#121212")
-screens = [Screen(top=top_primary, bottom=bottom_bar)]
+# screens = [Screen(top=top_primary, bottom=bottom_bar)]
+screens = []
 
 # Drag floating layouts.
 mouse = [
@@ -203,6 +204,50 @@ def on_client_new(client):
         client.togroup("browser")
 
 
+def list_monitors() -> dict:
+    try:
+        result = subprocess.run(
+            ["xrandr", "--listmonitors"], capture_output=True, text=True, check=True
+        )
+        output = result.stdout
+    except subprocess.CalledProcessError:
+        return {"count": 0, "monitors": [], "error": "Error ejecutando xrandr"}
+    except FileNotFoundError:
+        return {"count": 0, "monitors": [], "error": "xrandr no encontrado"}
+
+    lines = output.strip().split("\n")
+
+    monitor_count = 0
+    if lines and lines[0].startswith("Monitors"):
+        monitor_count = int(lines[0].split(":")[1].strip())
+
+    monitors = []
+
+    for line in lines[1:]:
+        if line.strip():
+            parts = line.strip().split()
+
+            index = int(parts[0].rstrip(":"))
+            name = parts[1].lstrip("+*")
+
+            resolution = parts[2]
+            is_primary = "*" in parts[1]
+
+            info = {
+                "index": index,
+                "name": name,
+                "resolution": resolution,
+                "is_primary": is_primary,
+            }
+
+            monitors.append(info)
+
+    return {
+        "count": monitor_count,
+        "monitors": monitors,
+    }
+
+
 def get_connected_monitors() -> list[str]:
     # FIXME: con qtile.conn.pseudomonitors era un toque más rápido
     # FIXME: pero dejó de andar(?
@@ -211,26 +256,83 @@ def get_connected_monitors() -> list[str]:
     return output.decode().split()
 
 
+def init_screens():
+    monitors_data = list_monitors()
+
+    if "error" in monitors_data:
+        return [Screen(top=top_primary, bottom=bottom_bar)]
+
+    monitors = monitors_data["monitors"]
+
+    edp, hdmi = None, None
+
+    for monitor in monitors:
+        if "eDP" in monitor["name"]:
+            edp = monitor
+        elif "HDMI" in monitor["name"]:
+            hdmi = monitor
+
+    if monitors_data["count"] == 1 or hdmi is None:
+        return [Screen(top=top_primary, bottom=bottom_bar)]
+
+    edp_widgets = [
+        widget.Spacer(length=bar.STRETCH),
+        all_widgets[4],
+        widget.Spacer(length=bar.STRETCH),
+    ]
+    edp_bar = bar.Bar(edp_widgets, 24, background="#ff0000")
+
+    xrandr_cmd = [
+        "xrandr",
+        "--output",
+        edp["name"],
+        "--mode",
+        "1920x1080",
+        "--output",
+        hdmi["name"],
+        "--mode",
+        "1920x1080",
+        "--primary",
+        "--left-of",
+        edp["name"],
+    ]
+
+    try:
+        subprocess.run(xrandr_cmd, check=True)
+    except Exception as e:
+        print(f"Error configurando xrandr: {e}")
+
+    return [
+        Screen(top=top_primary, bottom=bottom_bar),
+        Screen(),
+    ]
+
+
 def init_secondary_screen():
     monitors = get_connected_monitors()
-    if len(monitors) > 1:
-        second_screen_widgets = [
-            widget.Spacer(length=bar.STRETCH),
-            all_widgets[3],  # clock
-            widget.Spacer(length=bar.STRETCH),
-        ]
-        top_secondary = bar.Bar(second_screen_widgets, 24, background="#111111")
-        screens.append(Screen(top=top_secondary))
+    # if len(monitors) > 1:
+    second_screen_widgets = [
+        widget.Spacer(length=bar.STRETCH),
+        all_widgets[4],  # clock
+        widget.Spacer(length=bar.STRETCH),
+    ]
+    top_secondary = bar.Bar(second_screen_widgets, 24, background="#111111")
+    # screens.append(Screen(top=top_secondary))
+    screens.insert(0, Screen(top=top_secondary))
+    screens.insert(1, Screen(top=top_primary, bottom=bottom_bar))
 
-        edp, hdmi = monitors
-        xrandr_cmd_str = (
-            f"xrandr --output {edp} --mode 1920x1080 "
-            f"--output {hdmi} --mode 1920x1080 --primary "
-            f"--left-of {edp}"
-        )
-        xrandr_cmd = xrandr_cmd_str.split()
-        subprocess.Popen(xrandr_cmd)
+    edp, hdmi = monitors
+    xrandr_cmd_str = (
+        f"xrandr --output {edp} --mode 1920x1080 "
+        f"--output {hdmi} --mode 1920x1080 --primary "
+        f"--left-of {edp}"
+    )
+    xrandr_cmd = xrandr_cmd_str.split()
+    subprocess.Popen(xrandr_cmd)
 
+
+screens = init_screens()
 
 if __name__ in ("config", "__main__"):
-    init_secondary_screen()
+    # init_secondary_screen()
+    pass
