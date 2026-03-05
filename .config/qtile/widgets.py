@@ -37,13 +37,14 @@ def separator():
 
 
 group_box = widget.GroupBox(
-    fontsize=16,
+    fontsize=18,
+    font="JetBrainsMono Nerd Font",
     borderwidth=0,
-    padding_x=5,
+    padding_x=8,
     padding_y=0,
     active="#7e57c2",
     block_highlight_text_color="#7e57c2",
-    inactive="#111111",
+    inactive="#555555",
     foreground="#ffffff",
     this_current_screen_border="#7e57c2",
     this_screen_border="#7e57c2",
@@ -52,6 +53,7 @@ group_box = widget.GroupBox(
     urgent_border="#ff5555",
     rounded=True,
     disable_drag=True,
+    highlight_method="text",
 )
 
 clock = widget.Clock(format="[%b %d, %H:%M]")

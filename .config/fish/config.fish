@@ -31,3 +31,7 @@ function y
     end
     rm -f -- "$tmp"
 end
+
+if status is-interactive
+    type -q fastfetch; and fastfetch
+end
