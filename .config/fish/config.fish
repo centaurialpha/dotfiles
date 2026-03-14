@@ -28,8 +28,10 @@ function y
     rm -f -- "$tmp"
 end
 
+if status is-interactive
+    zoxide init fish | source
+end
+
 function fish_greeting
-    if status --is-interactive
-        type -q fastfetch; and fastfetch
-    end
+    type -q fastfetch; and fastfetch
 end
