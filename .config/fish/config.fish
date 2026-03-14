@@ -1,37 +1,35 @@
+# PATH
 fish_add_path --global --path --move ~/.local/bin
 
+# No greeting default
 set -g fish_greeting
 
-if status is-interactive
-    # Commands to run in interactive sessions can go here
-end
-
+# Environment variables
 set -gx GPG_TTY (tty)
 set -gx TERM xterm-256color
 set -gx _JAVA_AWT_WM_NONREPARENTING 1
 set -gx AWT_TOOLKIT MToolkit
 
 # Aliases
-# Neo Vim
 alias vim="nvim"
 alias v="nvim"
-
 alias ls="exa"
-# Dot files
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # dotfiles management
-# Bat
-# alias cat='bat --style=plain,grid,header --theme=Dracula'
-zoxide init fish | source
 
+# Dotfiles
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+# yazi wrapper
 function y
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
     yazi $argv --cwd-file="$tmp"
-    if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+    if set cwd (command cat -- "$tmp"); and test -n "$cwd"; and test "$cwd" != "$PWD"
         builtin cd -- "$cwd"
     end
     rm -f -- "$tmp"
 end
 
-if status is-interactive
-    type -q fastfetch; and fastfetch
+function fish_greeting
+    if status --is-interactive
+        type -q fastfetch; and fastfetch
+    end
 end
