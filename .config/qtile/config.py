@@ -132,7 +132,7 @@ layouts = [
     layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
     layout.Bsp(**LAYOUT_KWARGS, border_on_single=True),
     layout.Columns(**LAYOUT_KWARGS, border_on_single=True),
-    layout.Floating(**LAYOUT_KWARGS),
+    layout.Floating(),
     layout.Matrix(columns=2, **LAYOUT_KWARGS),
     layout.Tile(**LAYOUT_KWARGS),
     layout.MonadTall(**LAYOUT_KWARGS),
@@ -200,8 +200,10 @@ floating_layout = layout.Floating(
         # file_progress, confirm, download and error.
         *layout.Floating.default_float_rules,
         # Match(title="ESPlorer v0.2.0 by 4refr0nt"),
-        Match(wm_class="pinentry-qt"),
-        Match(wm_class="main.py"),
+        # Match(wm_class="pinentry-qt"),
+        # Match(wm_class="main.py"),
+        Match(wm_type="dialog"),
+        Match(title="pritunl"),
     ]
 )
 
@@ -349,6 +351,16 @@ def init_secondary_screen():
     )
     xrandr_cmd = xrandr_cmd_str.split()
     subprocess.Popen(xrandr_cmd)
+
+
+@hook.subscribe.client_new
+def force_float(client):
+    if (
+        client.match(Match(wm_class="pritunl"))
+        or "pritunl" in (client.name or "").lower()
+    ):
+        client.enable_floating()
+        # client.place(100, 100, 200, 300, 2)
 
 
 screens = init_screens()

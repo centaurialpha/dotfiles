@@ -133,6 +133,7 @@ w_temperature = (
 )
 w_battery = (
     widget.Battery(
+        battery="BATT",
         decorations=_left_deco(color="#89b4fa"),
         format="{char}",
         font="Font Awesome 7 Free Solid",
@@ -148,6 +149,7 @@ w_battery = (
         notification_timeout=30,
     ),
     widget.Battery(
+        battery="BATT",
         decorations=_right_deco(),
         padding=8,
         foreground="#89b4fa",
