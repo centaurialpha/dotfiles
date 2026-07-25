@@ -1,4 +1,5 @@
-import = ["/home/gabox/.config/alacritty/colorscheme.toml"]
+[window]
+decorations = "None"
 
 [cursor.style]
 shape = "Block"
@@ -17,6 +18,9 @@ style = "Italic"
 [font.normal]
 family = "IBM Plex Mono Text"
 style = "Regular"
+
+[general]
+import = ["/home/gabox/.config/alacritty/colorscheme.toml"]
 
 [window.padding]
 x = 5

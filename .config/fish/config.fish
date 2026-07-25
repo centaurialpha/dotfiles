@@ -32,16 +32,12 @@ if status is-interactive
     zoxide init fish | source
 end
 
-function fish_greeting
-    type -q fastfetch; and fastfetch
-end
-
-# opencode
-fish_add_path /home/gabox/.opencode/bin
-
 # pnpm
 set -gx PNPM_HOME "/home/gabox/.local/share/pnpm"
 if not string match -q -- "$PNPM_HOME/bin" $PATH
   set -gx PATH "$PNPM_HOME/bin" $PATH
 end
 # pnpm end
+
+# Added by LM Studio CLI tool (lms)
+set -gx PATH $PATH /home/gabox/.lmstudio/bin
