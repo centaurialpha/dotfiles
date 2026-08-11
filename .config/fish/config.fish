@@ -41,3 +41,14 @@ end
 
 # Added by LM Studio CLI tool (lms)
 set -gx PATH $PATH /home/gabox/.lmstudio/bin
+
+function clear
+    pyroclear
+end
+
+function clear-and-repaint
+    pyroclear
+    commandline -f repaint
+end
+
+bind \cl clear-and-repaint

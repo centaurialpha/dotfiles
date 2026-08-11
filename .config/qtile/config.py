@@ -77,12 +77,13 @@ keys = [
 
 
 groups = [
-    Group(name="dev", label=""),  # nf-fa-code
-    Group(name="slack", label="󰒱"),  # nf-md-slack
-    Group(name="browser", label=""),  # nf-fa-firefox
-    Group(name="sys", label=""),  # nf-fa-terminal
-    Group(name="vbox", label="󰍺"),  # nf-md-monitor
+    Group(name="dev", label=""),
+    Group(name="term", label=""),
+    Group(name="browser", label=""),
+    Group(name="slack", label="󰒱"),
+    Group(name="spotify", label="󰓇"),
 ]
+
 for i, group in enumerate(groups, 1):
     keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
     keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(group.name)))
