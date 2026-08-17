@@ -199,10 +199,12 @@ floating_layout = layout.Floating(
         # Run the utility of `xprop` to see the wm class and name of an X client.
         # default_float_rules include: utility, notification, toolbar, splash, dialog,
         # file_progress, confirm, download and error.
-        *layout.Floating.default_float_rules,
+        # *layout.Floating.default_float_rules,
         # Match(title="ESPlorer v0.2.0 by 4refr0nt"),
         # Match(wm_class="pinentry-qt"),
         # Match(wm_class="main.py"),
+        # Match(wm_type="dialog"),
+        # Match(title="pritunl"),
         Match(wm_type="dialog"),
         Match(title="pritunl"),
     ]
