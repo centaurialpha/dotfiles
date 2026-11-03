@@ -6,7 +6,7 @@ set -g fish_greeting
 
 # Environment variables
 set -gx GPG_TTY (tty)
-set -gx TERM xterm-256color
+test "$TERM" != linux; and set -gx TERM xterm-256color
 set -gx _JAVA_AWT_WM_NONREPARENTING 1
 set -gx AWT_TOOLKIT MToolkit
 
@@ -39,16 +39,9 @@ if not string match -q -- "$PNPM_HOME/bin" $PATH
 end
 # pnpm end
 
-# Added by LM Studio CLI tool (lms)
-set -gx PATH $PATH /home/gabox/.lmstudio/bin
-
-function clear
-    pyroclear
+function invclaude
+    env CLAUDE_CONFIG_DIR="$HOME/.claude-invera" claude $argv
 end
 
-function clear-and-repaint
-    pyroclear
-    commandline -f repaint
-end
-
-bind \cl clear-and-repaint
+# Pi
+fish_add_path "/home/gabox/.npm-global/bin"

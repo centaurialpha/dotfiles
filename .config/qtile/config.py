@@ -1,12 +1,35 @@
 import os
 import subprocess
-from typing import List  # noqa: F401
 
-from libqtile import bar, hook, layout, widget
-from libqtile.config import Click, Drag, DropDown, Group, Key, Match, ScratchPad, Screen
+from libqtile import (
+    bar,
+    hook,
+    layout,
+    widget,
+)
+from libqtile.backend.base import Window
+from libqtile.config import (
+    Click,
+    Drag,
+    DropDown,
+    Group,
+    Key,
+    Match,
+    ScratchPad,
+    Screen,
+)
+from libqtile.core.manager import Qtile
 from libqtile.lazy import lazy
 
-from widgets import w_window_name, widgets
+from widgets import (
+    PICOM_TOGGLE,
+    colors,
+    w_net,
+    w_system,
+    w_window_name,
+    w_wlan,
+    widgets,
+)
 
 mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = "st"  # Suckless st
@@ -56,7 +79,7 @@ keys = [
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod, "shift"], "c", lazy.window.kill(), desc="Kill focused window"),
-    Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
+    Key([mod, "control"], "r", lazy.reload_config(), desc="Reload config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # Key([mod], "d", lazy.spawn("dmenu_run -c -l 10 -bw 2")),
@@ -73,19 +96,39 @@ keys = [
         ),
     ),
     Key([mod], "n", lazy.next_screen()),
+    Key([mod], "c", lazy.spawn(PICOM_TOGGLE), desc="Toggle picom"),
 ]
 
 
 groups = [
-    Group(name="dev", label=""),
-    Group(name="term", label=""),
-    Group(name="browser", label=""),
-    Group(name="slack", label="󰒱"),
-    Group(name="spotify", label="󰓇"),
+    Group(name="dev", label="\ued95"),
+    Group(
+        name="browser",
+        label="\uebc6",
+        matches=[Match(wm_class="firefox"), Match(wm_class="qutebrowser")],
+    ),
+    Group(name="slack", label="\uec93", matches=[Match(wm_class="slack")]),
+    Group(name="spotify", label="\uecad"),
+    Group(
+        name="claude", label="\ued05", matches=[Match(wm_class="com.anthropic.Claude")]
+    ),
 ]
 
+
+def go_to_group(qtile: Qtile, name: str) -> None:
+    """
+    Muestra el grupo en la pantalla actual. Si ya se ve en la otra pantalla,
+    enfoca esa pantalla en vez de intercambiar los grupos entre monitores.
+    """
+    group = qtile.groups_map[name]
+    if group.screen is not None and group.screen is not qtile.current_screen:
+        qtile.focus_screen(group.screen.index)
+        return
+    group.toscreen()
+
+
 for i, group in enumerate(groups, 1):
-    keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
+    keys.append(Key([mod], str(i), lazy.function(go_to_group, group.name)))
     keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(group.name)))
 
 groups.append(
@@ -96,26 +139,6 @@ groups.append(
         ],
     )
 )
-# groups = [
-#    Group(name="dev", label="󰏃"),
-#    Group(name="slack", label="󰏃"),
-#    Group(name="browser", label="󰏃"),
-#    Group(name="sys", label="󰏃"),
-#    Group(name="vbox", label="󰏃"),
-# ]
-# for i, group in enumerate(groups, 1):
-#    keys.append(Key([mod], str(i), lazy.group[group.name].toscreen()))
-#    keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(group.name)))
-#
-#
-# groups.append(
-#    ScratchPad(
-#        "scratchpad",
-#        [
-#            DropDown("term", "st", width=0.6, height=0.5, x=0.2, y=0.1, opacity=1),
-#        ],
-#    )
-# )
 
 keys.extend(
     [
@@ -124,47 +147,38 @@ keys.extend(
 )
 
 LAYOUT_KWARGS = {
-    "border_focus": "#957FB8",
-    "border_normal": "#717C7C",
+    "border_focus": colors["accent"],
+    "border_normal": colors["inactive"],
     "border_width": 2,
     "margin": 5,
 }
 layouts = [
     layout.Stack(**LAYOUT_KWARGS, num_stacks=1),
-    layout.Bsp(**LAYOUT_KWARGS, border_on_single=True),
     layout.Columns(**LAYOUT_KWARGS, border_on_single=True),
-    layout.Floating(),
-    layout.Matrix(columns=2, **LAYOUT_KWARGS),
-    layout.Tile(**LAYOUT_KWARGS),
     layout.MonadTall(**LAYOUT_KWARGS),
-    layout.MonadThreeCol(**LAYOUT_KWARGS),
-    layout.MonadWide(**LAYOUT_KWARGS),
-    layout.Max(**LAYOUT_KWARGS),
-    layout.RatioTile(**LAYOUT_KWARGS),
-    layout.Spiral(**LAYOUT_KWARGS),
-    layout.TreeTab(**LAYOUT_KWARGS),
-    layout.VerticalTile(**LAYOUT_KWARGS),
+    layout.Bsp(**LAYOUT_KWARGS, border_on_single=True),
 ]
 
-widget_defaults = dict(
-    font="IBM Plex Mono Text",
-    fontsize=15,
-    padding=2,
-)
+widget_defaults = {
+    "font": "Input Mono",
+    "fontsize": 14,
+    "padding": 2,
+    "foreground": colors["text"],
+}
 extension_defaults = widget_defaults.copy()
 
+
 all_widgets = widgets.copy()
-top_primary = bar.Bar(all_widgets, 30, background="#121212")
+top_primary = bar.Bar(all_widgets, 28, background=colors["bg"])
 bottom_widgets = [
-    widget.Net(update_interval=5),
+    *w_wlan,
+    *w_net,
     widget.Spacer(),
     *w_window_name,
     widget.Spacer(),
-    widget.Wlan(update_interval=30),
+    *w_system,
 ]
-bottom_bar = bar.Bar(bottom_widgets, 26, background="#121212")
-# screens = [Screen(top=top_primary, bottom=bottom_bar)]
-screens = []
+bottom_bar = bar.Bar(bottom_widgets, 28, background=colors["bg"])
 
 # Drag floating layouts.
 mouse = [
@@ -181,7 +195,7 @@ mouse = [
 ]
 
 dgroups_key_binder = None
-dgroups_app_rules = []  # type: List
+dgroups_app_rules: list = []
 follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
@@ -199,34 +213,32 @@ floating_layout = layout.Floating(
         # Run the utility of `xprop` to see the wm class and name of an X client.
         # default_float_rules include: utility, notification, toolbar, splash, dialog,
         # file_progress, confirm, download and error.
-        # *layout.Floating.default_float_rules,
+        *layout.Floating.default_float_rules,
         # Match(title="ESPlorer v0.2.0 by 4refr0nt"),
         # Match(wm_class="pinentry-qt"),
         # Match(wm_class="main.py"),
-        # Match(wm_type="dialog"),
-        # Match(title="pritunl"),
         Match(wm_type="dialog"),
         Match(title="pritunl"),
     ]
 )
 
 
-def switch_screens(qtile):
-    i = qtile.screens.index(qtile.current_screen)
-    group = qtile.screens[i - 1].group
-    qtile.current_screen.set_group(group)
-
-
 @hook.subscribe.startup_once
-def autostart():
+def autostart() -> None:
     autostart_script = os.path.expanduser("~/.config/qtile/autostart.sh")
     subprocess.call([autostart_script])
 
 
-@hook.subscribe.client_new
-def on_client_new(client):
-    if client.name in ("qutebrowser", "firefox"):
-        client.togroup("browser")
+@hook.subscribe.client_name_updated
+def move_spotify(client: Window) -> None:
+    """
+    Spotify setea WM_CLASS después de mapear la ventana, así que Group.matches no la agarra.
+    """
+    # ponytail: corre en cada cambio de título; si movés Spotify a mano, vuelve sola al cambiar de tema.
+    if client.group is None or client.group.name == "spotify":
+        return
+    if client.match(Match(wm_class="spotify")):
+        client.togroup("spotify")
 
 
 def list_monitors() -> dict:
@@ -273,15 +285,7 @@ def list_monitors() -> dict:
     }
 
 
-def get_connected_monitors() -> list[str]:
-    # FIXME: con qtile.conn.pseudomonitors era un toque más rápido
-    # FIXME: pero dejó de andar(?
-    xrandr_cmd = "xrandr | grep -w 'connected' | cut -d ' ' -f 1"
-    output = subprocess.check_output(xrandr_cmd, shell=True)
-    return output.decode().split()
-
-
-def init_screens():
+def init_screens() -> list[Screen]:
     monitors_data = list_monitors()
 
     if "error" in monitors_data:
@@ -297,15 +301,8 @@ def init_screens():
         elif "HDMI" in monitor["name"]:
             hdmi = monitor
 
-    if monitors_data["count"] == 1 or hdmi is None:
+    if edp is None or hdmi is None:
         return [Screen(top=top_primary, bottom=bottom_bar)]
-
-    edp_widgets = [
-        widget.Spacer(length=bar.STRETCH),
-        all_widgets[4],
-        widget.Spacer(length=bar.STRETCH),
-    ]
-    edp_bar = bar.Bar(edp_widgets, 24, background="#ff0000")
 
     xrandr_cmd = [
         "xrandr",
@@ -324,7 +321,7 @@ def init_screens():
 
     try:
         subprocess.run(xrandr_cmd, check=True)
-    except Exception as e:
+    except (subprocess.CalledProcessError, OSError) as e:
         print(f"Error configurando xrandr: {e}")
 
     return [
@@ -333,31 +330,8 @@ def init_screens():
     ]
 
 
-def init_secondary_screen():
-    monitors = get_connected_monitors()
-    # if len(monitors) > 1:
-    second_screen_widgets = [
-        widget.Spacer(length=bar.STRETCH),
-        all_widgets[4],  # clock
-        widget.Spacer(length=bar.STRETCH),
-    ]
-    top_secondary = bar.Bar(second_screen_widgets, 24, background="#111111")
-    # screens.append(Screen(top=top_secondary))
-    screens.insert(0, Screen(top=top_secondary))
-    screens.insert(1, Screen(top=top_primary, bottom=bottom_bar))
-
-    edp, hdmi = monitors
-    xrandr_cmd_str = (
-        f"xrandr --output {edp} --mode 1920x1080 "
-        f"--output {hdmi} --mode 1920x1080 --primary "
-        f"--left-of {edp}"
-    )
-    xrandr_cmd = xrandr_cmd_str.split()
-    subprocess.Popen(xrandr_cmd)
-
-
 @hook.subscribe.client_new
-def force_float(client):
+def force_float(client: Window) -> None:
     if (
         client.match(Match(wm_class="pritunl"))
         or "pritunl" in (client.name or "").lower()
@@ -367,7 +341,3 @@ def force_float(client):
 
 
 screens = init_screens()
-
-if __name__ in ("config", "__main__"):
-    # init_secondary_screen()
-    pass
