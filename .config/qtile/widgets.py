@@ -1,3 +1,6 @@
+import asyncio
+import hashlib
+import inspect
 import json
 import math
 import os
@@ -10,8 +13,18 @@ from pathlib import Path
 from typing import Any
 from urllib.request import urlopen
 
-from libqtile import bar
+import cairocffi
+from libqtile import (
+    bar,
+    qtile,
+)
+from libqtile.core.manager import Qtile
 from libqtile.lazy import lazy
+from libqtile.log_utils import logger
+from libqtile.utils import (
+    rgb,
+    send_notification,
+)
 from libqtile.widget.base import _TextBox
 from qtile_extras import hook as extras_hook
 from qtile_extras import widget
@@ -23,6 +36,12 @@ from qtile_extras.popup.toolkit import (
     PopupText,
 )
 from qtile_extras.widget.decorations import RectDecoration
+from qtile_extras.widget.image import Image
+from qtile_extras.widget.mpris2widget import Mpris2
+from qtile_extras.widget.visualiser import (
+    CAVA_DRAW,
+    Visualiser,
+)
 
 # Paleta Kanagawa sobre fondo negro, acento azul compartido con dmenu y st.
 colors = {
@@ -70,16 +89,30 @@ def get_backlight_name() -> str:
     return bname
 
 
-def is_msi() -> bool:
+def has_nvidia() -> bool:
     """
-    Check if the machine is my msi or lenovo.
+    True si está cargado el driver de NVIDIA (la MSI), sin lanzar lspci.
     """
-    output = subprocess.check_output(["lspci"]).decode()
-    return "GTX" in output
+    return Path("/sys/module/nvidia").exists()
 
 
 # Radio de las esquinas externas de cada widget (0 = cuadrado).
 RADIUS = 2
+
+# Menús contextuales (bandeja y salida de audio) con la paleta de la barra.
+MENU_STYLE: dict[str, Any] = {
+    "menu_font": TEXT_FONT,
+    "menu_fontsize": 13,
+    "menu_foreground": colors["text"],
+    "menu_foreground_disabled": colors["inactive"],
+    "menu_background": colors["bg"],
+    "menu_border": colors["accent"],
+    "menu_border_width": 2,
+    "highlight_colour": colors["accent"],
+    "highlight_radius": RADIUS,
+    "separator_colour": colors["inactive"],
+}
+
 # Padding del ícono y del valor en cada pastilla; su suma es el hueco entre ambos.
 VALUE_PADDING = 5
 ICON_PADDING = 3
@@ -203,6 +236,7 @@ w_display = (
     widget.Backlight(
         backlight_name=get_backlight_name(),
         change_command="brightnessctl set {0}%",
+        update_interval=1,
         decorations=_right_deco(),
         padding=VALUE_PADDING,
     ),
@@ -299,27 +333,52 @@ class HemaraPoller:
 
 
 def _status_block(
-    func: Callable[[], str], interval: float, command: str
+    name: str, func: Callable[[], str], interval: float | None, on_click: Any
 ) -> tuple[widget.GenPollText, widget.Spacer]:
     """
     Bloque de un solo ícono cuyo color refleja el estado, con acción al hacer clic.
     """
     return (
         widget.GenPollText(
+            name=name,
             func=func,
             update_interval=interval,
             font=ICON_FONT,
             fontsize=ICON_SIZE,
             padding=6,
             decorations=_left_deco(colors["value_block"], radius=[RADIUS] * 4),
-            mouse_callbacks={"Button1": lazy.spawn(command)},
+            mouse_callbacks={"Button1": on_click},
         ),
         separator(),
     )
 
 
+# Tiempo que se le da al comando antes de redibujar el ícono.
+TOGGLE_REFRESH = 0.5
+
+
+@dataclass(frozen=True)
+class Toggle:
+    """
+    Corre `command` y redibuja el widget `widget_name` enseguida, así el ícono
+    cambia al toque aunque el sondeo sea lento. Sirve de clic y de lazy.function.
+    """
+
+    command: str
+    widget_name: str
+
+    def __call__(self, *_args: object) -> None:
+        if not isinstance(qtile, Qtile):
+            return
+        qtile.spawn(self.command)
+        status = qtile.widgets_map[self.widget_name]
+        qtile.call_later(TOGGLE_REFRESH, status.force_update)
+
+
 # Se redibuja cada 0.5 s para el titileo; Gatus se consulta cada 60 s.
-w_hemara = _status_block(HemaraPoller(), 0.5, f"xdg-open {GATUS_URL}")
+w_hemara = _status_block(
+    "hemara", HemaraPoller(), 0.5, lazy.spawn(f"xdg-open {GATUS_URL}")
+)
 
 PICOM_TOGGLE = "sh -c 'pkill -x picom || picom -b'"
 PICOM_ICON = "\uea54"
@@ -338,7 +397,11 @@ def picom_status() -> str:
     return _status_icon(PICOM_ICON, colors["ok"] if running else colors["inactive"])
 
 
-w_picom = _status_block(picom_status, 2, PICOM_TOGGLE)
+# Sin sondeo: se consulta al arrancar y después de cada clic o tecla. Si picom se
+# cae solo o pausás dunst desde la terminal, el ícono no se entera hasta recargar.
+STATUS_INTERVAL = None
+picom_toggle = Toggle(PICOM_TOGGLE, "picom")
+w_picom = _status_block("picom", picom_status, STATUS_INTERVAL, picom_toggle)
 
 DND_TOGGLE = "dunstctl set-paused toggle"
 BELL_ICON = "\ueab4"
@@ -357,7 +420,7 @@ def dnd_status() -> str:
     return _status_icon(BELL_OFF_ICON, colors["inactive"])
 
 
-w_dnd = _status_block(dnd_status, 2, DND_TOGGLE)
+w_dnd = _status_block("dnd", dnd_status, STATUS_INTERVAL, Toggle(DND_TOGGLE, "dnd"))
 
 
 def make_layout_icon() -> tuple[widget.CurrentLayout, widget.Spacer]:
@@ -370,7 +433,8 @@ def make_layout_icon() -> tuple[widget.CurrentLayout, widget.Spacer]:
             use_mask=True,
             scale=0.6,
             padding=6,
-            **icon_block(colors["layout"], radius=[RADIUS] * 4),
+            # Sin fondo, como el GroupBox de al lado.
+            foreground=colors["layout"],
         ),
         separator(),
     )
@@ -383,12 +447,13 @@ w_volume = (
         fontsize=ICON_SIZE,
         **icon_block(colors["device"]),
     ),
-    # Clic y rueda vienen de qtile; clic derecho abre el mezclador.
-    widget.Volume(
+    # Escucha eventos de PipeWire en vez de sondear amixer. Clic silencia, rueda
+    # cambia el volumen, clic medio elige la salida y clic derecho abre el mezclador.
+    widget.PulseVolume(
         decorations=_right_deco(),
         padding=VALUE_PADDING,
-        update_interval=1,
         volume_app="pavucontrol",
+        **MENU_STYLE,
     ),
     separator(),
 )
@@ -445,23 +510,82 @@ def make_battery(notify: bool) -> tuple[widget.Battery, widget.Battery, widget.S
     )
 
 
-# checkupdates trabaja sobre una copia de la base de pacman, no la del sistema.
 UPGRADE_COMMAND = "st -e sh -c 'sudo pacman -Syu; read -p \"Enter para cerrar\" _'"
 
-updates = widget.CheckUpdates(
-    distro="Arch_checkupdates",
-    update_interval=1800,
-    display_format="{updates}",
-    colour_have_updates=colors["text"],
-    execute=UPGRADE_COMMAND,
-    decorations=_right_deco(),
-    padding=VALUE_PADDING,
+ARCH_LOGO = Path(__file__).with_name("arch.svg")
+ARCH_BLUE = "#1793d1"
+LAUNCHER = (
+    'j4-dmenu-desktop --no-generic -x --dmenu="dmenu -i" --usage-log='
+    + os.path.expanduser("~/.cache/j4-dmenu-desktop.log")
+)
+POWER_MENU = (
+    'rofi -show power-menu -modi "power-menu:~/.rofi-scripts/power-menu'
+    ' --dry-run --choices=shutdown/reboot/logout"'
 )
 
-w_updates = (
-    follow_icon(updates, "\uecb9", colors["system"]),
-    updates,
-    follow_separator(updates),
+
+# Color del logo cuando hay actualizaciones pendientes.
+ARCH_UPDATES_COLOUR = "#ffa066"
+UPDATES_INTERVAL = 1800
+
+
+def has_updates() -> bool:
+    """
+    True si checkupdates encuentra paquetes nuevos (sale con 0; 2 es al día).
+    Trabaja sobre una copia de la base de pacman, no toca la del sistema.
+    """
+    result = subprocess.run(["checkupdates"], check=False, capture_output=True)
+    return result.returncode == 0
+
+
+class ArchLogo(Image):
+    """
+    Logo de Arch que cambia de color si hay actualizaciones. Clic medio abre el
+    upgrade y al cerrar la terminal vuelve a chequear.
+    """
+
+    def __init__(self, **config: Any) -> None:
+        super().__init__(**config)
+        self.add_callbacks({"Button2": self.upgrade})
+
+    def timer_setup(self) -> None:
+        self._periodic_check()
+
+    def _periodic_check(self) -> None:
+        self.check()
+        self.timeout_add(UPDATES_INTERVAL, self._periodic_check)
+
+    def check(self) -> None:
+        """
+        Corre checkupdates en un hilo para no trabar la barra.
+        """
+        self.qtile.run_in_executor(has_updates).add_done_callback(self._paint)
+
+    def _paint(self, future: asyncio.Future[bool]) -> None:
+        self.colour = ARCH_UPDATES_COLOUR if future.result() else ARCH_BLUE
+        self.draw()
+
+    def upgrade(self) -> None:
+        self.qtile.run_in_executor(
+            lambda: subprocess.run(UPGRADE_COMMAND, shell=True, check=False)
+        ).add_done_callback(lambda _: self.check())
+
+
+# Logo pixel art 16x16 (arch.svg), pintado como máscara con el color de estado.
+w_arch = (
+    ArchLogo(
+        filename=str(ARCH_LOGO),
+        mask=True,
+        colour=ARCH_BLUE,
+        margin_x=0,
+        margin_y=(28 - ICON_SIZE) // 2,
+        padding=6,
+        mouse_callbacks={
+            "Button1": lazy.spawn(LAUNCHER),
+            "Button3": lazy.spawn(POWER_MENU),
+        },
+    ),
+    separator(),
 )
 
 
@@ -493,11 +617,94 @@ def music_popup_layout() -> PopupRelativeLayout:
     )
 
 
+# Huella del código privado de qtile y qtile-extras que pisan StripedVisualiser y
+# RunningPlayerMpris2. Si no coincide al arrancar, avisa para revisarlas.
+UPSTREAM_HASH = "f916c85cbb305b5fc2fb35396858ef4d2c3cd99d0e3ffda9bbe6aefb8cfe24c5"
+# ID fijo: la notificación se reemplaza en vez de apilarse en cada recarga.
+UPSTREAM_NOTIFY_ID = 4242
+
+
+def upstream_hash() -> str:
+    """
+    sha256 del código privado del que dependen las subclases, tal como está instalado.
+    """
+    parts = [
+        inspect.getsource(Visualiser._draw),
+        CAVA_DRAW.read_text(),
+        inspect.getsource(Mpris2._config_async),
+        inspect.getsource(Mpris2._check_player),
+        inspect.getsource(Mpris2._send_message),
+    ]
+    return hashlib.sha256("".join(parts).encode()).hexdigest()
+
+
+def warn_upstream(message: str) -> None:
+    """
+    Notificación persistente sobre las subclases que pisan código privado.
+    """
+    send_notification("widgets.py", message, timeout=0, id_=UPSTREAM_NOTIFY_ID)
+
+
+def check_upstream() -> None:
+    """
+    Avisa si qtile o qtile-extras cambiaron el código privado que usamos.
+    """
+    current = upstream_hash()
+    if current == UPSTREAM_HASH:
+        return
+    logger.warning("widgets.py: hash nuevo de código privado: %s", current)
+    warn_upstream(
+        "qtile o qtile-extras cambiaron código que pisan el ecualizador o la"
+        " música. Si andan bien, copiá el hash nuevo del log de qtile a"
+        " UPSTREAM_HASH."
+    )
+
+
+MPRIS_PREFIX = "org.mpris.MediaPlayer2."
+
+
+class RunningPlayerMpris2(Mpris2):
+    """
+    Mpris2 que al arrancar se engancha a un reproductor ya abierto, prefiriendo
+    uno que esté sonando. El original, sin objname, espera al próximo evento del
+    reproductor (pausa o cambio de tema) y hasta entonces queda vacío.
+    """
+
+    async def _config_async(self) -> None:
+        await super()._config_async()
+        if self.objname is not None:
+            return
+        try:
+            await self._attach_running_player()
+        # Lo que tira un interno renombrado o con otra forma.
+        except (AttributeError, TypeError, IndexError):
+            logger.exception("RunningPlayerMpris2: no se pudo buscar el reproductor")
+            warn_upstream("la música no pudo buscar el reproductor al arrancar.")
+
+    async def _attach_running_player(self) -> None:
+        reply = await self._send_message(
+            "org.freedesktop.DBus",
+            "org.freedesktop.DBus",
+            "/org/freedesktop/DBus",
+            "ListNames",
+            "",
+            [],
+        )
+        players = [name for name in reply.body[0] if name.startswith(MPRIS_PREFIX)]
+        for name in players:
+            self._current_player = name
+            await self._check_player()
+            if self.is_playing:
+                return
+
+
 # Cualquier reproductor MPRIS. Clic pausa, rueda cambia de tema, clic derecho abre el panel.
 # Cuadros por segundo del ecualizador: menos es más liviano pero menos fluido.
 VISUALISER_FPS = 12
 
-music = widget.Mpris2(
+music = RunningPlayerMpris2(
+    # Nombre fijo: el clic derecho lo busca como widget["mpris2"].
+    name="mpris2",
     objname=None,
     format="{xesam:artist} - {xesam:title}",
     playing_text="{track}",
@@ -516,14 +723,99 @@ music = widget.Mpris2(
 
 # Ecualizador de cava entre el ícono y el texto. Solo corre mientras suena algo,
 # porque cava y su proceso de dibujo consumen CPU todo el tiempo.
-visualiser = widget.Visualiser(
+# Un color por barra, de izquierda a derecha. Si hay menos colores que barras, se repiten.
+VISUALISER_COLOURS = (
+    colors["media"],
+    "#7e9cd8",
+    colors["network"],
+    colors["system"],
+    colors["layout"],
+    colors["device"],
+)
+
+
+class StripedVisualiser(Visualiser):
+    """
+    Visualiser con un color sólido por barra. Usa la imagen de cava como máscara
+    sobre franjas de color, sin costo extra de CPU.
+
+    Depende de internos de qtile-extras. Si cambian, avisa con una notificación,
+    y si fallan, vuelve al ecualizador de un solo color en vez de romperse.
+    """
+
+    def __init__(self, colours: tuple[str, ...], **config: Any) -> None:
+        super().__init__(**config)
+        self._gradient: cairocffi.LinearGradient | None = None
+        try:
+            self._gradient = self._stripes(colours)
+        except AttributeError:
+            logger.exception("StripedVisualiser: no se pudieron armar las franjas")
+
+    def _stripes(self, colours: tuple[str, ...]) -> cairocffi.LinearGradient:
+        """
+        Franjas con el mismo reparto que cava_draw.py: width // bars, centradas.
+        """
+        width = self._config_length
+        slot = width // self.bars
+        pad = (width - slot * self.bars) // 2
+        gradient = cairocffi.LinearGradient(0, 0, width, 0)
+        for i in range(self.bars):
+            colour = rgb(colours[i % len(colours)])
+            # Dos paradas por borde dan un corte seco en vez de un degradé.
+            gradient.add_color_stop_rgba((pad + i * slot) / width, *colour)
+            gradient.add_color_stop_rgba((pad + (i + 1) * slot) / width, *colour)
+        return gradient
+
+    def _configure(self, qtile: Any, bar: Any) -> None:
+        super()._configure(qtile, bar)
+        if self._gradient is None:
+            warn_upstream("no se pudieron armar las franjas, quedó de un solo color.")
+            return
+        check_upstream()
+
+    def _draw(self) -> None:
+        if self._gradient is None:
+            super()._draw()
+            return
+        try:
+            self._draw_striped(self._gradient)
+        # Lo que tira un interno renombrado o con otra forma.
+        except (AttributeError, TypeError, ValueError, cairocffi.CairoError):
+            logger.exception("StripedVisualiser: falló el dibujo, uso el original")
+            self._gradient = None
+            warn_upstream("falló el dibujo por barra, quedó de un solo color.")
+            super()._draw()
+
+    def _draw_striped(self, gradient: cairocffi.LinearGradient) -> None:
+        """
+        Copia de Visualiser._draw que pinta con las franjas en vez de un color.
+        """
+        if self._shm is None:
+            return
+        with self._take_lock():
+            surface = cairocffi.ImageSurface.create_for_data(
+                bytearray(self._shm[: self._shm_size]),
+                cairocffi.FORMAT_ARGB32,
+                self._config_length,
+                self.bar_height,
+            )
+        self.drawer.clear(self.background or self.bar.background)
+        self.drawer.ctx.set_source(gradient)
+        self.drawer.ctx.mask_surface(surface, 0, self.y_offset)
+        self.draw_at_default_position()
+        self._timer = self.timeout_add(self._interval, self.loop)
+
+
+visualiser = StripedVisualiser(
+    VISUALISER_COLOURS,
     autostart=False,
+    # Solo se usa si falla el dibujo por barra.
+    bar_colour=colors["media"],
     width=36,
     bars=6,
     spacing=2,
     bar_height=14,
     framerate=VISUALISER_FPS,
-    bar_colour=colors["media"],
     decorations=[
         RectDecoration(colour=colors["value_block"], radius=0, filled=True, padding_y=3)
     ],
@@ -602,7 +894,7 @@ w_cpu = (
 )
 
 w_gpu = ()
-if is_msi():
+if has_nvidia():
     w_gpu = (
         widget.TextBox(
             text="GPU",
@@ -652,6 +944,7 @@ w_storage = (
 )
 
 widgets = [
+    *w_arch,
     *make_layout_icon(),
     make_group_box(),
     widget.Spacer(),
@@ -664,7 +957,7 @@ widgets = [
     *make_battery(notify=True),
     *w_music,
     *w_volume,
-    widget.Systray(),
+    widget.StatusNotifier(icon_size=ICON_SIZE, padding=4, **MENU_STYLE),
 ]
 
 laptop_widgets = [
@@ -726,8 +1019,6 @@ w_wlan = (
 )
 
 w_system = [
-    # Primero, así al ocultarse no corre al resto.
-    *w_updates,
     *w_temperature,
     *w_memory,
     *w_storage,

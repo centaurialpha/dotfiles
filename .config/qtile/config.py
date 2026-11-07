@@ -23,10 +23,12 @@ from libqtile.core.manager import Qtile
 from libqtile.lazy import lazy
 
 from widgets import (
-    PICOM_TOGGLE,
+    LAUNCHER,
+    POWER_MENU,
     TEXT_FONT,
     colors,
     laptop_widgets,
+    picom_toggle,
     w_net,
     w_system,
     w_window_name,
@@ -76,22 +78,18 @@ keys = [
     Key(
         [mod],
         "p",
-        lazy.spawn(
-            'j4-dmenu-desktop --no-generic -x --dmenu="dmenu -i" --usage-log='
-            + os.path.expanduser("~/.cache/j4-dmenu-desktop.log")
-        ),
+        lazy.spawn(LAUNCHER),
         desc="Launch apps",
     ),
     Key([mod, "shift"], "p", lazy.spawn("dmenu_run -i"), desc="Run command"),
     Key(
         ["control", "shift"],
         "a",
-        lazy.spawn(
-            'rofi -show power-menu -modi "power-menu:~/.rofi-scripts/power-menu --dry-run --choices=shutdown/reboot/logout"'
-        ),
+        lazy.spawn(POWER_MENU),
     ),
     Key([mod], "n", lazy.next_screen()),
-    Key([mod], "c", lazy.spawn(PICOM_TOGGLE), desc="Toggle picom"),
+    Key([mod], "c", lazy.function(picom_toggle), desc="Toggle picom"),
+    Key([mod, "shift"], "space", lazy.window.toggle_floating(), desc="Toggle floating"),
 ]
 
 
