@@ -5,6 +5,7 @@ from libqtile import (
     bar,
     hook,
     layout,
+    qtile,
     widget,
 )
 from libqtile.backend.base import Window
@@ -23,7 +24,9 @@ from libqtile.lazy import lazy
 
 from widgets import (
     PICOM_TOGGLE,
+    TEXT_FONT,
     colors,
+    laptop_widgets,
     w_net,
     w_system,
     w_window_name,
@@ -33,7 +36,6 @@ from widgets import (
 
 mod = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
 terminal = "st"  # Suckless st
-# terminal = "kitty"
 
 keys = [
     # Switch between windows
@@ -65,29 +67,22 @@ keys = [
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "m", lazy.layout.normalize(), desc="Reset all window sizes"),
-    # Toggle between split and unsplit sides of stack.
-    # Split = all windows displayed
-    # Unsplit = 1 window displayed, like Max layout, but still with
-    # multiple stack panes
-    # Key(
-    #     [mod, "shift"],
-    #     "Return",
-    #     lazy.layout.toggle_split(),
-    #     desc="Toggle between split and unsplit sides of stack",
-    # ),
     Key([mod, "shift"], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod, "shift"], "c", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    # Key([mod], "d", lazy.spawn("dmenu_run -c -l 10 -bw 2")),
     Key(
         [mod],
         "p",
-        lazy.spawn("rofi -i -show drun -modi drun -show-icons -display-drun ''"),
+        lazy.spawn(
+            'j4-dmenu-desktop --no-generic -x --dmenu="dmenu -i" --usage-log='
+            + os.path.expanduser("~/.cache/j4-dmenu-desktop.log")
+        ),
+        desc="Launch apps",
     ),
+    Key([mod, "shift"], "p", lazy.spawn("dmenu_run -i"), desc="Run command"),
     Key(
         ["control", "shift"],
         "a",
@@ -112,19 +107,33 @@ groups = [
     Group(
         name="claude", label="\ued05", matches=[Match(wm_class="com.anthropic.Claude")]
     ),
+    Group(name="media", label="\uede8"),
 ]
+
+# Con dos pantallas la notebook muestra siempre este grupo y el resto va al principal.
+LAPTOP_GROUP = "media"
+
+
+def pin_media_to_laptop(qtile: Qtile) -> None:
+    """
+    Pone el grupo de la notebook en la segunda pantalla, si hay dos.
+    """
+    if len(qtile.screens) > 1:
+        qtile.groups_map[LAPTOP_GROUP].toscreen(1)
 
 
 def go_to_group(qtile: Qtile, name: str) -> None:
     """
-    Muestra el grupo en la pantalla actual. Si ya se ve en la otra pantalla,
-    enfoca esa pantalla en vez de intercambiar los grupos entre monitores.
+    Con dos pantallas, "media" se ve en la notebook y el resto en el principal,
+    y el foco va a esa pantalla. Con una sola pantalla, muestra el grupo ahí.
     """
     group = qtile.groups_map[name]
-    if group.screen is not None and group.screen is not qtile.current_screen:
-        qtile.focus_screen(group.screen.index)
+    if len(qtile.screens) < 2:
+        group.toscreen()
         return
-    group.toscreen()
+    screen = 1 if name == LAPTOP_GROUP else 0
+    group.toscreen(screen)
+    qtile.focus_screen(screen)
 
 
 for i, group in enumerate(groups, 1):
@@ -160,7 +169,7 @@ layouts = [
 ]
 
 widget_defaults = {
-    "font": "Input Mono",
+    "font": TEXT_FONT,
     "fontsize": 14,
     "padding": 2,
     "foreground": colors["text"],
@@ -168,8 +177,20 @@ widget_defaults = {
 extension_defaults = widget_defaults.copy()
 
 
+def make_bar(items: list) -> bar.Bar:
+    """
+    Barra con los extremos alineados al margen de las ventanas.
+    """
+    edge = LAYOUT_KWARGS["margin"]
+    return bar.Bar(
+        [widget.Spacer(length=edge), *items, widget.Spacer(length=edge)],
+        28,
+        background=colors["bg"],
+    )
+
+
 all_widgets = widgets.copy()
-top_primary = bar.Bar(all_widgets, 28, background=colors["bg"])
+top_primary = make_bar(all_widgets)
 bottom_widgets = [
     *w_wlan,
     *w_net,
@@ -178,7 +199,7 @@ bottom_widgets = [
     widget.Spacer(),
     *w_system,
 ]
-bottom_bar = bar.Bar(bottom_widgets, 28, background=colors["bg"])
+bottom_bar = make_bar(bottom_widgets)
 
 # Drag floating layouts.
 mouse = [
@@ -194,8 +215,6 @@ mouse = [
     Click([mod], "Button1", lazy.window.bring_to_front()),
 ]
 
-dgroups_key_binder = None
-dgroups_app_rules: list = []
 follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
@@ -204,22 +223,22 @@ focus_on_window_activation = "smart"
 reconfigure_screens = True
 respect_minimize_requests = True
 
-# XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
+# Algunas apps Java necesitan un nombre de WM conocido.
 wmname = "qtile"
 
 
 floating_layout = layout.Floating(
+    border_focus=colors["accent"],
+    border_normal=colors["inactive"],
+    border_width=2,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
         # default_float_rules include: utility, notification, toolbar, splash, dialog,
         # file_progress, confirm, download and error.
         *layout.Floating.default_float_rules,
-        # Match(title="ESPlorer v0.2.0 by 4refr0nt"),
-        # Match(wm_class="pinentry-qt"),
-        # Match(wm_class="main.py"),
         Match(wm_type="dialog"),
         Match(title="pritunl"),
-    ]
+    ],
 )
 
 
@@ -227,6 +246,30 @@ floating_layout = layout.Floating(
 def autostart() -> None:
     autostart_script = os.path.expanduser("~/.config/qtile/autostart.sh")
     subprocess.call([autostart_script])
+
+
+@hook.subscribe.startup_once
+@hook.subscribe.screens_reconfigured
+def setup_laptop_screen() -> None:
+    """
+    Al arrancar o conectar un monitor, la notebook vuelve a mostrar "media".
+    """
+    if not isinstance(qtile, Qtile):
+        return
+    pin_media_to_laptop(qtile)
+
+
+@hook.subscribe.client_managed
+def open_browser_on_main(client: Window) -> None:
+    """
+    Cada ventana nueva de firefox o qutebrowser se muestra en el principal.
+    """
+    if not isinstance(qtile, Qtile):
+        return
+    if client.match(Match(wm_class="firefox")) or client.match(
+        Match(wm_class="qutebrowser")
+    ):
+        go_to_group(qtile, "browser")
 
 
 @hook.subscribe.client_name_updated
@@ -241,95 +284,6 @@ def move_spotify(client: Window) -> None:
         client.togroup("spotify")
 
 
-def list_monitors() -> dict:
-    try:
-        result = subprocess.run(
-            ["xrandr", "--listmonitors"], capture_output=True, text=True, check=True
-        )
-        output = result.stdout
-    except subprocess.CalledProcessError:
-        return {"count": 0, "monitors": [], "error": "Error ejecutando xrandr"}
-    except FileNotFoundError:
-        return {"count": 0, "monitors": [], "error": "xrandr no encontrado"}
-
-    lines = output.strip().split("\n")
-
-    monitor_count = 0
-    if lines and lines[0].startswith("Monitors"):
-        monitor_count = int(lines[0].split(":")[1].strip())
-
-    monitors = []
-
-    for line in lines[1:]:
-        if line.strip():
-            parts = line.strip().split()
-
-            index = int(parts[0].rstrip(":"))
-            name = parts[1].lstrip("+*")
-
-            resolution = parts[2]
-            is_primary = "*" in parts[1]
-
-            info = {
-                "index": index,
-                "name": name,
-                "resolution": resolution,
-                "is_primary": is_primary,
-            }
-
-            monitors.append(info)
-
-    return {
-        "count": monitor_count,
-        "monitors": monitors,
-    }
-
-
-def init_screens() -> list[Screen]:
-    monitors_data = list_monitors()
-
-    if "error" in monitors_data:
-        return [Screen(top=top_primary, bottom=bottom_bar)]
-
-    monitors = monitors_data["monitors"]
-
-    edp, hdmi = None, None
-
-    for monitor in monitors:
-        if "eDP" in monitor["name"]:
-            edp = monitor
-        elif "HDMI" in monitor["name"]:
-            hdmi = monitor
-
-    if edp is None or hdmi is None:
-        return [Screen(top=top_primary, bottom=bottom_bar)]
-
-    xrandr_cmd = [
-        "xrandr",
-        "--output",
-        edp["name"],
-        "--mode",
-        "1920x1080",
-        "--output",
-        hdmi["name"],
-        "--mode",
-        "1920x1080",
-        "--primary",
-        "--left-of",
-        edp["name"],
-    ]
-
-    try:
-        subprocess.run(xrandr_cmd, check=True)
-    except (subprocess.CalledProcessError, OSError) as e:
-        print(f"Error configurando xrandr: {e}")
-
-    return [
-        Screen(top=top_primary, bottom=bottom_bar),
-        Screen(),
-    ]
-
-
 @hook.subscribe.client_new
 def force_float(client: Window) -> None:
     if (
@@ -337,7 +291,10 @@ def force_float(client: Window) -> None:
         or "pritunl" in (client.name or "").lower()
     ):
         client.enable_floating()
-        # client.place(100, 100, 200, 300, 2)
 
 
-screens = init_screens()
+# Si hay una sola pantalla física, qtile usa solo la primera.
+screens = [
+    Screen(top=top_primary, bottom=bottom_bar),
+    Screen(top=make_bar(laptop_widgets)),
+]

@@ -6,7 +6,7 @@ set -g fish_greeting
 
 # Environment variables
 set -gx GPG_TTY (tty)
-test "$TERM" != linux; and set -gx TERM xterm-256color
+test "$TERM" != linux; and not set -q TMUX; and set -gx TERM xterm-256color
 set -gx _JAVA_AWT_WM_NONREPARENTING 1
 set -gx AWT_TOOLKIT MToolkit
 
