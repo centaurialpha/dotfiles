@@ -14,13 +14,14 @@
 ![screenshot qtile](screenshot-dotfiles-qtile.png)
 
 ## How to install
+Managed with [yadm](https://yadm.io/):
 ```
-echo ".dotfiles" >> .gitignore
-git clone --bare https://github.com/centaurialpha/dotfiles.git $HOME/.dotfiles
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-dotfiles checkout
-dotfiles config --local status.showUntrackedFiles no
+yadm clone git@github.com:centaurialpha/dotfiles.git
 ```
+
+Hardware differences between machines (battery name, CPU sensor, NVIDIA,
+backlight, monitors) are detected at runtime by the qtile config and
+`monitor-setup`, so every machine uses the same files.
 
 ### Neovim plugin manager
 ```

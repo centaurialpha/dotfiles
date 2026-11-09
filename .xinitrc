@@ -20,9 +20,14 @@ feh --bg-fill ~/.local/share/wallpapers/current &
 picom -b
 dunst &
 
+bar_pids=()
 case "$WM" in
 dwm)
-  command -v slstatus >/dev/null && slstatus &
+  # Barra: dwmblocks arma el estado y sb-listen lo redibuja con cada evento.
+  dwmblocks &
+  bar_pids+=($!)
+  sb-listen &
+  bar_pids+=($!)
   session=(~/.local/bin/dwm)
   ;;
 *)
@@ -32,4 +37,5 @@ esac
 
 systemctl --user start graphical-session.target
 "${session[@]}"
+[ ${#bar_pids[@]} -gt 0 ] && kill "${bar_pids[@]}" 2>/dev/null
 systemctl --user stop graphical-session.target

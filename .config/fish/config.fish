@@ -15,9 +15,6 @@ alias vim="nvim"
 alias v="nvim"
 alias ls="exa"
 
-# Dotfiles
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
 # yazi wrapper
 function y
     set tmp (mktemp -t "yazi-cwd.XXXXXX")

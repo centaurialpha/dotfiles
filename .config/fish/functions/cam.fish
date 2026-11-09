@@ -9,7 +9,7 @@ function cam --description 'Control de la cámara EZVIZ'
         case status
             $api camera --serial $serial status
         case ver
-            mpv $EZVIZ_RTSP
+            mpv --profile=camara $EZVIZ_RTSP
         case '*'
             echo 'uso: cam on|off|status|ver'
             return 1
