@@ -1,5 +1,8 @@
-import os
-import subprocess
+from dataclasses import (
+    dataclass,
+    field,
+)
+from pathlib import Path
 
 from libqtile import (
     bar,
@@ -30,6 +33,7 @@ from widgets import (
     laptop_widgets,
     picom_toggle,
     w_net,
+    w_power,
     w_system,
     w_window_name,
     w_wlan,
@@ -195,6 +199,7 @@ bottom_widgets = [
     widget.Spacer(),
     *w_window_name,
     widget.Spacer(),
+    *w_power,
     *w_system,
 ]
 bottom_bar = make_bar(bottom_widgets)
@@ -241,12 +246,6 @@ floating_layout = layout.Floating(
 
 
 @hook.subscribe.startup_once
-def autostart() -> None:
-    autostart_script = os.path.expanduser("~/.config/qtile/autostart.sh")
-    subprocess.call([autostart_script])
-
-
-@hook.subscribe.startup_once
 @hook.subscribe.screens_reconfigured
 def setup_laptop_screen() -> None:
     """
@@ -289,6 +288,70 @@ def force_float(client: Window) -> None:
         or "pritunl" in (client.name or "").lower()
     ):
         client.enable_floating()
+
+
+# Swallow como el parche de dwm: la terminal que lanza una app gráfica se esconde
+# hasta que la app se cierra. Las terminales y estas apps no la esconden.
+TERMINAL = Match(wm_class="st-256color")
+NO_SWALLOW = (
+    TERMINAL,
+    Match(wm_class="firefox"),
+    Match(title="Event Tester"),
+)
+
+
+def parent_pid(pid: int) -> int:
+    """
+    PID del proceso padre según /proc, 0 si el proceso ya no existe.
+    """
+    try:
+        stat = Path(f"/proc/{pid}/stat").read_text()
+    except OSError:
+        return 0
+    # El nombre va entre paréntesis y puede tener espacios: se corta después.
+    return int(stat.rpartition(")")[2].split()[1])
+
+
+@dataclass
+class Swallower:
+    """
+    Recuerda qué terminal escondió cada app para devolverla cuando la app se cierra.
+    """
+
+    parents: dict[int, Window] = field(default_factory=dict)
+
+    def on_managed(self, client: Window) -> None:
+        if not isinstance(qtile, Qtile) or any(client.match(m) for m in NO_SWALLOW):
+            return
+        terminals = {
+            window.get_pid(): window
+            for window in qtile.windows_map.values()
+            if isinstance(window, Window) and window.match(TERMINAL)
+        }
+        pid = client.get_pid()
+        while pid > 1:
+            pid = parent_pid(pid)
+            terminal = terminals.get(pid)
+            if terminal is not None:
+                terminal.minimized = True
+                self.parents[client.wid] = terminal
+                return
+
+    def on_killed(self, client: Window) -> None:
+        terminal = self.parents.pop(client.wid, None)
+        # La terminal puede haberse cerrado mientras estaba escondida.
+        if not isinstance(qtile, Qtile) or terminal is None:
+            return
+        if terminal.wid not in qtile.windows_map:
+            return
+        terminal.minimized = False
+        if terminal.group is not None:
+            terminal.group.focus(terminal)
+
+
+swallower = Swallower()
+hook.subscribe.client_managed(swallower.on_managed)
+hook.subscribe.client_killed(swallower.on_killed)
 
 
 # Si hay una sola pantalla física, qtile usa solo la primera.

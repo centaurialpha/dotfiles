@@ -1,28 +1,35 @@
 #!/bin/bash
-# exec ~/.local/bin/startdwm
+# Entorno a usar: WM=dwm startx, o startx solo para el default de esta máquina.
+# El default va en ~/.config/wm (una palabra: qtile o dwm), no se versiona.
+WM=${WM:-$(cat ~/.config/wm 2>/dev/null)}
+WM=${WM:-qtile}
+
 source /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
 
 export XDG_SESSION_TYPE=x11
+export XDG_CURRENT_DESKTOP=$WM
+export XDG_SESSION_DESKTOP=$WM
 xrdb -merge ~/.Xresources
 
+eval "$(gnome-keyring-daemon --start --components=secrets)"
+export SSH_AUTH_SOCK
+
+# Común a todos los entornos.
+~/.local/bin/monitor-setup
+feh --bg-fill ~/.local/share/wallpapers/current &
+picom -b
+dunst &
+
 case "$WM" in
-i3)
-  ~/.config/i3/monitor-setup.sh
-  export XDG_CURRENT_DESKTOP=i3
-  export XDG_SESSION_DESKTOP=i3
-  exec i3
+dwm)
+  command -v slstatus >/dev/null && slstatus &
+  session=(~/.local/bin/dwm)
   ;;
 *)
-  export XDG_CURRENT_DESKTOP=Qtile
-  export XDG_SESSION_DESKTOP=Qtile
-
-  eval "$(gnome-keyring-daemon --start --components=secrets)"
-  export SSH_AUTH_SOCK
-
-  systemctl --user start graphical-session.target
-
-  qtile start
-
-  systemctl --user stop graphical-session.target
+  session=(qtile start)
   ;;
 esac
+
+systemctl --user start graphical-session.target
+"${session[@]}"
+systemctl --user stop graphical-session.target

@@ -1,0 +1,17 @@
+# Repo de dotfiles (bare)
+.dotfiles
+
+# Estado local de Pi
+.atl/
+
+# Estado de fish por máquina y temporales de escritura
+.config/fish/fish_variables*
+.config/fish/fishd.tmp.*
+
+# Compilados de Python
+__pycache__/
+*.pyc
+
+# Secretos: nunca al repo
+.config/mpv/camara.m3u
+.config/wm

@@ -1,0 +1,10 @@
+#!/bin/bash
+EDP=$(xrandr --query | awk '/ connected/ && /^eDP/ {print $1; exit}')
+HDMI=$(xrandr --query | awk '/ connected/ && /^HDMI/ {print $1; exit}')
+
+if [ -n "$EDP" ] && [ -n "$HDMI" ]; then
+    xrandr --output "$EDP" --mode 1920x1080 \
+           --output "$HDMI" --mode 1920x1080 --primary --left-of "$EDP"
+elif [ -n "$EDP" ]; then
+    xrandr --output "$EDP" --auto --primary
+fi

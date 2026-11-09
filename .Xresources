@@ -1,0 +1,20 @@
+Xcursor.theme: ArchCursorTheme
+Xcursor.size: 24
+
+! st: tema suavizado (saturacion -22%), azul 4 oscuro para que el amarillo se lea sobre el highlight
+st.color0: #323437
+st.color1: #dd5a5a
+st.color2: #71bf4a
+st.color3: #d2ae39
+st.color4: #33468e
+st.color5: #bb6cd2
+st.color6: #41beb2
+st.color7: #c6c6c6
+st.color8: #7a7d82
+st.color9: #ef7b7b
+st.color10: #92df6b
+st.color11: #ebcd5e
+st.color12: #8dacf1
+st.color13: #d690e9
+st.color14: #65d8cb
+st.color15: #f2f2f2
