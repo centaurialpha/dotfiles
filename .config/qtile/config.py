@@ -27,7 +27,6 @@ from libqtile.lazy import lazy
 
 from widgets import (
     LAUNCHER,
-    POWER_MENU,
     TEXT_FONT,
     colors,
     laptop_widgets,
@@ -86,14 +85,20 @@ keys = [
         desc="Launch apps",
     ),
     Key([mod, "shift"], "p", lazy.spawn("dmenu_run -i"), desc="Run command"),
-    Key(
-        ["control", "shift"],
-        "a",
-        lazy.spawn(POWER_MENU),
-    ),
     Key([mod], "n", lazy.next_screen()),
     Key([mod], "c", lazy.function(picom_toggle), desc="Toggle picom"),
     Key([mod, "shift"], "space", lazy.window.toggle_floating(), desc="Toggle floating"),
+    Key(
+        [],
+        "XF86AudioRaiseVolume",
+        lazy.spawn("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 1%+"),
+    ),
+    Key(
+        [],
+        "XF86AudioLowerVolume",
+        lazy.spawn("wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"),
+    ),
+    Key([], "XF86AudioMute", lazy.spawn("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")),
 ]
 
 
@@ -102,7 +107,7 @@ groups = [
     Group(
         name="browser",
         label="\uebc6",
-        matches=[Match(wm_class="firefox"), Match(wm_class="qutebrowser")],
+        matches=[Match(wm_class="firefox")],
     ),
     Group(name="slack", label="\uec93", matches=[Match(wm_class="slack")]),
     Group(name="spotify", label="\uecad"),
@@ -259,13 +264,11 @@ def setup_laptop_screen() -> None:
 @hook.subscribe.client_managed
 def open_browser_on_main(client: Window) -> None:
     """
-    Cada ventana nueva de firefox o qutebrowser se muestra en el principal.
+    Cada ventana nueva de firefox se muestra en el principal.
     """
     if not isinstance(qtile, Qtile):
         return
-    if client.match(Match(wm_class="firefox")) or client.match(
-        Match(wm_class="qutebrowser")
-    ):
+    if client.match(Match(wm_class="firefox")):
         go_to_group(qtile, "browser")
 
 

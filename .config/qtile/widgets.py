@@ -49,7 +49,7 @@ from qtile_extras.widget.visualiser import (
     Visualiser,
 )
 
-# Paleta Kanagawa sobre fondo negro, acento azul compartido con dmenu y st.
+# Kanagawa sobre fondo negro
 colors = {
     "bg": "#0a0a0a",
     "value_block": "#2a2a2a",
@@ -61,7 +61,7 @@ colors = {
     "ok": "#e8e8e8",
     "fail": "#e46876",
     "icon_fg": "#0a0a0a",
-    # Un color apagado por categoría de widget.
+    # Un color apagado por categoría de widget
     "device": "#c0a36e",
     "system": "#87a987",
     "network": "#8ea4a2",
@@ -69,17 +69,17 @@ colors = {
 }
 
 
-# Íconos Pixelarticons (~/.local/share/fonts/pixelarticons.ttf), grilla de 24px mostrada a 16.
+# Íconos Pixelarticons (~/.local/share/fonts/pixelarticons.ttf)
 ICON_FONT = "pixelart-icons-font"
 ICON_SIZE = 16
 TEXT_FONT = "Input Mono"
-# Baja el ícono dentro de un texto para centrarlo (en 1/1024 pt).
+# Baja el ícono dentro de un texto para centrarlo (en 1/1024 pt)
 INLINE_ICON_RISE = -2048
 
 
 def inline_icon(glyph: str) -> str:
     """
-    Markup de un ícono dentro de un texto, del mismo tamaño que los bloques de ícono.
+    Markup de un ícono dentro de un texto
     """
     return (
         f'<span font="{ICON_FONT} {ICON_SIZE}px"'
@@ -96,17 +96,10 @@ def get_backlight_name() -> str:
 
 
 def has_nvidia() -> bool:
-    """
-    True si está cargado el driver de NVIDIA (la MSI), sin lanzar lspci.
-    """
     return Path("/sys/module/nvidia").exists()
 
 
 def battery_name() -> str:
-    """
-    Batería del equipo en /sys/class/power_supply (BATT en la Asus, BAT0 en la
-    ThinkPad). Saltea las de periféricos, como el mouse, que tienen scope Device.
-    """
     for supply in sorted(Path("/sys/class/power_supply").iterdir()):
         scope = supply / "scope"
         is_device = scope.exists() and scope.read_text().strip() == "Device"
@@ -116,9 +109,6 @@ def battery_name() -> str:
 
 
 def cpu_sensor_tag() -> str:
-    """
-    Etiqueta de la temperatura del CPU: Tctl en AMD (k10temp), paquete en Intel.
-    """
     names = {
         hwmon.read_text().strip() for hwmon in Path("/sys/class/hwmon").glob("*/name")
     }
@@ -126,19 +116,14 @@ def cpu_sensor_tag() -> str:
 
 
 def connected_monitors() -> int:
-    """
-    Salidas de video conectadas según DRM, leído al cargar la config.
-    """
     return sum(
         status.read_text().strip() == "connected"
         for status in Path("/sys/class/drm").glob("card*-*/status")
     )
 
 
-# Radio de las esquinas externas de cada widget (0 = cuadrado).
 RADIUS = 2
 
-# Menús contextuales (bandeja y salida de audio) con la paleta de la barra.
 MENU_STYLE: dict[str, Any] = {
     "menu_font": TEXT_FONT,
     "menu_fontsize": 13,
@@ -152,27 +137,21 @@ MENU_STYLE: dict[str, Any] = {
     "separator_colour": colors["inactive"],
 }
 
-# Padding del ícono y del valor en cada pastilla; su suma es el hueco entre ambos.
-VALUE_PADDING = 5
-ICON_PADDING = 3
+BLOCK_PADDING = 6
 
 
 def _left_deco(color: str, radius: list[int] | None = None) -> list[RectDecoration]:
     """
-    Bloque de color detrás del ícono, redondeado solo a la izquierda.
+    Bloque de color detrás del ícono, redondeado solo a la izquierda
     """
     corners = radius or [RADIUS, 0, 0, RADIUS]
     return [RectDecoration(colour=color, radius=corners, filled=True, padding_y=3)]
 
 
-# True: ícono oscuro sobre bloque de color. False: ícono de color sobre bloque gris.
 FILLED_ICONS = False
 
 
 def icon_block(color: str, radius: list[int] | None = None) -> dict[str, Any]:
-    """
-    Color, fondo y padding del bloque de ícono según FILLED_ICONS.
-    """
     fill = color if FILLED_ICONS else colors["value_block"]
     style: dict[str, Any] = {
         "foreground": colors["icon_fg"] if FILLED_ICONS else color,
@@ -180,22 +159,18 @@ def icon_block(color: str, radius: list[int] | None = None) -> dict[str, Any]:
     }
     # Solo la mitad izquierda de una pastilla; los bloques sueltos centran el ícono.
     if radius is None:
-        style["padding"] = ICON_PADDING
+        style["padding"] = BLOCK_PADDING
     return style
 
 
 def _right_deco(color: str = colors["value_block"]) -> list[RectDecoration]:
-    """
-    Bloque oscuro detrás del valor, redondeado solo a la derecha.
-    """
     corners = [0, RADIUS, RADIUS, 0]
     return [RectDecoration(colour=color, radius=corners, filled=True, padding_y=3)]
 
 
 def follow_icon(target: _TextBox, glyph: str, color: str) -> widget.GenPollText:
     """
-    Bloque de ícono que se muestra solo mientras `target` tiene texto. No sondea:
-    `target` lo actualiza con force_update cuando cambia su texto.
+    Bloque de ícono que se muestra solo mientras `target` tiene texto
     """
     return widget.GenPollText(
         func=lambda: glyph if target.text else "",
@@ -208,8 +183,7 @@ def follow_icon(target: _TextBox, glyph: str, color: str) -> widget.GenPollText:
 
 def follow_separator(target: _TextBox) -> widget.GenPollText:
     """
-    Separador que desaparece junto con `target`, para no dejar un hueco doble.
-    Es un espacio de texto: a 11px de Input Mono mide lo mismo que separator().
+    Separador que desaparece junto con `target`, para no dejar un hueco doble
     """
     return widget.GenPollText(
         func=lambda: " " if target.text else "",
@@ -224,9 +198,6 @@ def separator() -> widget.Spacer:
 
 
 def make_group_box() -> widget.GroupBox:
-    """
-    GroupBox nuevo: qtile no deja usar la misma instancia en dos barras.
-    """
     return widget.GroupBox(
         fontsize=ICON_SIZE,
         font=ICON_FONT,
@@ -251,10 +222,6 @@ CLOCK_FORMATS = ("[%b %d, %H:%M]", "[%a %d/%m/%Y]")
 
 
 def make_clock() -> widget.Clock:
-    """
-    Reloj que alterna de formato con clic izquierdo.
-    """
-    # Ningún formato muestra segundos: qtile alinea el tick al cambio de minuto.
     clock = widget.Clock(format=CLOCK_FORMATS[0], update_interval=60)
 
     def toggle() -> None:
@@ -267,11 +234,6 @@ def make_clock() -> widget.Clock:
 
 
 class BacklightBlock(widget.Backlight):
-    """
-    Backlight que se redibuja con los eventos de udev del subsistema backlight
-    (teclas, brightnessctl o la rueda) en vez de leer sysfs cada segundo.
-    """
-
     async def _config_async(self) -> None:
         await super()._config_async()
         self._monitor = await asyncio.create_subprocess_exec(
@@ -297,9 +259,6 @@ class BacklightBlock(widget.Backlight):
 
 
 def make_display() -> tuple[widget.TextBox, BacklightBlock, widget.Spacer]:
-    """
-    Bloque de brillo nuevo: qtile no deja usar la misma instancia en dos barras.
-    """
     return (
         widget.TextBox(
             text="\uec5d",
@@ -312,7 +271,7 @@ def make_display() -> tuple[widget.TextBox, BacklightBlock, widget.Spacer]:
             change_command="brightnessctl set {0}%",
             update_interval=None,
             decorations=_right_deco(),
-            padding=VALUE_PADDING,
+            padding=BLOCK_PADDING,
         ),
         separator(),
     )
@@ -321,33 +280,24 @@ def make_display() -> tuple[widget.TextBox, BacklightBlock, widget.Spacer]:
 w_window_name = (
     widget.WindowName(
         format="{name}",
-        # Sin ventanas no deja el bloque de fondo vacío.
         empty_group_string="",
         max_chars=80,
         decorations=_right_deco(),
-        padding=VALUE_PADDING,
+        padding=BLOCK_PADDING,
         width=bar.CALCULATED,
     ),
 )
 
-# Último resultado de cada monitor en Gatus (la Pi): no le pega a /health,
-# Gatus ya lo chequea. Fuera de casa sin VPN queda en gris.
 GATUS_URL = "http://uptime.home"
 HEMARA_GROUPS = ("Producción", "Preproducción")
 HEMARA_ICON = "\ued20"
 
 
 def _status_icon(glyph: str, color: str) -> str:
-    """
-    Markup del ícono de estado pintado con el color dado.
-    """
     return f'<span foreground="{color}">{glyph}</span>'
 
 
 def _group_healthy(endpoints: list[dict], group: str) -> bool:
-    """
-    True si el grupo tiene resultados y el último de cada endpoint fue exitoso.
-    """
     results = [
         e["results"][-1]["success"]
         for e in endpoints
@@ -357,9 +307,6 @@ def _group_healthy(endpoints: list[dict], group: str) -> bool:
 
 
 def fetch_endpoints() -> list[dict] | None:
-    """
-    Últimos resultados de Gatus, o None si no responde.
-    """
     try:
         with urlopen(
             f"{GATUS_URL}/api/v1/endpoints/statuses?pageSize=1", timeout=5
@@ -370,10 +317,6 @@ def fetch_endpoints() -> list[dict] | None:
 
 
 def hemara_icons(endpoints: list[dict] | None, blink_on: bool) -> str:
-    """
-    Un ícono de servidor por ambiente (prod, pre): claro si anda, gris apagado si
-    no llega a Gatus y rojo titilando si falla.
-    """
     icons = []
     for group in HEMARA_GROUPS:
         if endpoints is None:
@@ -383,15 +326,13 @@ def hemara_icons(endpoints: list[dict] | None, blink_on: bool) -> str:
         else:
             color = colors["fail"] if blink_on else colors["inactive"]
         icons.append(_status_icon(HEMARA_ICON, color))
-    # Sin separador: el margen del ícono alcanza y un espacio cae en otra fuente y se ve como un punto.
     return "".join(icons)
 
 
 @dataclass
 class HemaraPoller:
     """
-    Consulta Gatus cada `refresh` segundos y en cada llamada alterna el titileo.
-    La red solo se usa al refrescar; next_interval dice cuándo volver a llamarla.
+    Consulta Gatus cada `refresh` segundos y en cada llamada alterna el "titileo"
     """
 
     refresh: float = 60
@@ -401,7 +342,6 @@ class HemaraPoller:
 
     def __call__(self) -> str:
         now = time.monotonic()
-        # El segundo de margen evita saltear una consulta por el desfasaje del timer.
         if now - self._fetched_at >= self.refresh - 1:
             self._endpoints = fetch_endpoints()
             self._fetched_at = now
@@ -410,27 +350,16 @@ class HemaraPoller:
 
     @property
     def failing(self) -> bool:
-        """
-        True si Gatus respondió y algún ambiente falla.
-        """
         endpoints = self._endpoints
         if endpoints is None:
             return False
         return not all(_group_healthy(endpoints, group) for group in HEMARA_GROUPS)
 
     def next_interval(self) -> float:
-        """
-        Rápido solo mientras titila; si todo anda, hasta la próxima consulta.
-        """
         return self.blink if self.failing else self.refresh
 
 
 class HemaraBlock(widget.GenPollText):
-    """
-    Bloque de hemara que ajusta su intervalo después de cada consulta, así no se
-    redibuja cada 0.5 s cuando no hay nada que titile.
-    """
-
     def poll(self) -> str:
         text = super().poll()
         if isinstance(self.func, HemaraPoller):
@@ -445,9 +374,6 @@ def _status_block(
     on_click: Any,
     block_class: type[widget.GenPollText] = widget.GenPollText,
 ) -> tuple[widget.GenPollText, widget.Spacer]:
-    """
-    Bloque de un solo ícono cuyo color refleja el estado, con acción al hacer clic.
-    """
     return (
         block_class(
             name=name,
@@ -455,7 +381,7 @@ def _status_block(
             update_interval=interval,
             font=ICON_FONT,
             fontsize=ICON_SIZE,
-            padding=6,
+            padding=BLOCK_PADDING,
             decorations=_left_deco(colors["value_block"], radius=[RADIUS] * 4),
             mouse_callbacks={"Button1": on_click},
         ),
@@ -463,17 +389,11 @@ def _status_block(
     )
 
 
-# Tiempo que se le da al comando antes de redibujar el ícono.
 TOGGLE_REFRESH = 0.5
 
 
 @dataclass(frozen=True)
 class Toggle:
-    """
-    Corre `command` y redibuja el widget `widget_name` enseguida, así el ícono
-    cambia al toque aunque el sondeo sea lento. Sirve de clic y de lazy.function.
-    """
-
     command: str
     widget_name: str
 
@@ -485,7 +405,6 @@ class Toggle:
         qtile.call_later(TOGGLE_REFRESH, status.force_update)
 
 
-# Gatus se consulta cada 60 s; solo si algo falla se redibuja cada 0.5 s para titilar.
 w_hemara = _status_block(
     "hemara",
     HemaraPoller(),
@@ -499,9 +418,6 @@ PICOM_ICON = "\uea54"
 
 
 def picom_status() -> str:
-    """
-    Ícono de ventana: claro si picom está corriendo, gris apagado si no.
-    """
     running = (
         subprocess.run(
             ["pgrep", "-x", "picom"], check=False, capture_output=True
@@ -511,8 +427,6 @@ def picom_status() -> str:
     return _status_icon(PICOM_ICON, colors["ok"] if running else colors["inactive"])
 
 
-# Sin sondeo: se consulta al arrancar y después de cada clic o tecla. Si picom se
-# cae solo, el ícono no se entera hasta recargar.
 picom_toggle = Toggle(PICOM_TOGGLE, "picom")
 w_picom = _status_block("picom", picom_status, None, picom_toggle)
 
@@ -522,9 +436,6 @@ BELL_OFF_ICON = "\ueab0"
 
 
 def dnd_status() -> str:
-    """
-    Estado actual según dunstctl. Solo corre al arrancar.
-    """
     result = subprocess.run(
         ["dunstctl", "is-paused"], check=False, capture_output=True, text=True
     )
@@ -532,20 +443,12 @@ def dnd_status() -> str:
 
 
 def dnd_icon(paused: bool) -> str:
-    """
-    Campana clara si dunst muestra notificaciones, tachada y gris si están pausadas.
-    """
     if paused:
         return _status_icon(BELL_OFF_ICON, colors["inactive"])
     return _status_icon(BELL_ICON, colors["ok"])
 
 
 class DndBlock(widget.GenPollText):
-    """
-    Bloque que escucha la propiedad `paused` de dunst por D-Bus: se redibuja al
-    pausar o reanudar desde el clic, un atajo o la terminal.
-    """
-
     async def _config_async(self) -> None:
         await super()._config_async()
         await add_signal_receiver(
@@ -566,14 +469,12 @@ w_dnd = _status_block(
     "dnd", dnd_status, None, lazy.spawn(DND_TOGGLE), block_class=DndBlock
 )
 
-# Modo de power-profiles-daemon: velocímetro lento, medio o rápido.
 POWER_ICONS = {
     "power-saver": ("\ued50", colors["layout"]),
     "balanced": ("\ued4f", colors["ok"]),
     "performance": ("\ued4e", "#ffa066"),
 }
 POWER_PROFILES_PATH = "/org/freedesktop/UPower/PowerProfiles"
-# Rota balanced, performance (si el equipo lo soporta) y power-saver.
 POWER_TOGGLE = (
     "sh -c 'case $(powerprofilesctl get) in"
     " balanced) powerprofilesctl set performance 2>/dev/null"
@@ -584,17 +485,11 @@ POWER_TOGGLE = (
 
 
 def power_icon(profile: str) -> str:
-    """
-    Ícono del modo de energía, gris si el modo es desconocido.
-    """
     glyph, colour = POWER_ICONS.get(profile, ("\ued4f", colors["inactive"]))
     return _status_icon(glyph, colour)
 
 
 def power_status() -> str:
-    """
-    Modo actual según powerprofilesctl. Solo corre al arrancar.
-    """
     result = subprocess.run(
         ["powerprofilesctl", "get"], check=False, capture_output=True, text=True
     )
@@ -602,11 +497,6 @@ def power_status() -> str:
 
 
 class PowerProfileBlock(widget.GenPollText):
-    """
-    Bloque que escucha a power-profiles-daemon por D-Bus: se redibuja cuando el
-    modo cambia (clic, terminal o batería baja) sin sondear nada.
-    """
-
     async def _config_async(self) -> None:
         await super()._config_async()
         await add_signal_receiver(
@@ -631,8 +521,6 @@ w_power = _status_block(
     block_class=PowerProfileBlock,
 )
 
-# Ballena llena azul Docker prendido, contorno gris apagado, verde mientras
-# arranca o para.
 DOCKER_BLUE = "#2496ed"
 DOCKER_ICONS = {
     "active": ("\ueb77", DOCKER_BLUE),
@@ -641,9 +529,6 @@ DOCKER_ICONS = {
     "failed": ("\ueb78", colors["fail"]),
 }
 DOCKER_UNIT_PATH = "/org/freedesktop/systemd1/unit/docker_2eservice"
-# Se paran socket y servicio juntos: con el socket vivo, cualquier comando
-# `docker` vuelve a levantar el servicio. Van en llamadas separadas porque
-# polkit rechaza el pedido con dos unidades juntas.
 DOCKER_TOGGLE = (
     "sh -c 'if systemctl is-active -q docker.service;"
     " then systemctl --no-ask-password stop docker.socket;"
@@ -653,17 +538,11 @@ DOCKER_TOGGLE = (
 
 
 def docker_icon(state: str) -> str:
-    """
-    Ícono de Docker según el ActiveState de systemd.
-    """
     glyph, colour = DOCKER_ICONS.get(state, ("\ueb78", colors["inactive"]))
     return _status_icon(glyph, colour)
 
 
 def docker_status() -> str:
-    """
-    Estado actual de docker.service. Solo corre al arrancar.
-    """
     result = subprocess.run(
         ["systemctl", "is-active", "docker.service"],
         check=False,
@@ -674,15 +553,8 @@ def docker_status() -> str:
 
 
 class DockerBlock(widget.GenPollText):
-    """
-    Bloque que escucha a systemd por D-Bus y se redibuja cuando docker.service
-    cambia de estado, venga del clic o de la terminal.
-    """
-
     async def _config_async(self) -> None:
         await super()._config_async()
-        # Conexión propia: systemd solo emite señales de unidades mientras haya un
-        # suscriptor conectado, y al cerrarla en finalize la suscripción se va.
         self._bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
         await self._bus.call(
             Message(
@@ -719,56 +591,37 @@ w_docker = _status_block(
     block_class=DockerBlock,
 )
 
-# Estado de las sesiones de Claude Code, una carpeta por cuenta. Lo escriben los
-# hooks de ~/.claude/hooks/ y después mandan CLAUDE_SIGNAL por D-Bus: sin sondeo.
-# dbus-send tarda milisegundos; `qtile cmd-obj` arrancaba Python y tardaba casi 1 s.
 CLAUDE_RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 CLAUDE_STATE_DIR = CLAUDE_RUNTIME / "claude-state"
-# Uso de cada cuenta como "usado5h reset5h usado7d reset7d", escrito por los status lines.
 CLAUDE_USAGE_DIR = CLAUDE_RUNTIME / "claude-usage"
-# La cuenta sale de CLAUDE_CONFIG_DIR: ~/.claude es personal, ~/.claude-invera es invera.
 CLAUDE_PERSONAL = "personal"
 CLAUDE_WORK = "invera"
-# Etiqueta corta en la barra para la cuenta de trabajo.
 CLAUDE_WORK_LABEL = "inv"
-# Naranja de Claude Code (rgb 215,119,87) mientras trabaja, gris claro en reposo y
-# rojo esperando permiso, igual que el grupo urgente del GroupBox. Sin sesiones
-# queda un cuadrado en el gris apagado de la barra.
 CLAUDE_ORANGE = "#d77757"
 CLAUDE_IDLE = "#9a9a9a"
-# Orden de urgencia: primero las sesiones que esperan una respuesta.
 CLAUDE_STYLES = {
     "waiting": ("■", colors["fail"]),
     "working": ("■", CLAUDE_ORANGE),
     "done": ("■", CLAUDE_IDLE),
 }
-# Un archivo sin tocar por tanto tiempo es de una sesión que se cortó sin SessionEnd.
 CLAUDE_STALE = 12 * 3600
-# dbus-send --session --type=signal /dev/gabox/Claude dev.gabox.Claude.Changed
 CLAUDE_SIGNAL_PATH = "/dev/gabox/Claude"
 CLAUDE_SIGNAL_INTERFACE = "dev.gabox.Claude"
 
 
 def claude_accounts() -> tuple[str, ...]:
-    """
-    Cuentas para alternar con el clic. La de trabajo solo en la PC que la tiene.
-    """
     if (Path.home() / f".claude-{CLAUDE_WORK}").is_dir():
         return (CLAUDE_PERSONAL, CLAUDE_WORK)
     return (CLAUDE_PERSONAL,)
 
 
 def claude_states(account: str) -> list[str]:
-    """
-    Estado de cada sesión viva de la cuenta, ordenado por urgencia.
-    """
     folder = CLAUDE_STATE_DIR / account
     if not folder.is_dir():
         return []
     cutoff = time.time() - CLAUDE_STALE
     states = []
     for path in folder.iterdir():
-        # El hook puede borrar el archivo mientras se recorre la carpeta.
         try:
             if path.stat().st_mtime > cutoff:
                 states.append(path.read_text().strip())
@@ -780,41 +633,27 @@ def claude_states(account: str) -> list[str]:
 
 @dataclass(frozen=True, slots=True)
 class UsageWindow:
-    """
-    Una ventana de límite de uso. Se muestra solo desde `show_from` por ciento usado.
-    """
-
     label: str
     used: int
     resets_at: int
     show_from: int
 
     def current_used(self, now: float) -> int:
-        """
-        Uso vigente: pasado el reset, la ventana vuelve a cero. -1 es sin datos.
-        """
         if self.used < 0:
             return -1
         return 0 if now >= self.resets_at else self.used
 
 
 def claude_usage(account: str) -> list[UsageWindow]:
-    """
-    Ventanas de 5 h y 7 días según el último status line, o vacío si no hay datos.
-    """
     try:
         fields = (CLAUDE_USAGE_DIR / account).read_text().split()
         u5, r5, u7, r7 = (int(field) for field in fields)
     except (FileNotFoundError, ValueError):
         return []
-    # La de 7 días solo aparece cuando aprieta.
-    return [UsageWindow("5h", u5, r5, 0), UsageWindow("7d", u7, r7, 60)]
+    return [UsageWindow("5h", u5, r5, 0), UsageWindow("7d", u7, r7, 30)]
 
 
 def usage_color(used: int) -> str:
-    """
-    Mismos umbrales que el status line: naranja desde 60 y rojo desde 85.
-    """
     if used >= 85:
         return colors["fail"]
     if used >= 60:
@@ -823,9 +662,6 @@ def usage_color(used: int) -> str:
 
 
 def usage_markup(windows: list[UsageWindow], now: float) -> str:
-    """
-    Porcentaje que queda en cada ventana visible, por ejemplo "5h 69%".
-    """
     parts = []
     for window in windows:
         used = window.current_used(now)
@@ -837,10 +673,6 @@ def usage_markup(windows: list[UsageWindow], now: float) -> str:
 
 
 def claude_status(account: str) -> str:
-    """
-    Un cuadrado por sesión con el color de su estado, o uno gris si no hay
-    ninguna, seguido de lo que queda de uso. La cuenta de trabajo lleva su nombre.
-    """
     states = claude_states(account)
     squares = "".join(_status_icon(*CLAUDE_STYLES[s]) for s in states)
     parts = (
@@ -854,12 +686,6 @@ def claude_status(account: str) -> str:
 
 
 class ClaudeBlock(widget.GenPollText):
-    """
-    Bloque de Claude que se redibuja con la señal de D-Bus de los hooks y cuando
-    vence una ventana de uso, porque en ese momento nadie avisa. El clic alterna
-    entre cuentas.
-    """
-
     def __init__(self, accounts: tuple[str, ...], **config: Any) -> None:
         super().__init__(**config)
         self.accounts = accounts
@@ -881,9 +707,6 @@ class ClaudeBlock(widget.GenPollText):
         self.force_update()
 
     def next_account(self) -> None:
-        """
-        Pasa a la cuenta siguiente y redibuja.
-        """
         index = self.accounts.index(self.account)
         self.account = self.accounts[(index + 1) % len(self.accounts)]
         self.force_update()
@@ -911,7 +734,7 @@ w_claude = (
         name="claude",
         update_interval=None,
         font=TEXT_FONT,
-        padding=6,
+        padding=BLOCK_PADDING,
         decorations=_left_deco(colors["value_block"], radius=[RADIUS] * 4),
     ),
     separator(),
@@ -919,16 +742,12 @@ w_claude = (
 
 
 def make_layout_icon() -> tuple[widget.CurrentLayout, widget.Spacer]:
-    """
-    Ícono del layout activo de la pantalla de su barra.
-    """
     return (
         widget.CurrentLayout(
             mode="icon",
             use_mask=True,
             scale=0.6,
-            padding=6,
-            # Sin fondo, como el GroupBox de al lado.
+            padding=BLOCK_PADDING,
             foreground=colors["layout"],
         ),
         separator(),
@@ -942,11 +761,9 @@ w_volume = (
         fontsize=ICON_SIZE,
         **icon_block(colors["device"]),
     ),
-    # Escucha eventos de PipeWire en vez de sondear amixer. Clic silencia, rueda
-    # cambia el volumen, clic medio elige la salida y clic derecho abre el mezclador.
     widget.PulseVolume(
         decorations=_right_deco(),
-        padding=VALUE_PADDING,
+        padding=BLOCK_PADDING,
         volume_app="pavucontrol",
         **MENU_STYLE,
     ),
@@ -964,7 +781,7 @@ w_temperature = (
         decorations=_right_deco(),
         format="{temp:.0f}{unit}",
         tag_sensor=cpu_sensor_tag(),
-        padding=VALUE_PADDING,
+        padding=BLOCK_PADDING,
         update_interval=5,
     ),
     separator(),
@@ -975,11 +792,6 @@ UPOWER_DISPLAY_DEVICE = "/org/freedesktop/UPower/devices/DisplayDevice"
 
 
 class BatteryBlock(widget.Battery):
-    """
-    Battery que se redibuja cuando UPower avisa un cambio de carga o de estado
-    por D-Bus, sin sondear. DisplayDevice sirve en cualquier equipo con batería.
-    """
-
     async def _config_async(self) -> None:
         await super()._config_async()
         await add_signal_receiver(
@@ -1000,9 +812,6 @@ BATTERY = battery_name()
 def make_battery(
     notify: bool,
 ) -> tuple[BatteryBlock, BatteryBlock, widget.Spacer]:
-    """
-    Bloque de batería. Solo una barra debe avisar, si no llegan dos notificaciones.
-    """
     return (
         BatteryBlock(
             battery=BATTERY,
@@ -1025,7 +834,7 @@ def make_battery(
             battery=BATTERY,
             show_short_text=False,
             decorations=_right_deco(),
-            padding=VALUE_PADDING,
+            padding=BLOCK_PADDING,
             format="{percent:2.0%}",
             update_interval=None,
         ),
@@ -1041,34 +850,19 @@ LAUNCHER = (
     'j4-dmenu-desktop --no-generic -x --dmenu="dmenu -i" --usage-log='
     + os.path.expanduser("~/.cache/j4-dmenu-desktop.log")
 )
-POWER_MENU = (
-    'rofi -show power-menu -modi "power-menu:~/.rofi-scripts/power-menu'
-    ' --dry-run --choices=shutdown/reboot/logout"'
-)
 
 
-# Color del logo cuando hay actualizaciones que importan.
 ARCH_UPDATES_COLOUR = "#ffa066"
 UPDATES_INTERVAL = 1800
-# Paquetes que piden atención: el kernel pide reiniciar, y qtile o python
-# pueden romper la sesión hasta reiniciar qtile.
 IMPORTANT_PACKAGES = frozenset({"linux", "linux-lts", "linux-zen", "qtile", "python"})
-# Con tantas actualizaciones juntas también avisa, para que no se acumulen.
 UPDATES_PILE_UP = 30
 
 
 def needs_attention(pending: list[str]) -> bool:
-    """
-    True si entre los paquetes pendientes hay uno importante o son demasiados.
-    """
     return len(pending) >= UPDATES_PILE_UP or not IMPORTANT_PACKAGES.isdisjoint(pending)
 
 
 def pending_packages() -> list[str]:
-    """
-    Nombres de los paquetes con actualización según checkupdates. Trabaja sobre
-    una copia de la base de pacman, no toca la del sistema.
-    """
     result = subprocess.run(
         ["checkupdates"], check=False, capture_output=True, text=True
     )
@@ -1077,18 +871,10 @@ def pending_packages() -> list[str]:
 
 
 def has_updates() -> bool:
-    """
-    True si hay actualizaciones que vale la pena mostrar en el logo.
-    """
     return needs_attention(pending_packages())
 
 
 class ArchLogo(Image):
-    """
-    Logo de Arch que cambia de color si hay actualizaciones. Clic medio abre el
-    upgrade y al cerrar la terminal vuelve a chequear.
-    """
-
     def __init__(self, **config: Any) -> None:
         super().__init__(**config)
         self.add_callbacks({"Button2": self.upgrade})
@@ -1101,9 +887,6 @@ class ArchLogo(Image):
         self.timeout_add(UPDATES_INTERVAL, self._periodic_check)
 
     def check(self) -> None:
-        """
-        Corre checkupdates en un hilo para no trabar la barra.
-        """
         self.qtile.run_in_executor(has_updates).add_done_callback(self._paint)
 
     def _paint(self, future: asyncio.Future[bool]) -> None:
@@ -1116,7 +899,6 @@ class ArchLogo(Image):
         ).add_done_callback(lambda _: self.check())
 
 
-# Logo pixel art 16x16 (arch.svg), pintado como máscara con el color de estado.
 w_arch = (
     ArchLogo(
         filename=str(ARCH_LOGO),
@@ -1124,10 +906,9 @@ w_arch = (
         colour=ARCH_BLUE,
         margin_x=0,
         margin_y=(28 - ICON_SIZE) // 2,
-        padding=6,
+        padding=BLOCK_PADDING,
         mouse_callbacks={
             "Button1": lazy.spawn(LAUNCHER),
-            "Button3": lazy.spawn(POWER_MENU),
         },
     ),
     separator(),
@@ -1135,9 +916,6 @@ w_arch = (
 
 
 def music_popup_layout() -> PopupRelativeLayout:
-    """
-    Panel de controles de Mpris2 con la paleta y la fuente de la barra.
-    """
     controls = deepcopy(DEFAULT_LAYOUT.controls)
     for control in controls:
         control.highlight = colors["accent"]
@@ -1162,17 +940,11 @@ def music_popup_layout() -> PopupRelativeLayout:
     )
 
 
-# Huella del código privado de qtile y qtile-extras que pisan StripedVisualiser y
-# RunningPlayerMpris2. Si no coincide al arrancar, avisa para revisarlas.
 UPSTREAM_HASH = "f916c85cbb305b5fc2fb35396858ef4d2c3cd99d0e3ffda9bbe6aefb8cfe24c5"
-# ID fijo: la notificación se reemplaza en vez de apilarse en cada recarga.
 UPSTREAM_NOTIFY_ID = 4242
 
 
 def upstream_hash() -> str:
-    """
-    sha256 del código privado del que dependen las subclases, tal como está instalado.
-    """
     parts = [
         inspect.getsource(Visualiser._draw),
         CAVA_DRAW.read_text(),
@@ -1184,16 +956,10 @@ def upstream_hash() -> str:
 
 
 def warn_upstream(message: str) -> None:
-    """
-    Notificación persistente sobre las subclases que pisan código privado.
-    """
     send_notification("widgets.py", message, timeout=0, id_=UPSTREAM_NOTIFY_ID)
 
 
 def check_upstream() -> None:
-    """
-    Avisa si qtile o qtile-extras cambiaron el código privado que usamos.
-    """
     current = upstream_hash()
     if current == UPSTREAM_HASH:
         return
@@ -1209,14 +975,6 @@ MPRIS_PREFIX = "org.mpris.MediaPlayer2."
 
 
 class RunningPlayerMpris2(Mpris2):
-    """
-    Mpris2 que al arrancar se engancha a un reproductor ya abierto, prefiriendo
-    uno que esté sonando. El original, sin objname, espera al próximo evento del
-    reproductor (pausa o cambio de tema) y hasta entonces queda vacío.
-
-    Cada vez que cambia el texto actualiza a sus `followers` (ícono y separador).
-    """
-
     def __init__(self, **config: Any) -> None:
         super().__init__(**config)
         self.followers: list[widget.GenPollText] = []
@@ -1233,7 +991,6 @@ class RunningPlayerMpris2(Mpris2):
             return
         try:
             await self._attach_running_player()
-        # Lo que tira un interno renombrado o con otra forma.
         except (AttributeError, TypeError, IndexError):
             logger.exception("RunningPlayerMpris2: no se pudo buscar el reproductor")
             warn_upstream("la música no pudo buscar el reproductor al arrancar.")
@@ -1255,32 +1012,25 @@ class RunningPlayerMpris2(Mpris2):
                 return
 
 
-# Cualquier reproductor MPRIS. Clic pausa, rueda cambia de tema, clic derecho abre el panel.
-# Cuadros por segundo del ecualizador: menos es más liviano pero menos fluido.
 VISUALISER_FPS = 12
 
 music = RunningPlayerMpris2(
-    # Nombre fijo: el clic derecho lo busca como widget["mpris2"].
     name="mpris2",
     objname=None,
     format="{xesam:artist} - {xesam:title}",
     playing_text="{track}",
     paused_text="{track} [pausa]",
     no_metadata_text="",
-    # Tras recargar qtile, el primer evento no trae el tema.
     poll_interval=30,
     scroll=True,
     width=250,
     decorations=_right_deco(),
-    padding=VALUE_PADDING,
+    padding=BLOCK_PADDING,
     popup_layout=music_popup_layout(),
     popup_show_args={"relative_to": 3, "relative_to_bar": True},
     mouse_callbacks={"Button3": lazy.widget["mpris2"].toggle_player()},
 )
 
-# Ecualizador de cava entre el ícono y el texto. Solo corre mientras suena algo,
-# porque cava y su proceso de dibujo consumen CPU todo el tiempo.
-# Un color por barra, de izquierda a derecha. Si hay menos colores que barras, se repiten.
 VISUALISER_COLOURS = (
     colors["media"],
     "#7e9cd8",
@@ -1292,14 +1042,6 @@ VISUALISER_COLOURS = (
 
 
 class StripedVisualiser(Visualiser):
-    """
-    Visualiser con un color sólido por barra. Usa la imagen de cava como máscara
-    sobre franjas de color, sin costo extra de CPU.
-
-    Depende de internos de qtile-extras. Si cambian, avisa con una notificación,
-    y si fallan, vuelve al ecualizador de un solo color en vez de romperse.
-    """
-
     def __init__(self, colours: tuple[str, ...], **config: Any) -> None:
         super().__init__(**config)
         self._gradient: cairocffi.LinearGradient | None = None
@@ -1309,16 +1051,12 @@ class StripedVisualiser(Visualiser):
             logger.exception("StripedVisualiser: no se pudieron armar las franjas")
 
     def _stripes(self, colours: tuple[str, ...]) -> cairocffi.LinearGradient:
-        """
-        Franjas con el mismo reparto que cava_draw.py: width // bars, centradas.
-        """
         width = self._config_length
         slot = width // self.bars
         pad = (width - slot * self.bars) // 2
         gradient = cairocffi.LinearGradient(0, 0, width, 0)
         for i in range(self.bars):
             colour = rgb(colours[i % len(colours)])
-            # Dos paradas por borde dan un corte seco en vez de un degradé.
             gradient.add_color_stop_rgba((pad + i * slot) / width, *colour)
             gradient.add_color_stop_rgba((pad + (i + 1) * slot) / width, *colour)
         return gradient
@@ -1336,7 +1074,6 @@ class StripedVisualiser(Visualiser):
             return
         try:
             self._draw_striped(self._gradient)
-        # Lo que tira un interno renombrado o con otra forma.
         except (AttributeError, TypeError, ValueError, cairocffi.CairoError):
             logger.exception("StripedVisualiser: falló el dibujo, uso el original")
             self._gradient = None
@@ -1344,9 +1081,6 @@ class StripedVisualiser(Visualiser):
             super()._draw()
 
     def _draw_striped(self, gradient: cairocffi.LinearGradient) -> None:
-        """
-        Copia de Visualiser._draw que pinta con las franjas en vez de un color.
-        """
         if self._shm is None:
             return
         with self._take_lock():
@@ -1366,7 +1100,6 @@ class StripedVisualiser(Visualiser):
 visualiser = StripedVisualiser(
     VISUALISER_COLOURS,
     autostart=False,
-    # Solo se usa si falla el dibujo por barra.
     bar_colour=colors["media"],
     width=36,
     bars=6,
@@ -1379,8 +1112,6 @@ visualiser = StripedVisualiser(
 )
 
 
-# Hueco gris entre ecualizador y texto. Va afuera del texto porque la marquesina
-# se dibuja hasta el borde del widget e ignora el padding.
 VISUALISER_GAP = 6
 visualiser_gap = widget.Spacer(
     length=0,
@@ -1392,10 +1123,6 @@ visualiser_gap = widget.Spacer(
 
 @dataclass
 class VisualiserSwitch:
-    """
-    Prende el ecualizador al reproducir, salvo que esté desactivado a mano.
-    """
-
     visualiser: widget.Visualiser
     gap: widget.Spacer
     player: widget.Mpris2
@@ -1418,7 +1145,6 @@ class VisualiserSwitch:
 visualiser_switch = VisualiserSwitch(visualiser, visualiser_gap, music)
 extras_hook.subscribe.mpris_status_change(visualiser_switch.on_status)
 
-# Ícono aparte para que no se desplace con la marquesina. Clic prende o apaga el ecualizador.
 music_icon = follow_icon(music, "\uecad", colors["media"])
 music_icon.mouse_callbacks = {"Button1": visualiser_switch.toggle}
 music_separator = follow_separator(music)
@@ -1446,7 +1172,7 @@ w_cpu = (
         mouse_callbacks={"Button1": lazy.spawn(SYSTEM_MONITOR)},
         update_interval=5.0,
         decorations=_right_deco(),
-        padding=VALUE_PADDING,
+        padding=BLOCK_PADDING,
         format="{load_percent:.0f}%",
     ),
     separator(),
@@ -1462,7 +1188,7 @@ if has_nvidia():
         widget.NvidiaSensors(
             update_interval=5.0,
             decorations=_right_deco(),
-            padding=VALUE_PADDING,
+            padding=BLOCK_PADDING,
         ),
         separator(),
     )
@@ -1478,7 +1204,7 @@ w_memory = (
     widget.Memory(
         mouse_callbacks={"Button1": lazy.spawn(SYSTEM_MONITOR)},
         decorations=_right_deco(),
-        padding=VALUE_PADDING,
+        padding=BLOCK_PADDING,
         format="{Available:.1f}{mm}",
         measure_mem="G",
         update_interval=5,
@@ -1497,7 +1223,7 @@ w_storage = (
         decorations=_right_deco(),
         format="{r:.0f}%",
         visible_on_warn=False,
-        padding=VALUE_PADDING,
+        padding=BLOCK_PADDING,
     ),
     separator(),
 )
@@ -1514,7 +1240,6 @@ widgets = [
     *w_dnd,
     *w_docker,
     *w_claude,
-    # Con la notebook sola no hay barra de laptop: brillo y batería vienen acá.
     *(
         (*make_display(), *make_battery(notify=True))
         if connected_monitors() < 2
@@ -1522,7 +1247,12 @@ widgets = [
     ),
     *w_music,
     *w_volume,
-    widget.StatusNotifier(icon_size=ICON_SIZE, padding=4, **MENU_STYLE),
+    widget.StatusNotifier(
+        icon_size=ICON_SIZE,
+        padding=BLOCK_PADDING,
+        decorations=_left_deco(colors["value_block"], radius=[RADIUS] * 4),
+        **MENU_STYLE,
+    ),
 ]
 
 laptop_widgets = [
@@ -1537,9 +1267,6 @@ laptop_widgets = [
 
 
 def wifi_interface() -> str:
-    """
-    Primera interfaz wireless en /sys/class/net, o wlan0 si no hay.
-    """
     wireless = Path("/sys/class/net").glob("*/wireless")
     return next((path.parent.name for path in wireless), "wlan0")
 
@@ -1547,17 +1274,10 @@ def wifi_interface() -> str:
 WIFI = wifi_interface()
 
 IWD_STATION = "net.connman.iwd.Station"
-# La señal se sigue leyendo cada tanto: iwd solo la avisa con un agente propio por
-# D-Bus, que no vale la pena para un porcentaje. Conectar y desconectar es al toque.
 WLAN_SIGNAL_INTERVAL = 300
 
 
 class WlanBlock(widget.Wlan):
-    """
-    Wlan que se redibuja cuando iwd cambia el estado de la estación (conecta,
-    desconecta o cambia de red), además de leer la señal cada tanto.
-    """
-
     async def _config_async(self) -> None:
         await super()._config_async()
         await add_signal_receiver(
@@ -1588,7 +1308,7 @@ w_net = (
         + "{up:4.1f}{up_suffix:<2}",
         update_interval=5,
         decorations=_right_deco(),
-        padding=VALUE_PADDING,
+        padding=BLOCK_PADDING,
     ),
     separator(),
 )
@@ -1606,7 +1326,7 @@ w_wlan = (
         disconnected_message="offline",
         update_interval=WLAN_SIGNAL_INTERVAL,
         decorations=_right_deco(),
-        padding=VALUE_PADDING,
+        padding=BLOCK_PADDING,
     ),
     separator(),
 )

@@ -5,7 +5,7 @@
 - Shell: [fish](https://fishshell.com/)
 - Terminal: My [own](https://github.com/centaurialpha/st) build of [st](https://st.suckless.org/)
 - Editor: [Neovim](https://neovim.io/)
-- Browser: [qutebrowser](https://qutebrowser.org/)
+- Browser: [Firefox](https://www.mozilla.org/firefox/)
 - Launcher: My [own](https://github.com/centaurialpha/dmenu) build of [dmenu](https://tools.suckless.org/dmenu/)
 - File Manager: [broot](https://github.com/Canop/broot)
 - Compositor: [picom](https://github.com/yshui/picom)
@@ -30,11 +30,6 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 ```
 
 Inside nvim: `:PlugInstall`
-
-### Qutebrowser theme
-```
-git clone https://github.com/dracula/qutebrowser-dracula-theme.git ~/.config/qutebrowser/dracula
-```
 
 ### Other
 - Install fisher
