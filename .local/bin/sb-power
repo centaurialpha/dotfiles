@@ -1,0 +1,20 @@
+#!/bin/bash
+# Modo de power-profiles-daemon: velocímetro lento, medio o rápido. Clic izquierdo
+# rota balanced, performance (si el equipo lo soporta) y power-saver. sb-listen
+# lo redibuja si el modo cambia por otro lado.
+. sb-lib
+
+if [ "$BLOCK_BUTTON" = 1 ]; then
+	case $(powerprofilesctl get) in
+	balanced) powerprofilesctl set performance 2>/dev/null || powerprofilesctl set power-saver ;;
+	performance) powerprofilesctl set power-saver ;;
+	*) powerprofilesctl set balanced ;;
+	esac
+fi
+
+case $(powerprofilesctl get 2>/dev/null) in
+power-saver) icon "$LAYOUT" "$(printf '')" ;;
+balanced) icon "$OK" "$(printf '')" ;;
+performance) icon "#ffa066" "$(printf '')" ;;
+*) icon "$INACTIVE" "$(printf '')" ;;
+esac

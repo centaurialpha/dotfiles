@@ -1,0 +1,13 @@
+#!/bin/bash
+# Reloj. Clic izquierdo alterna entre la hora y la fecha completa.
+full="${XDG_RUNTIME_DIR:-/tmp}/sb-clock-full"
+
+if [ "$BLOCK_BUTTON" = 1 ]; then
+	if [ -e "$full" ]; then rm "$full"; else : >"$full"; fi
+fi
+
+if [ -e "$full" ]; then
+	date '+[%a %d/%m/%Y]'
+else
+	date '+[%b %d, %H:%M]'
+fi

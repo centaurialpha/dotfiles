@@ -1,0 +1,14 @@
+#!/bin/bash
+# picom: claro si corre, gris si no. Clic izquierdo lo prende o apaga.
+. sb-lib
+
+if [ "$BLOCK_BUTTON" = 1 ]; then
+	pkill -x picom || picom -b
+	sleep 0.3
+fi
+
+if pgrep -x picom >/dev/null; then
+	icon "$OK" "$(printf '')"
+else
+	icon "$INACTIVE" "$(printf '')"
+fi

@@ -1,0 +1,28 @@
+#!/bin/bash
+# Un ícono de servidor por ambiente de Hemara (prod, pre) según Gatus: claro si
+# anda, rojo si falla, gris si Gatus no responde (fuera de casa sin Tailscale).
+# Clic izquierdo abre Gatus. (No se llama GROUPS: bash ya usa ese nombre.)
+. sb-lib
+
+URL="http://uptime.home"
+ENVIRONMENTS=("Producción" "Preproducción")
+
+[ "$BLOCK_BUTTON" = 1 ] && setsid -f xdg-open "$URL" >/dev/null 2>&1
+
+json=$(curl -sf -m 5 "$URL/api/v1/endpoints/statuses?pageSize=1")
+out=""
+for group in "${ENVIRONMENTS[@]}"; do
+	if [ -z "$json" ]; then
+		color=$INACTIVE
+	# Sano si tiene resultados y el último de cada endpoint fue exitoso.
+	elif jq -e --arg g "$group" \
+		'[.[] | select(.group == $g and (.results | length > 0)) | .results[-1].success]
+		| length > 0 and all' <<<"$json" >/dev/null; then
+		color=$OK
+	else
+		color=$FAIL
+	fi
+	out+="^c$color^$(printf '')"
+done
+
+printf '^b%s^ %s ^d^\n' "$BLOCK_BG" "$out"

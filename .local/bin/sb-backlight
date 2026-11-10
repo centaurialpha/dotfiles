@@ -1,0 +1,13 @@
+#!/bin/bash
+# Brillo de la pantalla. La rueda lo sube y lo baja; las teclas de brillo de dwm
+# corren brightnessctl y después `pkill -RTMIN+7 dwmblocks`. Sin backlight no muestra nada.
+. sb-lib
+
+case $BLOCK_BUTTON in
+4) brightnessctl -q -c backlight set 5%+ ;;
+5) brightnessctl -q -c backlight set 5%- ;;
+esac
+
+line=$(brightnessctl -m -c backlight 2>/dev/null) || exit 0
+percent=$(echo "$line" | cut -d, -f4)
+pill "$DEVICE" "$(printf '')" "$percent"

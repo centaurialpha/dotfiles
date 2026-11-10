@@ -1,0 +1,24 @@
+#!/bin/bash
+# Docker: ballena llena azul prendido, contorno gris apagado, verde mientras
+# arranca o para. Clic izquierdo lo prende o apaga (sin contraseña por la regla de
+# polkit). sb-listen lo redibuja si cambia desde la terminal.
+. sb-lib
+
+if [ "$BLOCK_BUTTON" = 1 ]; then
+	if systemctl is-active -q docker.service; then
+		# Por separado: polkit rechaza el pedido con dos unidades juntas, y con el
+		# socket vivo cualquier comando `docker` vuelve a levantar el servicio.
+		systemctl --no-ask-password stop docker.socket
+		systemctl --no-ask-password stop docker.service
+	else
+		systemctl --no-ask-password start docker.service
+	fi
+fi
+
+case $(systemctl is-active docker.service) in
+active) icon "#2496ed" "$(printf '')" ;;
+activating) icon "$LAYOUT" "$(printf '')" ;;
+deactivating) icon "$LAYOUT" "$(printf '')" ;;
+failed) icon "$FAIL" "$(printf '')" ;;
+*) icon "$INACTIVE" "$(printf '')" ;;
+esac

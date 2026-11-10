@@ -1,0 +1,39 @@
+#!/bin/bash
+# Logo de Arch: azul normal, naranja si hay que prestarle atención a las
+# actualizaciones (kernel, o 30 o más juntas). Clic izquierdo abre el lanzador y
+# medio actualiza.
+. sb-lib
+
+IMPORTANT=" linux linux-lts linux-zen "
+PILE_UP=30
+ARCH_BLUE="#1793d1"
+ATTENTION="#ffa066"
+# Último color calculado: el clic del lanzador lo reusa en vez de correr checkupdates.
+cache="${XDG_RUNTIME_DIR:-/tmp}/sb-arch-color"
+logo=$(printf '')
+
+case $BLOCK_BUTTON in
+1)
+	setsid -f j4-dmenu-desktop --no-generic -x --dmenu="dmenu -i" \
+		--usage-log="$HOME/.cache/j4-dmenu-desktop.log" >/dev/null 2>&1
+	icon "$(cat "$cache" 2>/dev/null || echo "$ARCH_BLUE")" "$logo"
+	exit 0
+	;;
+2)
+	setsid -f st -e sh -c 'sudo pacman -Syu; read -p "Enter para cerrar" _; pkill -RTMIN+1 -x dwmblocks' \
+		>/dev/null 2>&1
+	;;
+esac
+
+# Cada línea de checkupdates: "nombre versión_vieja -> versión_nueva".
+mapfile -t pending < <(checkupdates 2>/dev/null | cut -d' ' -f1)
+color=$ARCH_BLUE
+if [ "${#pending[@]}" -ge "$PILE_UP" ]; then
+	color=$ATTENTION
+fi
+for pkg in "${pending[@]}"; do
+	[[ $IMPORTANT == *" $pkg "* ]] && color=$ATTENTION
+done
+
+echo "$color" >"$cache"
+icon "$color" "$logo"

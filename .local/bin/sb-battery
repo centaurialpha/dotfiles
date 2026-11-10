@@ -1,0 +1,31 @@
+#!/bin/bash
+# Batería: ícono según el estado y porcentaje. Sin batería (la MSI) no muestra nada.
+# Avisa una sola vez por descarga al bajar del 10%.
+. sb-lib
+
+for bat in /sys/class/power_supply/BAT*; do
+	[ -e "$bat/capacity" ] && break
+done
+[ -e "$bat/capacity" ] || exit 0
+
+read -r capacity <"$bat/capacity"
+read -r status <"$bat/status"
+warned="${XDG_RUNTIME_DIR:-/tmp}/sb-battery-warned"
+color=$DEVICE
+
+case $status in
+Charging) glyph="" ;;
+Full) glyph="" ;;
+"Not charging") glyph="" ;;
+*) glyph="" ;;
+esac
+
+if [ "$status" = Discharging ] && [ "$capacity" -le 10 ]; then
+	glyph=""
+	color=$FAIL
+	[ -e "$warned" ] || { notify-send -u critical -t 30000 "Batería baja" "Queda $capacity%"; : >"$warned"; }
+else
+	rm -f "$warned"
+fi
+
+pill "$color" "$(printf "$glyph")" "$capacity%"

@@ -1,0 +1,24 @@
+#!/bin/bash
+# Tema que suena por MPRIS. Clic izquierdo pausa o sigue, derecho pasa al
+# siguiente. Sin reproductor no muestra nada. sb-listen lo redibuja en cada cambio.
+. sb-lib
+
+MAX_CHARS=40
+
+case $BLOCK_BUTTON in
+1) playerctl play-pause ;;
+3) playerctl next ;;
+esac
+
+status=$(playerctl status 2>/dev/null) || exit 0
+[ "$status" = Stopped ] && exit 0
+
+track=$(playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null)
+# Un ^ en el título abriría un código de status2d.
+track=${track//^/}
+if [ "${#track}" -gt "$MAX_CHARS" ]; then
+	track="${track:0:MAX_CHARS-1}…"
+fi
+[ "$status" = Paused ] && track+=" [pausa]"
+
+pill "$MEDIA" "$(printf '')" "$track"

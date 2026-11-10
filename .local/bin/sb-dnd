@@ -1,0 +1,12 @@
+#!/bin/bash
+# No molestar de dunst: campana clara si muestra notificaciones, tachada si están
+# pausadas. Clic izquierdo alterna.
+. sb-lib
+
+[ "$BLOCK_BUTTON" = 1 ] && dunstctl set-paused toggle
+
+if [ "$(dunstctl is-paused)" = false ]; then
+	icon "$OK" "$(printf '')"
+else
+	icon "$INACTIVE" "$(printf '')"
+fi

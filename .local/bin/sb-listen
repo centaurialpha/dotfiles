@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+"""
+Listeners de la barra de dwm: esperan eventos y redibujan el bloque de
+dwmblocks que cambió, así esos bloques no necesitan intervalo. Lo lanza
+.xinitrc solo en la sesión de dwm.
+"""
+
+import asyncio
+import signal
+import subprocess
+import sys
+from collections.abc import Sequence
+from dataclasses import dataclass
+
+from dbus_fast import (
+    BusType,
+    Message,
+)
+from dbus_fast.aio import MessageBus
+
+# Señales de los bloques en config.h de dwmblocks.
+POWER_SIGNAL = 5
+DOCKER_SIGNAL = 6
+MUSIC_SIGNAL = 9
+VOLUME_SIGNAL = 11
+
+
+@dataclass(frozen=True)
+class PropertyWatch:
+    """
+    Objeto de D-Bus del sistema y la propiedad cuyo cambio redibuja un bloque.
+    """
+
+    path: str
+    prop: str
+    block_signal: int
+
+
+@dataclass(frozen=True)
+class CommandWatch:
+    """
+    Comando que imprime una línea por evento; las que contienen alguno de
+    `needles` (o todas, si está vacío) redibujan un bloque.
+    """
+
+    argv: Sequence[str]
+    needles: tuple[bytes, ...]
+    block_signal: int
+
+
+PROPERTY_WATCHES = (
+    PropertyWatch(
+        "/org/freedesktop/UPower/PowerProfiles", "ActiveProfile", POWER_SIGNAL
+    ),
+    PropertyWatch(
+        "/org/freedesktop/systemd1/unit/docker_2eservice", "ActiveState", DOCKER_SIGNAL
+    ),
+)
+MATCH_RULE = (
+    "type='signal',interface='org.freedesktop.DBus.Properties',"
+    "member='PropertiesChanged',path='{path}'"
+)
+COMMAND_WATCHES = (
+    # "Event 'change' on sink #56"; server cambia al elegir otra salida.
+    CommandWatch(("pactl", "subscribe"), (b"on sink", b"on server"), VOLUME_SIGNAL),
+    CommandWatch(
+        ("playerctl", "--follow", "metadata", "--format", "{{status}} {{title}}"),
+        (),
+        MUSIC_SIGNAL,
+    ),
+)
+
+
+def refresh(block_signal: int) -> None:
+    """
+    Pide a dwmblocks que vuelva a correr el bloque con esa señal.
+    """
+    subprocess.run(["pkill", f"-RTMIN+{block_signal}", "-x", "dwmblocks"], check=False)
+
+
+async def watch_properties(watches: Sequence[PropertyWatch]) -> None:
+    """
+    Escucha PropertiesChanged de cada objeto en una sola conexión al bus del sistema.
+    """
+    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
+    # systemd solo emite cambios de unidades mientras haya un suscriptor conectado.
+    await bus.call(
+        Message(
+            destination="org.freedesktop.systemd1",
+            path="/org/freedesktop/systemd1",
+            interface="org.freedesktop.systemd1.Manager",
+            member="Subscribe",
+        )
+    )
+    by_path = {watch.path: watch for watch in watches}
+    for path in by_path:
+        await bus.call(
+            Message(
+                destination="org.freedesktop.DBus",
+                path="/org/freedesktop/DBus",
+                interface="org.freedesktop.DBus",
+                member="AddMatch",
+                signature="s",
+                body=[MATCH_RULE.format(path=path)],
+            )
+        )
+
+    # systemd repite el mismo ActiveState varias veces por arranque; solo se
+    # redibuja cuando el valor cambia.
+    last: dict[str, object] = {}
+
+    def on_message(message: Message) -> None:
+        watch = by_path.get(message.path or "")
+        if watch is None or message.member != "PropertiesChanged":
+            return
+        _interface, changed, _invalidated = message.body
+        if watch.prop not in changed:
+            return
+        value = changed[watch.prop].value
+        if last.get(watch.path) != value:
+            last[watch.path] = value
+            refresh(watch.block_signal)
+
+    bus.add_message_handler(on_message)
+    try:
+        await bus.wait_for_disconnect()
+    finally:
+        bus.disconnect()
+
+
+async def watch_command(watch: CommandWatch) -> None:
+    """
+    Corre el comando y redibuja el bloque con cada línea que coincide. Al
+    cancelarse termina el proceso hijo para no dejarlo huérfano.
+    """
+    try:
+        process = await asyncio.create_subprocess_exec(
+            *watch.argv,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+    except FileNotFoundError:
+        print(f"sb-listen: falta {watch.argv[0]}", file=sys.stderr)
+        return
+    if process.stdout is None:
+        return
+    try:
+        async for line in process.stdout:
+            if not watch.needles or any(needle in line for needle in watch.needles):
+                refresh(watch.block_signal)
+    finally:
+        if process.returncode is None:
+            process.terminate()
+            await process.wait()
+
+
+async def main() -> None:
+    """
+    Arranca todos los listeners y los corta juntos con SIGTERM, SIGINT o SIGHUP.
+    """
+    tasks = [
+        asyncio.create_task(watch_properties(PROPERTY_WATCHES)),
+        *(asyncio.create_task(watch_command(watch)) for watch in COMMAND_WATCHES),
+    ]
+
+    def stop() -> None:
+        for task in tasks:
+            task.cancel()
+
+    loop = asyncio.get_running_loop()
+    for stop_signal in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+        loop.add_signal_handler(stop_signal, stop)
+    await asyncio.gather(*tasks, return_exceptions=True)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -1,0 +1,24 @@
+#!/bin/bash
+# Volumen de la salida por defecto. Clic izquierdo silencia, derecho abre
+# pavucontrol y la rueda sube o baja (tope 100%). sb-listen lo redibuja con
+# cualquier cambio, venga de las teclas o de otra app.
+. sb-lib
+
+SINK=@DEFAULT_AUDIO_SINK@
+
+case $BLOCK_BUTTON in
+1) wpctl set-mute "$SINK" toggle ;;
+3) setsid -f pavucontrol >/dev/null 2>&1 ;;
+4) wpctl set-volume -l 1.0 "$SINK" 5%+ ;;
+5) wpctl set-volume "$SINK" 5%- ;;
+esac
+
+# Salida de wpctl: "Volume: 0.45" o "Volume: 0.45 [MUTED]".
+read -r _ volume muted < <(wpctl get-volume "$SINK") || exit 0
+percent="$(awk -v v="$volume" 'BEGIN { printf "%d", v * 100 + 0.5 }')%"
+
+if [ -n "$muted" ]; then
+	pill "$INACTIVE" "$(printf '')" "$percent"
+else
+	pill "$DEVICE" "$(printf '')" "$percent"
+fi

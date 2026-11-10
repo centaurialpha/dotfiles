@@ -1,0 +1,125 @@
+# Paleta de la barra de qtile (widgets.py): bloques grises #2a2a2a, acento
+# #4f66aa para lo activo y un color apagado por categoría. Solo pisa lo que
+# cambia; el resto sale del tema por defecto de yazi.
+#
+# bg #0a0a0a  bloque #2a2a2a  texto #e8e8e8  inactivo #555555  acento #4f66aa
+# verde #98bb6c  rojo #e46876  dispositivo #c0a36e  red #8ea4a2  media #957fb8
+
+[mgr]
+cwd = { fg = "#e8e8e8", bold = true }
+
+find_keyword  = { fg = "#c0a36e", bold = true, underline = true }
+find_position = { fg = "#957fb8", bold = true }
+
+marker_copied   = { fg = "#98bb6c", bg = "#98bb6c" }
+marker_cut      = { fg = "#e46876", bg = "#e46876" }
+marker_marked   = { fg = "#8ea4a2", bg = "#8ea4a2" }
+marker_selected = { fg = "#c0a36e", bg = "#c0a36e" }
+
+count_copied   = { fg = "#0a0a0a", bg = "#98bb6c" }
+count_cut      = { fg = "#0a0a0a", bg = "#e46876" }
+count_selected = { fg = "#0a0a0a", bg = "#c0a36e" }
+
+border_symbol = "│"
+border_style  = { fg = "#2a2a2a" }
+
+# Pestañas como el GroupBox: activa en bloque azul, el resto en gris.
+[tabs]
+active    = { fg = "#e8e8e8", bg = "#4f66aa", bold = true }
+inactive  = { fg = "#555555", bg = "#2a2a2a" }
+sep_inner = { open = "", close = "" }
+sep_outer = { open = "", close = "" }
+
+# Barra de estado como la de qtile: solo el modo y la posición van en bloque;
+# tamaño y porcentaje van como texto suelto, sin segmentos encadenados.
+[mode]
+normal_main = { fg = "#e8e8e8", bg = "#4f66aa", bold = true }
+normal_alt  = { fg = "#e8e8e8" }
+select_main = { fg = "#0a0a0a", bg = "#c0a36e", bold = true }
+select_alt  = { fg = "#c0a36e" }
+unset_main  = { fg = "#0a0a0a", bg = "#e46876", bold = true }
+unset_alt   = { fg = "#e46876" }
+
+# Archivo bajo el cursor en bloque azul, su carpeta en las otras columnas en gris.
+[indicator]
+parent  = { fg = "#e8e8e8", bg = "#2a2a2a" }
+current = { fg = "#e8e8e8", bg = "#4f66aa" }
+preview = { fg = "#e8e8e8", bg = "#2a2a2a" }
+# Bloques del mismo azul a los costados: dejan un espacio entre el borde del
+# resaltado y el ícono. Un espacio común queda sin color y pega el resaltado al ícono.
+padding = { open = "█", close = "█" }
+
+[status]
+# Un espacio entre el bloque y el texto, como el separador entre widgets.
+sep_left  = { open = "", close = " " }
+sep_right = { open = " ", close = "" }
+
+perm_sep   = { fg = "#555555" }
+perm_type  = { fg = "#98bb6c" }
+perm_read  = { fg = "#c0a36e" }
+perm_write = { fg = "#e46876" }
+perm_exec  = { fg = "#8ea4a2" }
+
+progress_label  = { fg = "#e8e8e8", bold = true }
+progress_normal = { fg = "#98bb6c", bg = "#2a2a2a" }
+progress_error  = { fg = "#0a0a0a", bg = "#e46876" }
+
+# Ventanas emergentes con el borde azul de los menús de qtile.
+[which]
+border          = { fg = "#4f66aa" }
+cand            = { fg = "#8ea4a2" }
+rest            = { fg = "#555555" }
+desc            = { fg = "#957fb8" }
+separator_style = { fg = "#555555" }
+
+[confirm]
+border  = { fg = "#4f66aa" }
+title   = { fg = "#e8e8e8", bold = true }
+btn_yes = { fg = "#e8e8e8", bg = "#4f66aa" }
+
+[spot]
+border   = { fg = "#4f66aa" }
+title    = { fg = "#e8e8e8", bold = true }
+tbl_col  = { fg = "#8ea4a2" }
+tbl_cell = { fg = "#e8e8e8", bg = "#2a2a2a" }
+
+[notify]
+title_info  = { fg = "#98bb6c" }
+title_warn  = { fg = "#c0a36e" }
+title_error = { fg = "#e46876" }
+
+[pick]
+border = { fg = "#4f66aa" }
+active = { fg = "#e8e8e8", bg = "#4f66aa", bold = true }
+
+[input]
+border   = { fg = "#4f66aa" }
+selected = { fg = "#e8e8e8", bg = "#4f66aa" }
+
+[cmp]
+border = { fg = "#4f66aa" }
+active = { fg = "#e8e8e8", bg = "#4f66aa" }
+
+[tasks]
+border  = { fg = "#4f66aa" }
+hovered = { fg = "#e8e8e8", bg = "#4f66aa", bold = true }
+
+[help]
+border  = { fg = "#4f66aa" }
+chord   = { fg = "#8ea4a2" }
+hovered = { fg = "#e8e8e8", bg = "#4f66aa", bold = true }
+
+# La lista reemplaza entera a la del tema por defecto.
+[filetype]
+rules = [
+	{ mime = "**/image/*", fg = "#c0a36e" },
+	{ mime = "**/{audio,video}/*", fg = "#957fb8" },
+	{ mime = "**/application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#e46876" },
+	{ mime = "**/application/{pdf,doc,rtf}", fg = "#8ea4a2" },
+	{ mime = "vfs/{absent,stale}", fg = "#555555" },
+	{ url = "*", is = "orphan", fg = "#e46876", italic = true },
+	{ url = "*", is = "exec", fg = "#98bb6c" },
+	{ url = "*", is = "dummy", fg = "#e46876", italic = true },
+	{ url = "*/", is = "dummy", fg = "#e46876", italic = true },
+	{ url = "*/", fg = "#4f66aa", bold = true },
+]
