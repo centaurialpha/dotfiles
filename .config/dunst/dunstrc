@@ -9,9 +9,9 @@
     offset = (30, 60)
     padding = 8
     horizontal_padding = 10
-    frame_width = 2
+    frame_width = 0
     separator_height = 2
-    separator_color = frame
+    separator_color = "#2a2a2a"
     gap_size = 4
     font = Input Mono 11
     markup = full
@@ -30,19 +30,21 @@
     mouse_right_click = close_all
 
 [urgency_low]
-    background = "#0a0a0a"
-    foreground = "#555555"
+    background = "#1a1a1a"
+    foreground = "#9a9a9a"
     frame_color = "#555555"
     timeout = 4
 
 [urgency_normal]
-    background = "#0a0a0a"
+    background = "#1a1a1a"
     foreground = "#e8e8e8"
-    frame_color = "#4f66aa"
+    frame_color = "#1270a8"
     timeout = 10
 
 [urgency_critical]
-    background = "#0a0a0a"
+    # La única marca es el título en rojo
+    background = "#1a1a1a"
     foreground = "#e8e8e8"
+    format = "<b><span foreground='#e46876'>%s</span></b>\n%b"
     frame_color = "#e46876"
     timeout = 0
