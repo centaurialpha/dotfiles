@@ -114,7 +114,7 @@ groups = [
     Group(
         name="claude", label="\ued05", matches=[Match(wm_class="com.anthropic.Claude")]
     ),
-    Group(name="media", label="\uede8"),
+    Group(name="media", label="\uede8", matches=[Match(wm_class="webcam")]),
 ]
 
 # Con dos pantallas la notebook muestra siempre este grupo y el resto va al principal.
@@ -246,6 +246,7 @@ floating_layout = layout.Floating(
         *layout.Floating.default_float_rules,
         Match(wm_type="dialog"),
         Match(title="pritunl"),
+        Match(wm_class="webcam"),
     ],
 )
 

@@ -53,10 +53,14 @@ from qtile_extras.widget.visualiser import (
 colors = {
     "bg": "#0a0a0a",
     "value_block": "#2a2a2a",
+    # Fondo de menús, popups y notificaciones: se separan por tono, sin borde
+    "surface": "#1a1a1a",
     "text": "#e8e8e8",
     "inactive": "#555555",
-    "accent": "#4f66aa",
-    "accent_dim": "#555555",
+    "accent": "#1270a8",
+    # Acento mezclado al 55% con el fondo, para rellenos grandes
+    "accent_soft": "#0e4361",
+    "accent_dim": "#2a2a2a",
     "layout": "#98bb6c",
     "ok": "#e8e8e8",
     "fail": "#e46876",
@@ -129,9 +133,8 @@ MENU_STYLE: dict[str, Any] = {
     "menu_fontsize": 13,
     "menu_foreground": colors["text"],
     "menu_foreground_disabled": colors["inactive"],
-    "menu_background": colors["bg"],
-    "menu_border": colors["accent"],
-    "menu_border_width": 2,
+    "menu_background": colors["surface"],
+    "menu_border_width": 0,
     "highlight_colour": colors["accent"],
     "highlight_radius": RADIUS,
     "separator_colour": colors["inactive"],
@@ -207,11 +210,12 @@ def make_group_box() -> widget.GroupBox:
         active=colors["text"],
         block_highlight_text_color=colors["text"],
         inactive=colors["inactive"],
-        this_current_screen_border=colors["accent"],
+        this_current_screen_border=colors["accent_soft"],
         this_screen_border=colors["accent_dim"],
         other_current_screen_border=colors["accent_dim"],
         other_screen_border=colors["accent_dim"],
-        urgent_border=colors["fail"],
+        urgent_alert_method="text",
+        urgent_text=colors["fail"],
         rounded=True,
         disable_drag=True,
         highlight_method="block",
@@ -741,14 +745,32 @@ w_claude = (
 )
 
 
+# Color del ícono según el layout activo, más saturados que el resto de la barra
+LAYOUT_COLOURS = {
+    "stack": "#ffa066",
+    "columns": "#a77bff",
+    "monadtall": "#a6e22e",
+    "bsp": "#ffd43b",
+}
+
+
+class LayoutIcon(widget.CurrentLayout):
+    """
+    CurrentLayout que pinta el ícono con un color distinto por layout.
+    """
+
+    def draw(self) -> None:
+        self.foreground = LAYOUT_COLOURS.get(self.current_layout, colors["layout"])
+        super().draw()
+
+
 def make_layout_icon() -> tuple[widget.CurrentLayout, widget.Spacer]:
     return (
-        widget.CurrentLayout(
+        LayoutIcon(
             mode="icon",
             use_mask=True,
             scale=0.6,
             padding=BLOCK_PADDING,
-            foreground=colors["layout"],
         ),
         separator(),
     )
@@ -915,6 +937,18 @@ w_arch = (
 )
 
 
+class RefocusPopup(PopupRelativeLayout):
+    """
+    Popup que devuelve el foco a la ventana activa al cerrarse.
+    """
+
+    def kill(self) -> None:
+        super().kill()
+        group = self.qtile.current_group
+        if group.current_window:
+            group.focus(group.current_window, warp=False, force=True)
+
+
 def music_popup_layout() -> PopupRelativeLayout:
     controls = deepcopy(DEFAULT_LAYOUT.controls)
     for control in controls:
@@ -927,16 +961,18 @@ def music_popup_layout() -> PopupRelativeLayout:
             control.colour_above = colors["inactive"]
         elif isinstance(control, PopupImage) and control.mask:
             control.colour = colors["text"]
-    return PopupRelativeLayout(
+    return RefocusPopup(
         None,
         width=400,
         height=200,
         controls=controls,
-        background=colors["bg"],
-        border=colors["accent"],
-        border_width=2,
+        background=colors["surface"],
+        border_width=0,
         highlight=colors["accent"],
         close_on_click=False,
+        # Los popups de qtile no ven clicks afuera: se cierran al sacar el mouse
+        hide_on_mouse_leave=True,
+        hide_interval=0.8,
     )
 
 
@@ -994,6 +1030,26 @@ class RunningPlayerMpris2(Mpris2):
         except (AttributeError, TypeError, IndexError):
             logger.exception("RunningPlayerMpris2: no se pudo buscar el reproductor")
             warn_upstream("la música no pudo buscar el reproductor al arrancar.")
+
+    async def _send_message(
+        self,
+        destination: str,
+        interface: str,
+        path: str,
+        member: str,
+        signature: str,
+        body: Any,
+    ) -> Any:
+        """
+        Igual que el original, pero si la conexión guardada murió abre otra.
+        """
+        args = (destination, interface, path, member, signature, body)
+        try:
+            return await super()._send_message(*args)
+        except OSError:
+            logger.warning("RunningPlayerMpris2: conexión dbus muerta, reconectando")
+            self.bus = None
+            return await super()._send_message(*args)
 
     async def _attach_running_player(self) -> None:
         reply = await self._send_message(
