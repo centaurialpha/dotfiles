@@ -46,7 +46,7 @@ def icon_block(color: str, radius: list[int] | None = None) -> dict[str, Any]:
         "foreground": colors.icon_fg if FILLED_ICONS else color,
         "decorations": left_deco(fill, radius),
     }
-    # Only the left half of a pill; standalone blocks center the icon.
+    # Standalone blocks center the icon, pill halves do not
     if radius is None:
         style["padding"] = BLOCK_PADDING
     return style
@@ -102,7 +102,7 @@ def status_block(
     **block_config: Any,
 ) -> tuple[widget.GenPollText, widget.Spacer]:
     """
-    block_config goes straight to the widget, e.g. the D-Bus path/prop/render.
+    block_config goes straight to the widget, e.g. the D-Bus path/prop/render
     """
     return (
         block_class(

@@ -105,7 +105,7 @@ def make_cpu() -> list[_Widget]:
 
 def make_gpu() -> list[_Widget]:
     """
-    Empty on machines without NVIDIA.
+    Empty on machines without NVIDIA
     """
     if not has_nvidia():
         return []
@@ -135,7 +135,7 @@ def make_system() -> list[_Widget]:
 
 class BatteryBlock(widget.Battery):
     """
-    Redraws on UPower changes instead of polling.
+    Redraws on UPower changes instead of polling
     """
 
     async def _config_async(self) -> None:
@@ -148,7 +148,7 @@ class BatteryBlock(widget.Battery):
 
 def make_battery(notify: bool) -> list[_Widget]:
     """
-    notify warns below 10%.
+    notify warns below 10%
     """
     return [
         BatteryBlock(

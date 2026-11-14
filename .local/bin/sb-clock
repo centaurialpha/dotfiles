@@ -1,5 +1,5 @@
 #!/bin/bash
-# Reloj. Clic izquierdo alterna entre la hora y la fecha completa.
+# Clock, left click toggles between time and full date
 full="${XDG_RUNTIME_DIR:-/tmp}/sb-clock-full"
 
 if [ "$BLOCK_BUTTON" = 1 ]; then

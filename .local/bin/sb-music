@@ -1,6 +1,6 @@
 #!/bin/bash
-# Tema que suena por MPRIS. Clic izquierdo pausa o sigue, derecho pasa al
-# siguiente. Sin reproductor no muestra nada. sb-listen lo redibuja en cada cambio.
+# Track playing over MPRIS. Left click plays or pauses, right click skips
+# Nothing without a player. sb-listen redraws it on every change
 . sb-lib
 
 MAX_CHARS=40
@@ -14,7 +14,7 @@ status=$(playerctl status 2>/dev/null) || exit 0
 [ "$status" = Stopped ] && exit 0
 
 track=$(playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null)
-# Un ^ en el título abriría un código de status2d.
+# A ^ in the title would start a status2d code
 track=${track//^/}
 if [ "${#track}" -gt "$MAX_CHARS" ]; then
 	track="${track:0:MAX_CHARS-1}…"

@@ -1,7 +1,7 @@
 """
-Claude Code sessions and usage, read from the files the hooks write.
+Claude Code sessions and usage, read from the files the hooks write
 
-The hooks send a D-Bus signal on every change, so the widget does not poll.
+The hooks send a D-Bus signal on every change, so the widget does not poll
 """
 
 import asyncio
@@ -48,7 +48,7 @@ CLAUDE_SIGNAL_INTERFACE = "dev.gabox.Claude"
 
 def claude_accounts() -> tuple[str, ...]:
     """
-    The work account only if its config folder exists.
+    The work account only if its config folder exists
     """
     if (Path.home() / f".claude-{CLAUDE_WORK}").is_dir():
         return (CLAUDE_PERSONAL, CLAUDE_WORK)
@@ -57,7 +57,7 @@ def claude_accounts() -> tuple[str, ...]:
 
 def claude_states(account: str) -> list[str]:
     """
-    Recent session states, most urgent first.
+    Recent session states, most urgent first
     """
     folder = CLAUDE_STATE_DIR / account
     if not folder.is_dir():
@@ -77,7 +77,7 @@ def claude_states(account: str) -> list[str]:
 @dataclass(frozen=True, slots=True)
 class UsageWindow:
     """
-    A usage window (5h or 7d): percent used and reset time.
+    A usage window (5h or 7d): percent used and reset time
     """
 
     label: str
@@ -93,7 +93,7 @@ class UsageWindow:
 
 def claude_usage(account: str) -> list[UsageWindow]:
     """
-    Usage as written by the statusline script.
+    Usage as written by the statusline script
     """
     try:
         fields = (CLAUDE_USAGE_DIR / account).read_text().split()
@@ -113,7 +113,7 @@ def usage_color(used: int) -> str:
 
 def usage_markup(windows: list[UsageWindow], now: float) -> str:
     """
-    Remaining percent of each window above its show threshold.
+    Remaining percent of each window above its show threshold
     """
     parts = []
     for window in windows:
@@ -140,7 +140,7 @@ def claude_status(account: str) -> str:
 
 class ClaudeBlock(widget.GenPollText):
     """
-    One square per session plus remaining usage; click switches account.
+    Click switches account
     """
 
     def __init__(self, accounts: tuple[str, ...], **config: Any) -> None:

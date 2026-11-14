@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Listeners de la barra de dwm: esperan eventos y redibujan el bloque de
-dwmblocks que cambió, así esos bloques no necesitan intervalo. Lo lanza
-.xinitrc solo en la sesión de dwm.
+dwm bar listeners: wait for events and redraw the dwmblocks block that
+changed, so those blocks need no interval. Started by .xinitrc only in the
+dwm session
 """
 
 import asyncio
@@ -18,7 +18,7 @@ from dbus_fast import (
 )
 from dbus_fast.aio import MessageBus
 
-# Señales de los bloques en config.h de dwmblocks.
+# Block signals from dwmblocks config.h
 POWER_SIGNAL = 5
 DOCKER_SIGNAL = 6
 MUSIC_SIGNAL = 9
@@ -28,7 +28,7 @@ VOLUME_SIGNAL = 11
 @dataclass(frozen=True)
 class PropertyWatch:
     """
-    Objeto de D-Bus del sistema y la propiedad cuyo cambio redibuja un bloque.
+    System D-Bus object and property whose change redraws a block
     """
 
     path: str
@@ -39,8 +39,8 @@ class PropertyWatch:
 @dataclass(frozen=True)
 class CommandWatch:
     """
-    Comando que imprime una línea por evento; las que contienen alguno de
-    `needles` (o todas, si está vacío) redibujan un bloque.
+    Command printing one line per event. Lines with any of `needles` (every line
+    if empty) redraw a block
     """
 
     argv: Sequence[str]
@@ -61,7 +61,7 @@ MATCH_RULE = (
     "member='PropertiesChanged',path='{path}'"
 )
 COMMAND_WATCHES = (
-    # "Event 'change' on sink #56"; server cambia al elegir otra salida.
+    # "Event 'change' on sink #56", server changes when picking another output
     CommandWatch(("pactl", "subscribe"), (b"on sink", b"on server"), VOLUME_SIGNAL),
     CommandWatch(
         ("playerctl", "--follow", "metadata", "--format", "{{status}} {{title}}"),
@@ -72,18 +72,15 @@ COMMAND_WATCHES = (
 
 
 def refresh(block_signal: int) -> None:
-    """
-    Pide a dwmblocks que vuelva a correr el bloque con esa señal.
-    """
     subprocess.run(["pkill", f"-RTMIN+{block_signal}", "-x", "dwmblocks"], check=False)
 
 
 async def watch_properties(watches: Sequence[PropertyWatch]) -> None:
     """
-    Escucha PropertiesChanged de cada objeto en una sola conexión al bus del sistema.
+    One system bus connection for every object's PropertiesChanged
     """
     bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
-    # systemd solo emite cambios de unidades mientras haya un suscriptor conectado.
+    # systemd only sends unit changes while a subscriber is connected
     await bus.call(
         Message(
             destination="org.freedesktop.systemd1",
@@ -105,8 +102,7 @@ async def watch_properties(watches: Sequence[PropertyWatch]) -> None:
             )
         )
 
-    # systemd repite el mismo ActiveState varias veces por arranque; solo se
-    # redibuja cuando el valor cambia.
+    # systemd repeats the same ActiveState several times per start, redraw only on change
     last: dict[str, object] = {}
 
     def on_message(message: Message) -> None:
@@ -130,8 +126,7 @@ async def watch_properties(watches: Sequence[PropertyWatch]) -> None:
 
 async def watch_command(watch: CommandWatch) -> None:
     """
-    Corre el comando y redibuja el bloque con cada línea que coincide. Al
-    cancelarse termina el proceso hijo para no dejarlo huérfano.
+    Kills the child process on cancel so it is not orphaned
     """
     try:
         process = await asyncio.create_subprocess_exec(
@@ -140,7 +135,7 @@ async def watch_command(watch: CommandWatch) -> None:
             stderr=asyncio.subprocess.DEVNULL,
         )
     except FileNotFoundError:
-        print(f"sb-listen: falta {watch.argv[0]}", file=sys.stderr)
+        print(f"sb-listen: missing {watch.argv[0]}", file=sys.stderr)
         return
     if process.stdout is None:
         return
@@ -156,7 +151,7 @@ async def watch_command(watch: CommandWatch) -> None:
 
 async def main() -> None:
     """
-    Arranca todos los listeners y los corta juntos con SIGTERM, SIGINT o SIGHUP.
+    Stops every listener together on SIGTERM, SIGINT or SIGHUP
     """
     tasks = [
         asyncio.create_task(watch_properties(PROPERTY_WATCHES)),

@@ -1,13 +1,13 @@
 #!/bin/bash
-# Docker: ballena llena azul prendido, contorno gris apagado, verde mientras
-# arranca o para. Clic izquierdo lo prende o apaga (sin contraseña por la regla de
-# polkit). sb-listen lo redibuja si cambia desde la terminal.
+# Docker: blue whale when running, grey outline when stopped, green while starting
+# or stopping. Left click toggles it (no password thanks to the polkit rule)
+# sb-listen redraws it when it changes from the terminal
 . sb-lib
 
 if [ "$BLOCK_BUTTON" = 1 ]; then
 	if systemctl is-active -q docker.service; then
-		# Por separado: polkit rechaza el pedido con dos unidades juntas, y con el
-		# socket vivo cualquier comando `docker` vuelve a levantar el servicio.
+		# One at a time: polkit rejects a request with both units, and with the socket
+		# alive any `docker` command starts the service again
 		systemctl --no-ask-password stop docker.socket
 		systemctl --no-ask-password stop docker.service
 	else

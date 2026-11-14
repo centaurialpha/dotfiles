@@ -21,7 +21,7 @@ def has_nvidia() -> bool:
 @cache
 def battery_name() -> str:
     """
-    First system battery, ignoring device battery mouse, headphones
+    First system battery, ignoring devices like mice or headphones
     """
     for supply in sorted(Path("/sys/class/power_supply").iterdir()):
         scope = supply / "scope"
@@ -47,7 +47,7 @@ def wifi_interface() -> str:
 
 def connected_monitors() -> int:
     """
-    Number of DRM outputs connected. No cache, changes when plugging in a monitor
+    Not cached, it changes when a monitor is plugged in
     """
     return sum(
         status.read_text().strip() == "connected"

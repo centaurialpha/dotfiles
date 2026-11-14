@@ -9,7 +9,7 @@ from libqtile.core.manager import Qtile
 # Spotify sets WM_CLASS late, which is why there is also the move_spotify hook
 MUSIC_APPS = (Match(wm_class="spotify"), Match(wm_class="spotifast"))
 
-# With two screens the notebook always shows this group and the rest goes to the main one
+# With two screens, the laptop always shows this group
 LAPTOP_GROUP = "media"
 
 
@@ -39,7 +39,7 @@ def pin_media_to_laptop(qtile: Qtile) -> None:
 
 def go_to_group(qtile: Qtile, name: str) -> None:
     """
-    Show the group on its screen and focus it; with one screen, show it here.
+    Show the group on its screen and focus that screen
     """
     group = qtile.groups_map[name]
     if len(qtile.screens) < 2:

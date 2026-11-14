@@ -39,11 +39,10 @@ wmname = "qtile"
 
 def _forget_custom_modules() -> None:
     """
-    Drop custom/ from sys.modules so the next reload imports it from scratch.
+    Drop custom/ from sys.modules so the next reload imports it from scratch
 
-    qtile reloads submodules in first-import order, so a module can reload before
-    one it depends on; if it uses a new name from it, the reload fails until
-    qtile restarts
+    qtile reloads submodules in first-import order, so a module may reload before
+    one it depends on and fail until qtile restarts
     """
     for name in [n for n in sys.modules if n == "custom" or n.startswith("custom.")]:
         del sys.modules[name]

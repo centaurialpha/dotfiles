@@ -41,9 +41,9 @@ async def watch_properties(
 
 class DbusPropertyBlock(widget.GenPollText):
     """
-    GenPollText that is updated when a D-Bus property changes.
+    GenPollText redrawn when a D-Bus property changes
 
-    func draws the initial state; render draws each new value of the property
+    func draws the initial state and render each new value of prop
     """
 
     def __init__(
@@ -81,10 +81,9 @@ class DbusPropertyBlock(widget.GenPollText):
 
 class SystemdUnitBlock(DbusPropertyBlock):
     """
-    State (ActiveState) of a systemd unit.
+    State (ActiveState) of a systemd unit
 
-    systemd only issues unit changes to subscribed clients, so it uses a
-    own bus with Subscribe and closes it when finished
+    systemd only sends unit changes to subscribed clients, so it opens its own bus
     """
 
     def __init__(self, *, unit_path: str, **config: Any) -> None:

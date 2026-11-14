@@ -1,8 +1,5 @@
 """
-Music (MPRIS) with a striped visualiser, control popup and volume.
-
-Overrides private qtile and qtile-extras methods; check_upstream warns when
-they change.
+Overrides private qtile-extras methods, check_upstream warns when they change
 """
 
 import hashlib
@@ -87,7 +84,7 @@ def music_popup_layout() -> PopupRelativeLayout:
         border_width=0,
         highlight=colors.accent,
         close_on_click=False,
-        # qtile popups do not see clicks outside, they close when the mouse is removed
+        # qtile popups do not get outside clicks, so close on mouse leave
         hide_on_mouse_leave=True,
         hide_interval=0.8,
     )
@@ -99,7 +96,7 @@ UPSTREAM_NOTIFY_ID = 4242
 
 def upstream_hash() -> str:
     """
-    Hash of the private qtile-extras code this module overrides.
+    Hash of the private qtile-extras code this module overrides
     """
     parts = [
         inspect.getsource(Visualiser._draw),
@@ -113,7 +110,7 @@ def upstream_hash() -> str:
 
 def warn_upstream(message: str) -> None:
     """
-    Persistent notification that replaces itself instead of stacking.
+    Persistent notification that replaces itself instead of stacking
     """
     send_notification("qtile media", message, timeout=0, id_=UPSTREAM_NOTIFY_ID)
 
@@ -135,7 +132,7 @@ MPRIS_PREFIX = "org.mpris.MediaPlayer2."
 
 class RunningPlayerMpris2(Mpris2):
     """
-    Attaches at startup to the player that is already playing.
+    Attaches at startup to the player that is already playing
     """
 
     def __init__(self, **config: Any) -> None:
@@ -168,7 +165,7 @@ class RunningPlayerMpris2(Mpris2):
         body: Any,
     ) -> Any:
         """
-        Same as the original, but if the saved connection died open another
+        Reconnects if the saved connection died
         """
         args = (destination, interface, path, member, signature, body)
         try:
@@ -209,7 +206,7 @@ VISUALISER_COLOURS = (
 
 class StripedVisualiser(Visualiser):
     """
-    One colour per bar; falls back to the original drawing on failure.
+    Falls back to the original drawing if the stripes fail
     """
 
     def __init__(self, colours: tuple[str, ...], **config: Any) -> None:
@@ -270,7 +267,7 @@ class StripedVisualiser(Visualiser):
 @dataclass
 class VisualiserSwitch:
     """
-    Runs the visualiser only while music plays and it was not turned off by hand.
+    Runs the visualiser only while music plays and it was not turned off by hand
     """
 
     visualiser: widget.Visualiser
@@ -300,10 +297,8 @@ def _block_background() -> list[RectDecoration]:
 
 def make_music() -> list[_Widget]:
     """
-    Hidden while there is no player.
-
-    Clicking the icon toggles the visualiser; right click on the title switches
-    player.
+    Clicking the icon toggles the visualiser, right click on the title switches
+    player
     """
     music = RunningPlayerMpris2(
         name="mpris2",

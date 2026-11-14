@@ -1,4 +1,4 @@
-function scrot --wraps scrot --description 'scrot que guarda en ~/Pictures/screenshots si no se pasa -F'
+function scrot --wraps scrot --description 'scrot saving to ~/Pictures/screenshots unless -F is given'
     if contains -- -F $argv; or contains -- --file $argv
         command scrot $argv
         return

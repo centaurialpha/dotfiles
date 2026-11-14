@@ -32,9 +32,7 @@ def build_floating_layout() -> layout.Floating:
         border_normal=colors.inactive,
         border_width=BORDER_WIDTH,
         float_rules=[
-            # Run the utility of `xprop` to see the wm class and name of an X client.
-            # default_float_rules include: utility, notification, toolbar, splash,
-            # dialog, file_progress, confirm, download and error
+            # xprop shows a window's class and name
             *layout.Floating.default_float_rules,
             Match(wm_type="dialog"),
             Match(title="pritunl"),

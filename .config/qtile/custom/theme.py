@@ -4,12 +4,12 @@ from dataclasses import dataclass
 @dataclass(frozen=True, slots=True)
 class Palette:
     """
-    Kanagawa on a black background.
+    Kanagawa on a black background
     """
 
     bg: str = "#0a0a0a"
     value_block: str = "#2a2a2a"
-    # Background of menus, popups and notifications, separated by tone, without border
+    # Menus, popups and notifications, told apart by tone instead of a border
     surface: str = "#1a1a1a"
     text: str = "#e8e8e8"
     inactive: str = "#555555"

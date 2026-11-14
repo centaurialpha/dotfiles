@@ -1,4 +1,4 @@
-# Misma paleta y fuente que qtile y dmenu.
+# Same palette and font as qtile and dmenu
 
 [global]
     monitor = 0
@@ -42,7 +42,7 @@
     timeout = 10
 
 [urgency_critical]
-    # La única marca es el título en rojo
+    # The red title is the only marker
     background = "#1a1a1a"
     foreground = "#e8e8e8"
     format = "<b><span foreground='#e46876'>%s</span></b>\n%b"

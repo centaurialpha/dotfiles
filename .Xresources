@@ -1,7 +1,7 @@
 Xcursor.theme: ArchCursorTheme
 Xcursor.size: 24
 
-! st: tema suavizado (saturacion -22%), azul 4 oscuro para que el amarillo se lea sobre el highlight
+! st: softened theme (saturation -22%), dark color 4 so yellow reads on the highlight
 st.color0: #323437
 st.color1: #dd5a5a
 st.color2: #71bf4a

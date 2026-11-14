@@ -1,7 +1,7 @@
 #!/bin/bash
-# Un ícono de servidor por ambiente de Hemara (prod, pre) según Gatus: claro si
-# anda, rojo si falla, gris si Gatus no responde (fuera de casa sin Tailscale).
-# Clic izquierdo abre Gatus. (No se llama GROUPS: bash ya usa ese nombre.)
+# One server icon per Hemara environment (prod, pre) from Gatus: light when up,
+# red when down, grey when Gatus does not answer (away from home without Tailscale)
+# Left click opens Gatus. Not named GROUPS because bash already uses that name
 . sb-lib
 
 URL="http://uptime.home"
@@ -14,7 +14,7 @@ out=""
 for group in "${ENVIRONMENTS[@]}"; do
 	if [ -z "$json" ]; then
 		color=$INACTIVE
-	# Sano si tiene resultados y el último de cada endpoint fue exitoso.
+	# Healthy if it has results and every endpoint's last one succeeded
 	elif jq -e --arg g "$group" \
 		'[.[] | select(.group == $g and (.results | length > 0)) | .results[-1].success]
 		| length > 0 and all' <<<"$json" >/dev/null; then

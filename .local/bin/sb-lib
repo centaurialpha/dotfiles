@@ -1,5 +1,5 @@
-# Paleta y helpers de los bloques sb-* de dwmblocks, la misma de la barra de qtile.
-# Los scripts (bash, por el printf de \u) la cargan con `. sb-lib`, que busca en el PATH.
+# Palette and helpers for the dwmblocks sb-* blocks, same as the qtile bar
+# Scripts (bash, for printf \u) source it with `. sb-lib`, which searches PATH
 BLOCK_BG="#2a2a2a"
 TEXT="#e8e8e8"
 INACTIVE="#555555"
@@ -9,17 +9,17 @@ LAYOUT="#98bb6c"
 DEVICE="#c0a36e"
 MEDIA="#957fb8"
 
-# Ícono suelto: glifo de color sobre el bloque gris.
+# Standalone icon: colored glyph on the grey block
 icon() {
 	printf '^b%s^^c%s^ %s ^d^\n' "$BLOCK_BG" "$1" "$2"
 }
 
-# Pastilla: ícono de color y valor, los dos sobre el bloque gris.
+# Pill: colored icon and value, both on the grey block
 pill() {
 	printf '^b%s^^c%s^ %s ^c%s^%s ^d^\n' "$BLOCK_BG" "$1" "$2" "$TEXT" "$3"
 }
 
-# Redibuja el bloque con esa señal (la de config.h de dwmblocks).
+# Redraw the block with that signal (from dwmblocks config.h)
 refresh() {
 	pkill -RTMIN+"$1" -x dwmblocks
 }

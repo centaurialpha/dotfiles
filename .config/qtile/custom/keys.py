@@ -14,8 +14,8 @@ from custom.widgets.toggles import (
     picom_toggle,
 )
 
-MOD = "mod1"  # mod1=Alt;mod2=;mod3=;mod4=super
-TERMINAL = "st"  # Suckless st
+MOD = "mod1"  # Alt
+TERMINAL = "st"
 
 
 def screenshot(flags: str) -> str:
@@ -38,7 +38,7 @@ def _window_keys() -> list[Key]:
             [MOD], "space", lazy.layout.next(), desc="Move window focus to other window"
         ),
         Key([MOD], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen"),
-        # Move windows between left/right columns or move up/down in current stack.
+        # Move windows between left/right columns or move up/down in current stack
         # Moving out of range in Columns layout will create new column
         Key(
             [MOD, "shift"],

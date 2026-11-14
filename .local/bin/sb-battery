@@ -1,6 +1,6 @@
 #!/bin/bash
-# Batería: ícono según el estado y porcentaje. Sin batería (la MSI) no muestra nada.
-# Avisa una sola vez por descarga al bajar del 10%.
+# Battery icon by state plus percent, nothing without a battery (the MSI)
+# Warns once per discharge below 10%
 . sb-lib
 
 for bat in /sys/class/power_supply/BAT*; do

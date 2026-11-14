@@ -50,7 +50,7 @@ CLOCK_FORMATS = ("[%b %d, %H:%M]", "[%a %d/%m/%Y]")
 
 def make_clock() -> list[_Widget]:
     """
-    Click toggles between time and full date.
+    Click toggles between time and full date
     """
     clock = widget.Clock(format=CLOCK_FORMATS[0], update_interval=60)
 
@@ -65,7 +65,7 @@ def make_clock() -> list[_Widget]:
 
 class BacklightBlock(widget.Backlight):
     """
-    Redraws on udev events instead of polling.
+    Redraws on udev events instead of polling
     """
 
     async def _config_async(self) -> None:
@@ -124,7 +124,7 @@ def make_window_name() -> list[_Widget]:
     ]
 
 
-# Icon color according to the active layout, more saturated than the rest of the bar
+# More saturated than the rest of the bar
 LAYOUT_COLOURS = {
     "stack": "#ffa066",
     "columns": "#a77bff",

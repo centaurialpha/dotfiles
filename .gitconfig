@@ -26,6 +26,6 @@
 	tool = nvimdiff
 [difftool "nvimdiff"]
 	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
-# Repos del trabajo
+# Work repos
 [includeIf "gitdir:~/invera/"]
 	path = ~/.gitconfig-invera

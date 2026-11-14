@@ -1,7 +1,7 @@
 #!/bin/bash
-# Modo de power-profiles-daemon: velocímetro lento, medio o rápido. Clic izquierdo
-# rota balanced, performance (si el equipo lo soporta) y power-saver. sb-listen
-# lo redibuja si el modo cambia por otro lado.
+# power-profiles-daemon mode: slow, medium or fast gauge. Left click cycles
+# balanced, performance (if supported) and power-saver. sb-listen redraws it
+# when the mode changes elsewhere
 . sb-lib
 
 if [ "$BLOCK_BUTTON" = 1 ]; then

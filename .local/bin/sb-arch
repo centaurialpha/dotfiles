@@ -1,14 +1,13 @@
 #!/bin/bash
-# Logo de Arch: azul normal, naranja si hay que prestarle atención a las
-# actualizaciones (kernel, o 30 o más juntas). Clic izquierdo abre el lanzador y
-# medio actualiza.
+# Arch logo: blue, orange when updates need attention (kernel, or 30+ pending)
+# Left click opens the launcher, middle click upgrades
 . sb-lib
 
 IMPORTANT=" linux linux-lts linux-zen "
 PILE_UP=30
 ARCH_BLUE="#1793d1"
 ATTENTION="#ffa066"
-# Último color calculado: el clic del lanzador lo reusa en vez de correr checkupdates.
+# Last computed color, the launcher click reuses it instead of running checkupdates
 cache="${XDG_RUNTIME_DIR:-/tmp}/sb-arch-color"
 logo=$(printf '')
 
@@ -25,7 +24,7 @@ case $BLOCK_BUTTON in
 	;;
 esac
 
-# Cada línea de checkupdates: "nombre versión_vieja -> versión_nueva".
+# Each checkupdates line: "name old_version -> new_version"
 mapfile -t pending < <(checkupdates 2>/dev/null | cut -d' ' -f1)
 color=$ARCH_BLUE
 if [ "${#pending[@]}" -ge "$PILE_UP" ]; then

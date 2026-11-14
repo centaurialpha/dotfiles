@@ -1,4 +1,4 @@
-# Paleta de qtile/tmux
+# Same palette as qtile and tmux
 gui:
   theme:
     activeBorderColor:

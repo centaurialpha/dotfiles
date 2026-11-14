@@ -1,6 +1,5 @@
 #!/bin/bash
-# Entorno a usar: WM=dwm startx, o startx solo para el default de esta máquina.
-# El default va en ~/.config/wm (una palabra: qtile o dwm), no se versiona.
+# WM=dwm startx picks the WM, plain startx uses ~/.config/wm (qtile or dwm, not versioned)
 WM=${WM:-$(cat ~/.config/wm 2>/dev/null)}
 WM=${WM:-qtile}
 
@@ -14,7 +13,6 @@ xrdb -merge ~/.Xresources
 eval "$(gnome-keyring-daemon --start --components=secrets)"
 export SSH_AUTH_SOCK
 
-# Común a todos los entornos.
 ~/.local/bin/monitor-setup
 feh --bg-fill ~/.local/share/wallpapers/current &
 picom -b
@@ -23,7 +21,7 @@ dunst &
 bar_pids=()
 case "$WM" in
 dwm)
-  # Barra: dwmblocks arma el estado y sb-listen lo redibuja con cada evento.
+  # dwmblocks builds the status and sb-listen redraws it on each event
   dwmblocks &
   bar_pids+=($!)
   sb-listen &

@@ -23,7 +23,7 @@ TOGGLE_REFRESH = 0.5
 class Toggle:
     """
     Runs a command and redraws its status widget, for things that do not signal
-    over D-Bus.
+    over D-Bus
     """
 
     command: str

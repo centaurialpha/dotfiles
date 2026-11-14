@@ -1,9 +1,4 @@
-# Paleta de la barra de qtile (widgets.py): bloques grises #2a2a2a, acento
-# #1270a8 para lo activo y un color apagado por categoría. Solo pisa lo que
-# cambia; el resto sale del tema por defecto de yazi.
-#
-# bg #0a0a0a  bloque #2a2a2a  texto #e8e8e8  inactivo #555555  acento #1270a8
-# verde #98bb6c  rojo #e46876  dispositivo #c0a36e  red #8ea4a2  media #957fb8
+# qtile bar palette, only overrides what differs from yazi's default theme
 
 [mgr]
 cwd = { fg = "#e8e8e8", bold = true }
@@ -23,15 +18,14 @@ count_selected = { fg = "#0a0a0a", bg = "#c0a36e" }
 border_symbol = "│"
 border_style  = { fg = "#2a2a2a" }
 
-# Pestañas como el GroupBox: activa en bloque azul, el resto en gris.
+# Tabs styled like qtile's GroupBox
 [tabs]
 active    = { fg = "#e8e8e8", bg = "#1270a8", bold = true }
 inactive  = { fg = "#555555", bg = "#2a2a2a" }
 sep_inner = { open = "", close = "" }
 sep_outer = { open = "", close = "" }
 
-# Barra de estado como la de qtile: solo el modo y la posición van en bloque;
-# tamaño y porcentaje van como texto suelto, sin segmentos encadenados.
+# Status bar like qtile's: only mode and position go in blocks
 [mode]
 normal_main = { fg = "#e8e8e8", bg = "#1270a8", bold = true }
 normal_alt  = { fg = "#e8e8e8" }
@@ -40,17 +34,16 @@ select_alt  = { fg = "#c0a36e" }
 unset_main  = { fg = "#0a0a0a", bg = "#e46876", bold = true }
 unset_alt   = { fg = "#e46876" }
 
-# Archivo bajo el cursor en bloque azul, su carpeta en las otras columnas en gris.
+# Hovered file in a blue block, its folder grey in the other columns
 [indicator]
 parent  = { fg = "#e8e8e8", bg = "#2a2a2a" }
 current = { fg = "#e8e8e8", bg = "#1270a8" }
 preview = { fg = "#e8e8e8", bg = "#2a2a2a" }
-# Bloques del mismo azul a los costados: dejan un espacio entre el borde del
-# resaltado y el ícono. Un espacio común queda sin color y pega el resaltado al ícono.
+# Blue padding blocks, a plain space stays uncolored and glues the highlight to the icon
 padding = { open = "█", close = "█" }
 
 [status]
-# Un espacio entre el bloque y el texto, como el separador entre widgets.
+# Same gap as between qtile widgets
 sep_left  = { open = "", close = " " }
 sep_right = { open = " ", close = "" }
 
@@ -64,7 +57,7 @@ progress_label  = { fg = "#e8e8e8", bold = true }
 progress_normal = { fg = "#98bb6c", bg = "#2a2a2a" }
 progress_error  = { fg = "#0a0a0a", bg = "#e46876" }
 
-# Ventanas emergentes con el borde azul de los menús de qtile.
+# Popups with qtile's blue menu border
 [which]
 border          = { fg = "#2a2a2a" }
 cand            = { fg = "#8ea4a2" }
@@ -109,7 +102,7 @@ border  = { fg = "#2a2a2a" }
 chord   = { fg = "#8ea4a2" }
 hovered = { fg = "#e8e8e8", bg = "#1270a8", bold = true }
 
-# La lista reemplaza entera a la del tema por defecto.
+# Replaces the default theme's list entirely
 [filetype]
 rules = [
 	{ mime = "**/image/*", fg = "#c0a36e" },

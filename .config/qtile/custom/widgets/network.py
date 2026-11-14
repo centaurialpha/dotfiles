@@ -23,7 +23,7 @@ WLAN_SIGNAL_INTERVAL = 300
 
 class WlanBlock(widget.Wlan):
     """
-    Redraws when iwd changes state; signal strength is polled every 5 minutes.
+    Redraws on iwd state changes and polls signal strength every 5 minutes
     """
 
     async def _config_async(self) -> None:

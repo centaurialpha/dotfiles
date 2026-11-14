@@ -30,7 +30,7 @@ UPDATES_PILE_UP = 30
 
 def needs_attention(pending: list[str]) -> bool:
     """
-    Many pending updates or an important package among them.
+    Many pending updates or an important package among them
     """
     return len(pending) >= UPDATES_PILE_UP or not IMPORTANT_PACKAGES.isdisjoint(pending)
 
@@ -39,7 +39,7 @@ def pending_packages() -> list[str]:
     result = subprocess.run(
         ["checkupdates"], check=False, capture_output=True, text=True
     )
-    # Each line: "name old_version -> new_version".
+    # Each line: "name old_version -> new_version"
     return [line.split()[0] for line in result.stdout.splitlines() if line.strip()]
 
 
@@ -49,7 +49,7 @@ def has_updates() -> bool:
 
 class ArchLogo(Image):
     """
-    Checks updates every half hour; middle click runs pacman -Syu.
+    Middle click runs pacman -Syu
     """
 
     def __init__(self, **config: Any) -> None:

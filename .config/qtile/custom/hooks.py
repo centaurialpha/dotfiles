@@ -18,8 +18,8 @@ from custom.groups import (
     pin_media_to_laptop,
 )
 
-# Swallow like the dwm patch. The terminal that launches a graphical app hides
-# until the app closes. The terminals and these apps do not hide it
+# Like dwm's swallow patch: the terminal that launches a graphical app hides
+# until the app closes
 TERMINAL = Match(wm_class="st-256color")
 NO_SWALLOW = (
     TERMINAL,

@@ -1,15 +1,11 @@
-# PATH
 fish_add_path --global --path --move ~/.local/bin
 
-# No greeting default
 set -g fish_greeting
 
-# Environment variables
 set -gx GPG_TTY (tty)
 set -gx _JAVA_AWT_WM_NONREPARENTING 1
 set -gx AWT_TOOLKIT MToolkit
 
-# Aliases
 alias vim="nvim"
 alias v="nvim"
 alias ls="eza"

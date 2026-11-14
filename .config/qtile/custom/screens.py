@@ -60,8 +60,7 @@ def make_bar(items: list[_Widget]) -> bar.Bar:
 
 
 def _primary_top() -> list[_Widget]:
-    # Brightness and battery only when the laptop is the only screen, with the
-    # monitor plugged in, the laptop bar shows them
+    # With the monitor plugged in, the laptop bar shows these
     laptop_only = (
         [*make_display(), *make_battery(notify=True)]
         if connected_monitors() < 2

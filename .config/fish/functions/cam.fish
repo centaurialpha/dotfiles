@@ -1,4 +1,4 @@
-function cam --description 'Control de la cámara EZVIZ'
+function cam --description 'Control the EZVIZ camera'
     set -l serial J50010940
     set -l api env -C ~/projects/ezviz uvx pyezvizapi
     switch "$argv[1]"

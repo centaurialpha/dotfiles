@@ -30,7 +30,7 @@ def _group_healthy(endpoints: list[dict], group: str) -> bool:
 
 def fetch_endpoints() -> list[dict] | None:
     """
-    Latest result of each endpoint, or None if Gatus does not answer.
+    Latest result of each endpoint, or None if Gatus does not answer
     """
     try:
         with urlopen(
@@ -43,7 +43,7 @@ def fetch_endpoints() -> list[dict] | None:
 
 def hemara_icons(endpoints: list[dict] | None, blink_on: bool) -> str:
     """
-    One icon per environment: light if up, blinking red if down, grey without data.
+    One icon per environment: light if up, blinking red if down, grey without data
     """
     icons = []
     for group in HEMARA_GROUPS:
@@ -60,7 +60,7 @@ def hemara_icons(endpoints: list[dict] | None, blink_on: bool) -> str:
 @dataclass
 class HemaraPoller:
     """
-    Gatus consults every `refresh` seconds and alternates the "flicker" with each call
+    Queries Gatus every `refresh` seconds and toggles the blink on each call
     """
 
     refresh: float = 60
@@ -89,7 +89,7 @@ class HemaraPoller:
 
 class HemaraBlock(widget.GenPollText):
     """
-    Polls fast while something fails (to blink), slow otherwise.
+    Polls fast while something fails (to blink), slow otherwise
     """
 
     def poll(self) -> str:
