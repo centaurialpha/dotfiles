@@ -1,0 +1,40 @@
+# Paleta de qtile/tmux
+gui:
+  theme:
+    activeBorderColor:
+      - '#1270a8'
+      - bold
+    inactiveBorderColor:
+      - '#2a2a2a'
+    searchingActiveBorderColor:
+      - '#e6c384'
+      - bold
+    optionsTextColor:
+      - '#1270a8'
+    selectedLineBgColor:
+      - '#2a2a2a'
+    inactiveViewSelectedLineBgColor:
+      - '#1e1e1e'
+    cherryPickedCommitFgColor:
+      - '#e8e8e8'
+    cherryPickedCommitBgColor:
+      - '#1270a8'
+    markedBaseCommitFgColor:
+      - '#141414'
+    markedBaseCommitBgColor:
+      - '#e6c384'
+    unstagedChangesColor:
+      - '#e46876'
+    defaultFgColor:
+      - '#e8e8e8'
+    authorColors:
+      '*': '#1270a8'
+  border: single
+  showRandomTip: false
+  showBottomLine: false
+  showCommandLog: false
+  nerdFontsVersion: ""
+  showFileIcons: false
+git:
+  diffRenderers:
+    - command: delta --dark --paging=never

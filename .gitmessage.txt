@@ -1,0 +1,32 @@
+# Tipo de commit:
+# feat     -> Nueva funcionalidad
+# fix      -> Corrección de bug
+# docs     -> Solo documentación
+# style    -> Cambios de formato (espacios, punto y coma, etc)
+# refactor -> Refactorización sin cambio de comportamiento
+# perf     -> Mejora de performance
+# test     -> Agregado/cambio de tests
+# chore    -> Cambios en tareas de build o herramientas
+# build    -> Cambios que afectan el sistema de build
+# ci       -> Cambios en configuración de CI/CD
+# revert   -> Reversión de un commit
+
+# Formato:
+# tipo(área opcional): descripción corta en presente imperativo
+#
+# Cuerpo opcional:
+# - Explica qué se hizo y por qué.
+# - Deja líneas en blanco entre párrafos.
+#
+# Footer opcional:
+# - Closes #123
+# - BREAKING CHANGE: explica el cambio que rompe compatibilidad
+
+# Ejemplo:
+# feat(database): agrega soporte para múltiples conexiones
+#
+# Permite definir múltiples strings de conexión desde config.
+#
+# Closes #42
+
+# Escribe tu mensaje debajo de esta línea:

@@ -4,7 +4,10 @@ HDMI=$(xrandr --query | awk '/ connected/ && /^HDMI/ {print $1; exit}')
 
 if [ -n "$EDP" ] && [ -n "$HDMI" ]; then
     xrandr --output "$EDP" --mode 1920x1080 \
-           --output "$HDMI" --mode 1920x1080 --primary --left-of "$EDP"
+           --output "$HDMI" --mode 1920x1080 --primary --left-of "$EDP" \
+           --set "Broadcast RGB" Full
+    # X arranca con el puntero entre las dos pantallas; lo deja en el principal.
+    command -v xdotool >/dev/null && xdotool mousemove 960 540
 elif [ -n "$EDP" ]; then
     xrandr --output "$EDP" --auto --primary
 fi

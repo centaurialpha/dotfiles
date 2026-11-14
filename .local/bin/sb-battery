@@ -23,7 +23,7 @@ esac
 if [ "$status" = Discharging ] && [ "$capacity" -le 10 ]; then
 	glyph=""
 	color=$FAIL
-	[ -e "$warned" ] || { notify-send -u critical -t 30000 "Batería baja" "Queda $capacity%"; : >"$warned"; }
+	[ -e "$warned" ] || { notify-send -u critical -t 30000 "Low battery" "$capacity% left"; : >"$warned"; }
 else
 	rm -f "$warned"
 fi

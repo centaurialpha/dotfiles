@@ -1,0 +1,31 @@
+[user]
+	email = acostadariogabriel@gmail.com
+	name = Gabriel Acosta
+	signingkey = B960A3FF61BE58A9
+[core]
+	pager = delta
+	editor = nvim
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	features = woolly-mammoth
+	navigate = true
+
+[merge]
+	conflictstyle = zdiff3
+	tool = vimdiff
+
+[include]
+	path = ~/.delta-themes.gitconfig
+[commit]
+	template = ~/.gitmessage.txt
+	gpgsign = true
+[diff]
+	tool = nvimdiff
+[difftool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+# Repos del trabajo
+[includeIf "gitdir:~/invera/"]
+	path = ~/.gitconfig-invera
