@@ -8,6 +8,7 @@
 - Browser: [Firefox](https://www.mozilla.org/firefox/)
 - Launcher: My [own](https://github.com/centaurialpha/dmenu) build of [dmenu](https://tools.suckless.org/dmenu/) with [j4-dmenu-desktop](https://github.com/enkore/j4-dmenu-desktop)
 - File Manager: [yazi](https://github.com/sxyazi/yazi)
+- Git diffs: [delta](https://github.com/dandavison/delta) as pager and [difftastic](https://difftastic.wilfred.me.uk/) for structural diffs
 - Compositor: [picom](https://github.com/yshui/picom)
 - Notifications: [dunst](https://dunst-project.org/)
 - Wallpaper: [feh](https://feh.finalrewind.org/)
@@ -52,6 +53,7 @@ git clone git@github.com:centaurialpha/nvim-config.git ~/.config/nvim
 
 ### Other
 - Install fisher and plugins: `fisher update`
+- Git diff tools: `sudo pacman -S git-delta difftastic`. `git dft` and `git dlog` show diffs and log with difftastic
 
 ## Keybindings
 
