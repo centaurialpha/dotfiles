@@ -8,6 +8,7 @@ from libqtile.core.manager import Qtile
 
 # Spotify sets WM_CLASS late, which is why there is also the move_spotify hook
 MUSIC_APPS = (Match(wm_class="spotify"), Match(wm_class="spotifast"))
+BROWSER = Match(wm_class="qutebrowser")
 
 # With two screens, the laptop always shows this group
 LAPTOP_GROUP = "media"
@@ -16,7 +17,7 @@ LAPTOP_GROUP = "media"
 def build_groups() -> list[Group]:
     return [
         Group(name="dev", label="\ued95"),
-        Group(name="browser", label="\uebc6", matches=[Match(wm_class="firefox")]),
+        Group(name="browser", label="\uebc6", matches=[BROWSER]),
         Group(name="slack", label="\uec93", matches=[Match(wm_class="slack")]),
         Group(name="spotify", label="\uecad", matches=list(MUSIC_APPS)),
         Group(

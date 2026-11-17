@@ -13,6 +13,7 @@ from libqtile.config import Match
 from libqtile.core.manager import Qtile
 
 from custom.groups import (
+    BROWSER,
     MUSIC_APPS,
     go_to_group,
     pin_media_to_laptop,
@@ -23,7 +24,7 @@ from custom.groups import (
 TERMINAL = Match(wm_class="st-256color")
 NO_SWALLOW = (
     TERMINAL,
-    Match(wm_class="firefox"),
+    BROWSER,
     Match(title="Event Tester"),
 )
 
@@ -39,11 +40,11 @@ def setup_laptop_screen() -> None:
 
 def open_browser_on_main(client: Window) -> None:
     """
-    Every new firefox window is displayed in the main
+    Every new browser window is displayed in the main
     """
     if not isinstance(qtile, Qtile):
         return
-    if client.match(Match(wm_class="firefox")):
+    if client.match(BROWSER):
         go_to_group(qtile, "browser")
 
 

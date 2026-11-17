@@ -5,7 +5,7 @@
 - Shell: [fish](https://fishshell.com/) with [hydro](https://github.com/jorgebucaran/hydro) prompt
 - Terminal: My [own](https://github.com/centaurialpha/st) build of [st](https://st.suckless.org/)
 - Editor: [Neovim](https://neovim.io/), config in its own [repo](https://github.com/centaurialpha/nvim-config)
-- Browser: [Firefox](https://www.mozilla.org/firefox/)
+- Browser: [qutebrowser](https://qutebrowser.org/) with a custom start page
 - Launcher: My [own](https://github.com/centaurialpha/dmenu) build of [dmenu](https://tools.suckless.org/dmenu/) with [j4-dmenu-desktop](https://github.com/enkore/j4-dmenu-desktop)
 - File Manager: [yazi](https://github.com/sxyazi/yazi)
 - Git diffs: [delta](https://github.com/dandavison/delta) as pager and [difftastic](https://difftastic.wilfred.me.uk/) for structural diffs
@@ -49,6 +49,18 @@ The default for each machine goes in `~/.config/wm` (`qtile` or `dwm`), not vers
 The config lives in its own repo, clone it on each machine:
 ```
 git clone git@github.com:centaurialpha/nvim-config.git ~/.config/nvim
+```
+
+### qutebrowser
+Config and start page live in `~/.config/qutebrowser`. Adblocking needs
+`python-adblock`, then run `:adblock-update` once:
+```
+sudo pacman -S python-adblock
+```
+
+Make it the default browser:
+```
+xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 ```
 
 ### Other
@@ -104,5 +116,21 @@ git clone git@github.com:centaurialpha/nvim-config.git ~/.config/nvim
 | `prefix + s` | Session picker (fzf) |
 | `prefix + r` | Reload config |
 | `v`/`y` in copy mode | Select/copy |
+
+</details>
+
+<details>
+<summary>qutebrowser (custom only)</summary>
+
+| Keys | Action |
+| --- | --- |
+| `M` | Open hinted link in mpv |
+| `,m` | Open current page in mpv |
+| `,d` | Download hinted link with yt-dlp |
+| `,t` | Toggle tab bar |
+| `xb` | Toggle status bar |
+| `ctrl + e` (insert) | Edit field in Neovim |
+
+Search shortcuts in `:open`: `aw` Arch Wiki, `aur`, `pkg`, `gh`, `py`, `pyd`, `yt`, `w`, `g`.
 
 </details>
