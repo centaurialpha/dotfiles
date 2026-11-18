@@ -37,5 +37,6 @@ def build_floating_layout() -> layout.Floating:
             Match(wm_type="dialog"),
             Match(title="pritunl"),
             Match(wm_class="webcam"),
+            Match(wm_class="rbw-unlock"),
         ],
     )

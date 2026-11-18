@@ -98,11 +98,12 @@ c.content.autoplay = False
 c.content.notifications.enabled = "ask"
 c.content.geolocation = "ask"
 c.content.pdfjs = True
+# Lets "copy" buttons on GitHub and docs reach the clipboard
+c.content.javascript.clipboard = "access-paste"
+c.input.insert_mode.auto_load = True
 
-# Dark pages, images left untouched
+# Ask sites for dark theme, never force it
 c.colors.webpage.preferred_color_scheme = "dark"
-c.colors.webpage.darkmode.enabled = True
-c.colors.webpage.darkmode.policy.images = "never"
 c.colors.webpage.bg = BG
 
 # Fonts
@@ -261,3 +262,12 @@ config.bind(",d", "hint links spawn --detach st -e yt-dlp -P ~/Downloads {hint-u
 config.bind(",t", "config-cycle tabs.show multiple never")
 config.bind("<Ctrl-e>", "edit-text", mode="insert")
 config.bind("xb", "config-cycle statusbar.show always in-mode")
+# Force dark on the current site only, saved per host
+config.bind(
+    ",D",
+    "config-cycle -p -u *://{url:host}/* colors.webpage.darkmode.enabled true false",
+)
+# Absolute path, qb-work changes configdir
+config.bind(",p", f"spawn --userscript {HERE / 'userscripts' / 'qute-rbw'}")
+config.bind(",c", "spawn --detach firefox {url}")
+config.bind(",r", "spawn --userscript readability")
