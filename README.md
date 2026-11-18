@@ -58,6 +58,15 @@ Config and start page live in `~/.config/qutebrowser`. Adblocking needs
 sudo pacman -S python-adblock
 ```
 
+`qb-work` opens a separate work profile (own cookies, history and sessions,
+same config), marked with `work` and Invera colors. Its start page
+`~/.config/qutebrowser/start-work.html` has internal links, so it is not
+versioned; without it the work profile uses `start.html`.
+
+Bookmarks (`bookmarks/urls`) are not versioned. Groups listed in
+`START_PAGE_GROUPS` (titles like `hemara: Status`) show on the start page
+through a generated `bookmarks.js`.
+
 Make it the default browser:
 ```
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
@@ -89,6 +98,7 @@ xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 | `mod + shift + Return` | Terminal (st) |
 | `mod + s` | Dropdown terminal |
 | `mod + p` | App launcher |
+| `mod + b` | Browser profile picker (personal or work) |
 | `mod + shift + p` | Run command (dmenu) |
 | `mod + c` | Toggle picom |
 | `mod + d` | Toggle docker |
@@ -124,7 +134,7 @@ xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 
 | Keys | Action |
 | --- | --- |
-| `M` | Open hinted link in mpv |
+| `,M` | Open hinted link in mpv |
 | `,m` | Open current page in mpv |
 | `,d` | Download hinted link with yt-dlp |
 | `,t` | Toggle tab bar |

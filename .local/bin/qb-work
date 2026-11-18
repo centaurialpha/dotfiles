@@ -1,0 +1,6 @@
+#!/bin/sh
+# qutebrowser work profile: own cookies, history and sessions, shared config
+exec qutebrowser \
+    --basedir "$HOME/.local/share/qutebrowser-work" \
+    --config-py "$HOME/.config/qutebrowser/config.py" \
+    "$@"

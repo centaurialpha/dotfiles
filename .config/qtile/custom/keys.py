@@ -87,6 +87,7 @@ def _app_keys() -> list[Key]:
     return [
         Key([MOD, "shift"], "Return", lazy.spawn(TERMINAL), desc="Launch terminal"),
         Key([MOD], "p", lazy.spawn(LAUNCHER), desc="Launch apps"),
+        Key([MOD], "b", lazy.spawn("qb-pick"), desc="Pick browser profile"),
         Key([MOD, "shift"], "p", lazy.spawn("dmenu_run -i"), desc="Run command"),
         Key([MOD], "c", lazy.function(picom_toggle), desc="Toggle picom"),
         Key([MOD], "d", lazy.spawn(DOCKER_TOGGLE), desc="Toggle docker"),

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Pick a qutebrowser profile with dmenu
+case $(printf 'personal\nwork\n' | dmenu -i -p profile) in
+    personal) exec qutebrowser ;;
+    work) exec qb-work ;;
+esac

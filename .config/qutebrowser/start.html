@@ -3,64 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>start</title>
-<style>
-  :root {
-    --bg: #0a0a0a;
-    --text: #e8e8e8;
-    --muted: #8a8a8a;
-    --link: #7fb4ca;
-    --glass: rgba(16, 16, 16, 0.6);
-    --row-hover: rgba(255, 255, 255, 0.06);
-  }
-  html, body {
-    margin: 0;
-    height: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: "Input Mono", monospace;
-    font-size: 14px;
-  }
-  body {
-    display: grid;
-    place-items: center;
-    background:
-      linear-gradient(rgba(10, 10, 10, 0.3), rgba(10, 10, 10, 0.3)),
-      url("file:///home/gabox/.local/share/wallpapers/current") center / cover;
-  }
-  main {
-    width: 380px;
-    padding: 20px 0;
-    background: var(--glass);
-    backdrop-filter: blur(18px) saturate(1.2);
-    border-radius: 6px;
-  }
-  h1 {
-    margin: 0 24px 12px;
-    font-size: 12px;
-    font-weight: normal;
-    color: var(--muted);
-  }
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  a {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 24px;
-    color: var(--text);
-    text-decoration: none;
-  }
-  a span {
-    color: var(--muted);
-  }
-  a:hover, a:focus {
-    background: var(--row-hover);
-    color: var(--link);
-    outline: none;
-  }
-</style>
+<link rel="stylesheet" href="start.css">
 </head>
 <body>
 <main>
@@ -70,10 +13,34 @@
     <li><a href="https://www.youtube.com">youtube <span>youtube.com</span></a></li>
     <li><a href="https://wiki.archlinux.org">arch wiki <span>wiki.archlinux.org</span></a></li>
     <li><a href="https://docs.python.org/3/">python docs <span>docs.python.org</span></a></li>
-    <li><a href="http://bezsel.home">bezsel <span>bezsel.home</span></a></li>
+    <li><a href="http://beszel.home">beszel <span>beszel.home</span></a></li>
     <li><a href="http://uptime.home">hemara status <span>uptime.home</span></a></li>
     <li><a href="https://www.reddit.com/r/unixporn/">unixporn <span>r/unixporn</span></a></li>
   </ul>
 </main>
+<div id="groups"></div>
+<!-- bookmarks.js is written by config.py from bookmarks/urls and not versioned -->
+<script src="bookmarks.js"></script>
+<script>
+  const groups = document.getElementById("groups");
+  for (const [name, links] of Object.entries(window.BOOKMARKS ?? {})) {
+    const panel = document.createElement("section");
+    panel.className = "panel";
+    const title = document.createElement("h1");
+    title.textContent = name;
+    const list = document.createElement("ul");
+    for (const { url, title: text } of links) {
+      const link = document.createElement("a");
+      link.href = url;
+      link.textContent = text;
+      link.title = text;
+      const item = document.createElement("li");
+      item.append(link);
+      list.append(item);
+    }
+    panel.append(title, list);
+    groups.append(panel);
+  }
+</script>
 </body>
 </html>

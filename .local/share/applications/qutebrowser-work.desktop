@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=qutebrowser (work)
+Exec=qb-work %u
+Icon=qutebrowser
+Categories=Network;WebBrowser;

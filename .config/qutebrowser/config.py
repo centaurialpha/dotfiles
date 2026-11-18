@@ -4,6 +4,8 @@ qutebrowser config, matched to the qtile palette and fonts
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -31,9 +33,40 @@ LINK = "#7fb4ca"
 
 TERMINAL = "st"
 
+# qb-work starts qutebrowser with its own basedir and this same file
+WORK_PROFILE = "qutebrowser-work" in config.datadir.parts
+
 # General
-c.url.start_pages = ["file:///home/gabox/.config/qutebrowser/start.html"]
-c.url.default_page = "file:///home/gabox/.config/qutebrowser/start.html"
+# start-work.html holds internal links, so it stays out of the public dotfiles
+# qb-work changes configdir, so pages are found next to this file instead
+HERE = Path(__file__).parent
+work_page = HERE / "start-work.html"
+start_page = work_page if WORK_PROFILE and work_page.exists() else HERE / "start.html"
+
+
+# Bookmark groups shown on the start page, the rest only in completion
+START_PAGE_GROUPS = ("hemara", "homelab")
+
+
+def write_bookmarks_script(urls_file: Path, target: Path) -> None:
+    """
+    Group bookmarks by their "group: " title prefix for the start page
+    """
+    groups: dict[str, list[dict[str, str]]] = {g: [] for g in START_PAGE_GROUPS}
+    for line in urls_file.read_text().splitlines():
+        url, _, title = line.partition(" ")
+        group, _, name = title.partition(": ")
+        if group in groups:
+            groups[group].append({"url": url, "title": name or url})
+    target.write_text(f"window.BOOKMARKS = {json.dumps(groups)};\n")
+
+
+# Refreshed on every config load, so new bookmarks show after :config-source
+bookmarks_file = HERE / "bookmarks" / "urls"
+if not WORK_PROFILE and bookmarks_file.exists():
+    write_bookmarks_script(bookmarks_file, HERE / "bookmarks.js")
+c.url.start_pages = [start_page.as_uri()]
+c.url.default_page = start_page.as_uri()
 c.auto_save.session = True
 c.session.lazy_restore = True
 c.confirm_quit = ["downloads"]
@@ -86,12 +119,15 @@ c.tabs.indicator.width = 0
 c.tabs.favicons.show = "never"
 c.statusbar.padding = {"top": 4, "bottom": 4, "left": 6, "right": 6}
 c.statusbar.widgets = ["keypress", "search_match", "url", "scroll", "progress"]
+if WORK_PROFILE:
+    c.statusbar.widgets = ["text:work", *c.statusbar.widgets]
+    c.window.title_format = "work: {perc}{current_title}"
 c.completion.height = "30%"
 c.completion.shrink = True
 c.hints.chars = "asdfghjkl"
 c.hints.border = "none"
 c.hints.padding = {"top": 1, "bottom": 1, "left": 3, "right": 3}
-c.scrolling.smooth = False
+c.scrolling.smooth = True
 
 # Colors
 c.colors.statusbar.normal.bg = BG
@@ -172,6 +208,38 @@ c.colors.downloads.start.bg = ACCENT_SOFT
 c.colors.downloads.stop.bg = ACCENT
 c.colors.downloads.error.bg = RED
 
+# Work profile in Invera brand colors, same as the claude-invera status line
+INVERA_GREEN = "#28e384"
+INVERA_BLUE = "#5a7fff"
+INK = "#1a1a1a"
+WORK_COLORS = {
+    "statusbar.normal.bg": INVERA_BLUE,
+    "statusbar.normal.fg": INK,
+    "statusbar.command.bg": INVERA_BLUE,
+    "statusbar.command.fg": INK,
+    "statusbar.insert.bg": INVERA_GREEN,
+    "statusbar.insert.fg": INK,
+    "statusbar.progress.bg": INVERA_GREEN,
+    "statusbar.url.fg": INK,
+    "statusbar.url.hover.fg": INK,
+    "statusbar.url.success.http.fg": INK,
+    "statusbar.url.success.https.fg": INK,
+    "tabs.selected.odd.bg": INVERA_BLUE,
+    "tabs.selected.odd.fg": INK,
+    "tabs.selected.even.bg": INVERA_BLUE,
+    "tabs.selected.even.fg": INK,
+    "completion.item.selected.bg": INVERA_BLUE,
+    "completion.item.selected.fg": INK,
+    "completion.item.selected.border.top": INVERA_BLUE,
+    "completion.item.selected.border.bottom": INVERA_BLUE,
+    "completion.item.selected.match.fg": INK,
+}
+if WORK_PROFILE:
+    for option, color in WORK_COLORS.items():
+        config.set(f"colors.{option}", color)
+    # Google and Atlassian SSO break without third-party cookies
+    c.content.cookies.accept = "all"
+
 # Search engines, used as "<key> <query>" in :open
 c.url.searchengines = {
     "DEFAULT": "https://duckduckgo.com/?q={}",
@@ -187,7 +255,7 @@ c.url.searchengines = {
 }
 
 # Bindings
-config.bind("M", "hint links spawn --detach mpv {hint-url}")
+config.bind(",M", "hint links spawn --detach mpv {hint-url}")
 config.bind(",m", "spawn --detach mpv {url}")
 config.bind(",d", "hint links spawn --detach st -e yt-dlp -P ~/Downloads {hint-url}")
 config.bind(",t", "config-cycle tabs.show multiple never")
