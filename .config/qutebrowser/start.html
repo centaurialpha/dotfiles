@@ -7,14 +7,12 @@
 </head>
 <body>
 <main>
-  <h1>qutebrowser</h1>
+  <h1>links</h1>
   <ul>
     <li><a href="https://github.com">github <span>github.com</span></a></li>
     <li><a href="https://www.youtube.com">youtube <span>youtube.com</span></a></li>
     <li><a href="https://wiki.archlinux.org">arch wiki <span>wiki.archlinux.org</span></a></li>
     <li><a href="https://docs.python.org/3/">python docs <span>docs.python.org</span></a></li>
-    <li><a href="http://beszel.home">beszel <span>beszel.home</span></a></li>
-    <li><a href="http://uptime.home">hemara status <span>uptime.home</span></a></li>
     <li><a href="https://www.reddit.com/r/unixporn/">unixporn <span>r/unixporn</span></a></li>
   </ul>
 </main>
@@ -23,23 +21,64 @@
 <script src="bookmarks.js"></script>
 <script>
   const groups = document.getElementById("groups");
+  const panels = {};
+
+  function makeTitle(tag, text) {
+    const title = document.createElement(tag);
+    title.textContent = text;
+    return title;
+  }
+
+  // "hemara envs" goes into a shared "hemara" panel as its "envs" column
+  function containerFor(name) {
+    const [owner, sub] = name.split(" ");
+    if (!sub) {
+      const panel = document.createElement("section");
+      panel.className = "panel";
+      panel.dataset.group = name;
+      panel.append(makeTitle("h1", name));
+      groups.append(panel);
+      return panel;
+    }
+    if (!panels[owner]) {
+      const panel = document.createElement("section");
+      panel.className = "panel";
+      panel.dataset.group = owner;
+      const columns = document.createElement("div");
+      columns.className = "columns";
+      panel.append(makeTitle("h1", owner), columns);
+      groups.append(panel);
+      panels[owner] = columns;
+    }
+    const column = document.createElement("div");
+    column.dataset.group = name;
+    column.append(makeTitle("h2", sub));
+    panels[owner].append(column);
+    return column;
+  }
+
   for (const [name, links] of Object.entries(window.BOOKMARKS ?? {})) {
-    const panel = document.createElement("section");
-    panel.className = "panel";
-    const title = document.createElement("h1");
-    title.textContent = name;
     const list = document.createElement("ul");
     for (const { url, title: text } of links) {
       const link = document.createElement("a");
       link.href = url;
-      link.textContent = text;
-      link.title = text;
+      // "(desactivado)" in the bookmark title only dims the link, it is not shown
+      const off = text.endsWith(" (desactivado)");
+      const label = off ? text.slice(0, -" (desactivado)".length) : text;
+      link.textContent = label;
+      link.title = label;
+      if (off) link.classList.add("off");
+      // Environments show their host, so sandbox and prod are not confused
+      if (name === "hemara envs") {
+        const host = document.createElement("span");
+        host.textContent = new URL(url).host;
+        link.append(" ", host);
+      }
       const item = document.createElement("li");
       item.append(link);
       list.append(item);
     }
-    panel.append(title, list);
-    groups.append(panel);
+    containerFor(name).append(list);
   }
 </script>
 </body>

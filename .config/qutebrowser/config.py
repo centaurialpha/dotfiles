@@ -45,7 +45,7 @@ start_page = work_page if WORK_PROFILE and work_page.exists() else HERE / "start
 
 
 # Bookmark groups shown on the start page, the rest only in completion
-START_PAGE_GROUPS = ("hemara", "homelab")
+START_PAGE_GROUPS = ("hemara envs", "hemara infra", "hemara services", "homelab")
 
 
 def write_bookmarks_script(urls_file: Path, target: Path) -> None:
@@ -212,7 +212,8 @@ c.colors.downloads.error.bg = RED
 # Work profile in Invera brand colors, same as the claude-invera status line
 INVERA_GREEN = "#28e384"
 INVERA_BLUE = "#5a7fff"
-INK = "#1a1a1a"
+# Pure black and bold: dark gray on the brand blue was hard to read
+INK = "#000000"
 WORK_COLORS = {
     "statusbar.normal.bg": INVERA_BLUE,
     "statusbar.normal.fg": INK,
@@ -238,6 +239,8 @@ WORK_COLORS = {
 if WORK_PROFILE:
     for option, color in WORK_COLORS.items():
         config.set(f"colors.{option}", color)
+    c.fonts.statusbar = "bold default_size default_family"
+    c.fonts.tabs.selected = "bold default_size default_family"
     # Google and Atlassian SSO break without third-party cookies
     c.content.cookies.accept = "all"
 
@@ -268,6 +271,8 @@ config.bind(
     "config-cycle -p -u *://{url:host}/* colors.webpage.darkmode.enabled true false",
 )
 # Absolute path, qb-work changes configdir
-config.bind(",p", f"spawn --userscript {HERE / 'userscripts' / 'qute-rbw'}")
+QUTE_RBW = HERE / "userscripts" / "qute-rbw"
+config.bind(",p", f"spawn --userscript {QUTE_RBW}")
+config.bind(",P", f"spawn --userscript {QUTE_RBW} --password-only")
 config.bind(",c", "spawn --detach firefox {url}")
 config.bind(",r", "spawn --userscript readability")
