@@ -1,0 +1,14 @@
+# hardware
+vulkan-radeon
+v4l2loopback-dkms
+gphoto2
+
+# work
+pritunl-client
+slack-desktop
+slk
+claude-desktop
+aws-cli
+aws-session-manager-plugin
+kubectl
+k9s

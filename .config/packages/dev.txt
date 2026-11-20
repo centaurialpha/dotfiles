@@ -1,0 +1,26 @@
+# toolchains
+clang
+ccache
+rust
+jdk25-openjdk
+yarn
+lua-language-server
+tree-sitter-cli
+
+# containers and vms
+docker
+docker-buildx
+docker-compose
+dive
+oxker-bin
+qemu-desktop
+
+# tools
+httpie
+bruno-bin
+just
+tokei
+git-filter-repo
+git-town
+tuicr
+mdbtools

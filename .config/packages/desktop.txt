@@ -1,0 +1,56 @@
+# xorg
+xorg-server
+xorg-xinit
+xorg-xrandr
+xorg-xsetroot
+xorg-xwd
+xorg-server-xephyr
+arandr
+mesa-utils
+vulkan-tools
+
+# qtile and its optional widget deps
+qtile
+qtile-extras
+python-dbus-fast
+python-iwlib
+python-psutil
+python-pulsectl-asyncio
+cava
+
+# desktop tools
+picom
+dunst
+feh
+nsxiv
+scrot
+xclip
+xdotool
+j4-dmenu-desktop
+thunar
+gnome-keyring
+xdg-desktop-portal-gtk
+imagemagick
+
+# audio and media
+pavucontrol
+helvum
+playerctl
+mpv
+yt-dlp
+spotifast-bin
+recordly-bin
+zapfast-bin
+
+# browsers
+firefox
+qutebrowser
+python-adblock
+python-readability-lxml
+
+# fonts
+ttc-iosevka
+ttf-input
+ttf-nerd-fonts-symbols-mono
+noto-fonts-cjk
+noto-fonts-emoji
