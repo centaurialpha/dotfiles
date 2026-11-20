@@ -24,6 +24,7 @@ SURFACE = "#1a1a1a"
 BLOCK = "#2a2a2a"
 TEXT = "#e8e8e8"
 INACTIVE = "#555555"
+MUTED = "#8a8a8a"
 ACCENT = "#1270a8"
 ACCENT_SOFT = "#0e4361"
 GOLD = "#c0a36e"
@@ -45,7 +46,13 @@ start_page = work_page if WORK_PROFILE and work_page.exists() else HERE / "start
 
 
 # Bookmark groups shown on the start page, the rest only in completion
-START_PAGE_GROUPS = ("hemara envs", "hemara infra", "hemara services", "homelab")
+START_PAGE_GROUPS = (
+    "links",
+    "hemara envs",
+    "hemara infra",
+    "hemara services",
+    "homelab",
+)
 
 
 def write_bookmarks_script(urls_file: Path, target: Path) -> None:
@@ -110,11 +117,14 @@ c.colors.webpage.bg = BG
 c.fonts.default_family = "Input Mono"
 c.fonts.default_size = "10pt"
 c.fonts.web.family.fixed = "Iosevka Term"
+c.fonts.tabs.selected = "bold default_size default_family"
 
 # Tabs and statusbar
 c.tabs.show = "multiple"
 c.tabs.last_close = "default-page"
-c.tabs.title.format = "{audio}{index}: {current_title}"
+c.tabs.title.format = "{audio}{index} {perc}{current_title}"
+c.tabs.title.format_pinned = "{index}"
+c.tabs.select_on_remove = "last-used"
 c.tabs.padding = {"top": 4, "bottom": 4, "left": 6, "right": 6}
 c.tabs.indicator.width = 0
 c.tabs.favicons.show = "never"
@@ -156,20 +166,20 @@ c.colors.tabs.odd.bg = BG
 c.colors.tabs.even.bg = BG
 c.colors.tabs.odd.fg = INACTIVE
 c.colors.tabs.even.fg = INACTIVE
-c.colors.tabs.selected.odd.bg = ACCENT_SOFT
-c.colors.tabs.selected.even.bg = ACCENT_SOFT
+c.colors.tabs.selected.odd.bg = ACCENT
+c.colors.tabs.selected.even.bg = ACCENT
 c.colors.tabs.selected.odd.fg = TEXT
 c.colors.tabs.selected.even.fg = TEXT
 c.colors.tabs.pinned.odd.bg = BLOCK
 c.colors.tabs.pinned.even.bg = BLOCK
-c.colors.tabs.pinned.selected.odd.bg = ACCENT_SOFT
-c.colors.tabs.pinned.selected.even.bg = ACCENT_SOFT
+c.colors.tabs.pinned.selected.odd.bg = ACCENT
+c.colors.tabs.pinned.selected.even.bg = ACCENT
 
 c.colors.completion.fg = TEXT
 c.colors.completion.odd.bg = SURFACE
 c.colors.completion.even.bg = SURFACE
 c.colors.completion.category.bg = BG
-c.colors.completion.category.fg = GOLD
+c.colors.completion.category.fg = MUTED
 c.colors.completion.category.border.top = BG
 c.colors.completion.category.border.bottom = BG
 c.colors.completion.item.selected.bg = ACCENT
@@ -240,7 +250,6 @@ if WORK_PROFILE:
     for option, color in WORK_COLORS.items():
         config.set(f"colors.{option}", color)
     c.fonts.statusbar = "bold default_size default_family"
-    c.fonts.tabs.selected = "bold default_size default_family"
     # Google and Atlassian SSO break without third-party cookies
     c.content.cookies.accept = "all"
 
@@ -276,3 +285,7 @@ config.bind(",p", f"spawn --userscript {QUTE_RBW}")
 config.bind(",P", f"spawn --userscript {QUTE_RBW} --password-only")
 config.bind(",c", "spawn --detach firefox {url}")
 config.bind(",r", "spawn --userscript readability")
+# tmux-style tab prefix, replaces the default <Ctrl-a> (navigate increment)
+config.unbind("<Ctrl-a>")
+config.bind("<Ctrl-a>n", "tab-next")
+config.bind("<Ctrl-a>p", "tab-prev")

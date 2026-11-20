@@ -162,3 +162,94 @@ h2 {
   color: var(--muted);
   font-size: 13px;
 }
+/* Full-width row, so the panels wrap below it */
+header {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 0.3em;
+  color: var(--text);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+/* Right sidebar: one glass column, the cards become sections inside it */
+body:has(> aside) {
+  display: block;
+  padding: 0;
+  /* Own wallpaper, not the desktop's "current" symlink. The girl touches the
+     top and bottom edges, so the image fits the height. Its content runs from
+     the boot text (x 76 of 1920) to the girl (x 1900), centered at x 988
+     (91.48vh); center it in the free area, both ends trim a bit */
+  background:
+    url("file:///home/gabox/.local/share/wallpapers/wallhaven-vp2mll_1920x1080.png")
+      calc(50vw - 150px - 91.48vh) center / auto 100% no-repeat,
+    #626276;
+}
+aside {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  /* Still scrolls on short windows, but never shows a bar */
+  scrollbar-width: none;
+  padding: 28px 0;
+  background: var(--glass);
+  backdrop-filter: blur(18px) saturate(1.2);
+  border-left: 1px solid var(--border);
+}
+/* Title sits at the bottom, links start at the top */
+aside header {
+  order: 1;
+  flex-basis: auto;
+  margin-top: auto;
+  padding: 28px 24px 0;
+  text-align: left;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-shadow: none;
+}
+aside main,
+aside .panel {
+  width: auto;
+  padding: 0 0 24px;
+  background: none;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+}
+aside #groups {
+  display: block;
+}
+/* Sections split by space and an accent title instead of a rule */
+aside h1 {
+  margin: 0 0 4px;
+  padding: 0 24px;
+  border: none;
+  color: var(--text);
+}
+aside .columns {
+  grid-template-columns: 1fr;
+}
+aside a {
+  padding: 4px 24px;
+}
+aside h2 {
+  margin: 10px 24px 4px;
+  color: var(--muted);
+}
+/* Terminal-style selection: the hovered row turns into a solid accent block */
+aside a:hover,
+aside a:focus {
+  background: #1270a8;
+  color: var(--text);
+}
+aside a:hover span,
+aside a:focus span {
+  color: var(--text);
+}
