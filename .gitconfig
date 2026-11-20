@@ -48,9 +48,6 @@
 	conflictstyle = zdiff3
 	tool = vimdiff
 
-[alias]
-	dft = -c diff.external=difft diff
-	dlog = -c diff.external=difft log -p --ext-diff
 [commit]
 	template = ~/.gitmessage.txt
 	gpgsign = true

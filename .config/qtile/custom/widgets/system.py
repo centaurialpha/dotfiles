@@ -21,7 +21,7 @@ from custom.widgets.blocks import (
 )
 from custom.widgets.dbus import watch_properties
 
-SYSTEM_MONITOR = "st -e htop"
+SYSTEM_MONITOR = "st -e btop"
 UPOWER_DISPLAY_DEVICE = "/org/freedesktop/UPower/devices/DisplayDevice"
 
 
